@@ -50,7 +50,26 @@ const navBarLogo = css`
 `;
 
 const dropDownNavbarLinks = css`
-  display: none;
+  display: flex;
+  flex-direction: row;
+  font-size: 16px;
+  font-weight: 400;
+`;
+
+const dropDownCategoriesTitle = css`
+  font-weight: 600;
+  padding: 1vw 0;
+  background-color: #ffff;
+`;
+
+const dropDownCategories = css``;
+
+const dropDownList = css`
+  list-style: none;
+  & li {
+    padding: 0.3vw 0;
+    background-color: #ffff;
+  }
 `;
 
 function NavBar() {
@@ -74,34 +93,81 @@ function NavBar() {
             Homme
           </a>
           <div css={dropDownNavbarLinks}>
-            <div>
-              Découvrez
-              <a>Nos chaussures minimalistes hommes</a>
-              <a>Nos chaussures chaussettes</a>
-              <a>Nos chaussures minimalistre enfants</a>
-              <a>Nouveautés</a>
-              <a>Soldes</a>
+            <div css={dropDownCategories}>
+              <div css={dropDownCategoriesTitle}>Découvrez</div>
+              <ul css={dropDownList}>
+                <li>
+                  <a>Nos chaussures minimalistes hommes</a>
+                </li>
+                <li>
+                  <a>Nos chaussures chaussettes</a>
+                </li>
+                <li>
+                  <a>Nos chaussures minimalistre enfants</a>
+                </li>
+                <li>
+                  <a>Nouveautés</a>
+                </li>
+                <li>
+                  <a>Soldes</a>
+                </li>
+              </ul>
             </div>
             <div>
-              Par activités
-              <a>Running/Athlétisme</a>
-              <a>Trail/Outdoor</a>
-              <a>Fitness/Crossfit</a>
-              <a>Yoga/Pilate/Danse</a>
-              <a>Ville</a>
+              <div css={dropDownCategoriesTitle}>Par activités</div>
+              <ul>
+                <li>
+                  <a>Running/Athlétisme</a>
+                </li>
+                <li>
+                  <a>Trail/Outdoor</a>
+                </li>
+                <li>
+                  <a>Fitness/Crossfit</a>
+                </li>
+                <li>
+                  <a>Yoga/Pilate/Danse</a>
+                </li>
+                <li>
+                  <a>Ville</a>
+                </li>
+              </ul>
             </div>
             <div>
-              Marques
-              <a>Vibram FiveFingers</a>
-              <a>Altra</a>
-              <a>Merell</a>
-              <a>Xero Shoes</a>
-              <a>Aylla</a>
-              <a>Gumbies</a>
-              <a>Inov-8</a>
-              <a>Topo</a>
-              <a>Skinners</a>
-              <a>Luna Sandals</a>
+              <div css={dropDownCategoriesTitle}>Marques</div>
+
+              <ul>
+                <li>
+                  <a>Vibram FiveFingers</a>
+                </li>
+                <li>
+                  <a>Altra</a>
+                </li>
+                <li>
+                  <a>Merell</a>
+                </li>
+                <li>
+                  <a>Xero Shoes</a>
+                </li>
+                <li>
+                  <a>Aylla</a>
+                </li>
+                <li>
+                  <a>Gumbies</a>
+                </li>
+                <li>
+                  <a>Inov-8</a>
+                </li>
+                <li>
+                  <a>Topo</a>
+                </li>
+                <li>
+                  <a>Skinners</a>
+                </li>
+                <li>
+                  <a>Luna Sandals</a>
+                </li>
+              </ul>
             </div>
           </div>
         </li>
