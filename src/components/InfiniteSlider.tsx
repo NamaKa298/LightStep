@@ -1,11 +1,17 @@
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import Cross_separator from "../assets/CrossSection.svg";
 
 // Import des logos
 import Altra_logo from "../assets/brands_logo/altraNB.png";
+import Aylla_logo from "../assets/brands_logo/AyllaNB.svg";
 import Gumbies_logo from "../assets/brands_logo/gumbiesNB.png";
 import Inov8_logo from "../assets/brands_logo/inov8NB.png";
 import LunaSandals_logo from "../assets/brands_logo/luna_sandalsNB.png";
+import Merell_logo from "../assets/brands_logo/merellNB.png";
+import Skinners_logo from "../assets/brands_logo/SkinnersNB.svg";
 import TopoAthletic_logo from "../assets/brands_logo/topo_athleticNB.png";
 import Vibram_logo from "../assets/brands_logo/vibramNB.png";
 import XeroShoes_logo from "../assets/brands_logo/xero_shoesNB.png";
@@ -24,7 +30,30 @@ const brands: Brand[] = [
   { id: "5", name: "Topo Athletic", logo: TopoAthletic_logo },
   { id: "6", name: "Vibram", logo: Vibram_logo },
   { id: "7", name: "Xero Shoes", logo: XeroShoes_logo },
+  { id: "8", name: "Aylla", logo: Aylla_logo },
+  { id: "9", name: "Skinners", logo: Skinners_logo },
+  { id: "10", name: "Merell", logo: Merell_logo },
 ];
+
+const CrossSeparator = css`
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const TitleSection = styled.h1`
+  color: #004e36;
+  font-family: "Montserra", sans-serif;
+  font-size: 24px;
+  margin-top: 2em;
+`;
+
+const Separator = styled.hr`
+  background-color: #004e36;
+  height: 3px;
+  margin: 0.8em 0;
+`;
 
 const SliderContainer = styled.div`
   overflow: hidden;
@@ -64,7 +93,7 @@ const Logo = styled.img`
   margin: 0 40px;
   height: 100%;
   width: auto;
-  max-height: 60px;
+  max-height: 40px;
   object-fit: contain;
   filter: grayscale(100%) opacity(80%);
   transition: all 0.3s ease;
@@ -135,13 +164,20 @@ const InfiniteSlider: React.FC = () => {
   }, [isPaused, animate]);
 
   return (
-    <SliderContainer>
-      <Slider ref={sliderRef} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
-        {[...brands, ...brands].map((brand, index) => (
-          <Logo key={`${brand.id}-${index}`} src={brand.logo} alt={brand.name} />
-        ))}
-      </Slider>
-    </SliderContainer>
+    <>
+      <div css={CrossSeparator}>
+        <TitleSection>Nos Marques</TitleSection>
+        <img src={Cross_separator} alt="" />
+      </div>
+      <Separator />
+      <SliderContainer>
+        <Slider ref={sliderRef} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+          {[...brands, ...brands].map((brand, index) => (
+            <Logo key={`${brand.id}-${index}`} src={brand.logo} alt={brand.name} />
+          ))}
+        </Slider>
+      </SliderContainer>
+    </>
   );
 };
 
