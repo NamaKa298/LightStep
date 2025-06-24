@@ -4,11 +4,13 @@ import NavBar from "./NavBar";
 
 function App() {
   return (
-    <div>
+    <>
       <Band />
       <NavBar />
-      <InfiniteSlider />
-    </div>
+      <div className="container">
+        <InfiniteSlider />
+      </div>
+    </>
   );
 }
 

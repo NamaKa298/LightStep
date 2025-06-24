@@ -84,8 +84,10 @@ const dropdownWrapper = css`
   }
   &:hover > a,
   & > div:hover + a {
+    color: #004e36;
     text-decoration: underline;
-    text-underline-offset: 0.7vw;
+    text-underline-offset: 1vw;
+    text-decoration-thickness: 5px;
   }
 `;
 const dropDownCategoriesTitle = css`
