@@ -4,9 +4,7 @@ function App() {
   return (
     <>
       <Band />
-      <div className="container">
-        <NavBar />
-      </div>
+      <NavBar />
     </>
   );
 }
