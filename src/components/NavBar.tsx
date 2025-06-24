@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import logo from "../assets/logo.png";
-import { FaBasketShopping } from "react-icons/fa6";
 import { BsBookmarkFill } from "react-icons/bs";
+import { FaBasketShopping } from "react-icons/fa6";
 import { IoPersonSharp } from "react-icons/io5";
+import logo from "../assets/LightStep_logo.png";
 
 const Title1 = css`
   font-family: "Calligraffitti", sans-serif;
@@ -111,7 +111,7 @@ const navBarSelection = css`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0 5vw;
+  padding: 0 8vw;
   position: relative;
 `;
 

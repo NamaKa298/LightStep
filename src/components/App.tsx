@@ -1,6 +1,7 @@
 import Band from "./Band";
-import InfiniteSlider from "./InfiniteSlider";
+import InfiniteBrandsSlider from "./InfiniteBrandsSlider";
 import NavBar from "./NavBar";
+import HomeCategoriesPictures from "./HomeCategoriesPictures";
 
 function App() {
   return (
@@ -8,7 +9,8 @@ function App() {
       <Band />
       <NavBar />
       <div className="container">
-        <InfiniteSlider />
+        <HomeCategoriesPictures />
+        <InfiniteBrandsSlider />
       </div>
     </>
   );
