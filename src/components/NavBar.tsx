@@ -19,6 +19,7 @@ const navbarLinks = css`
   &:hover {
     color: #004e36;
     text-decoration: underline;
+    text-underline-offset: 0.7vw;
   }
 `;
 
@@ -39,7 +40,9 @@ const UnorderedListLinks = css`
 `;
 
 const navBarContainer = css`
+  width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   padding: 16px 0px;
 `;
@@ -50,71 +53,309 @@ const navBarLogo = css`
 `;
 
 const dropDownNavbarLinks = css`
+  font-family: "Montserra", sans-serif;
+  position: absolute;
+  width: 100vw;
   display: none;
+  flex-direction: row;
+  font-size: 16px;
+  font-weight: 400;
+  justify-content: space-between;
+  padding: 1vw 5vw;
+  background-color: #ffff;
+  z-index: 1000;
+  top: calc(100% - 20px);
+  left: 0;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: transparent;
+  }
+`;
+const dropdownWrapper = css`
+  position: static;
+  &:hover > div {
+    display: flex;
+  }
+  &:hover > a,
+  & > div:hover + a {
+    text-decoration: underline;
+    text-underline-offset: 0.7vw;
+  }
+`;
+const dropDownCategoriesTitle = css`
+  font-weight: 600;
+  font-size: 20px;
+  padding: 1vw 0;
+  background-color: #ffff;
+`;
+
+const dropDownCategories = css`
+  background-color: #ffff;
+`;
+
+const dropDownUnorderList = css`
+  list-style: none;
+`;
+
+const navBarSelection = css`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5vw;
+  position: relative;
+`;
+
+const dropDownList = css`
+  background-color: #ffff;
+  padding: 0.3vw 0;
+  a {
+    background-color: #ffff;
+    text-decoration: none;
+    color: black;
+    &:hover {
+      color: #004e36;
+    }
+  }
+`;
+
+const brandColumns = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const brandColumn = css`
+  display: flex;
+  flex-direction: column;
+  padding-left: 5vw;
+  background-color: #ffff;
 `;
 
 function NavBar() {
   return (
     <div css={navBarContainer}>
-      <img src={logo} css={navBarLogo} alt="Vite logo" />
-      <div css={Title1}>LightStep</div>
-      <ul css={UnorderedListLinks}>
-        <li>
-          <a css={navbarLinks} href="#news">
-            Nouveautés
-          </a>
-        </li>
-        <li>
-          <a css={navbarLinks} href="#woman">
-            Femme
-          </a>
-        </li>
-        <li>
-          <a css={navbarLinks} href="#man">
-            Homme
-          </a>
-          <div css={dropDownNavbarLinks}>
-            <div>
-              Découvrez
-              <a>Nos chaussures minimalistes hommes</a>
-              <a>Nos chaussures chaussettes</a>
-              <a>Nos chaussures minimalistre enfants</a>
-              <a>Nouveautés</a>
-              <a>Soldes</a>
+      <div css={navBarSelection}>
+        <img src={logo} css={navBarLogo} alt="Vite logo" />
+        <div css={Title1}>LightStep</div>
+        <ul css={UnorderedListLinks}>
+          <li>
+            <a css={navbarLinks} href="#news">
+              Nouveautés
+            </a>
+          </li>
+          <li css={dropdownWrapper}>
+            <a css={navbarLinks} href="#woman">
+              Femme
+            </a>
+            <div css={dropDownNavbarLinks}>
+              <div css={dropDownCategories}>
+                <div css={dropDownCategoriesTitle}>Découvrez</div>
+                <ul css={dropDownUnorderList}>
+                  <li css={dropDownList}>
+                    <a href="#">Nos chaussures minimalistes femmes</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Nos chaussures chaussettes</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Nos chaussures minimalistre enfants</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Nouveautés</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Soldes</a>
+                  </li>
+                </ul>
+              </div>
+              <div css={dropDownCategories}>
+                <div css={dropDownCategoriesTitle}>Par activités</div>
+                <ul css={dropDownUnorderList}>
+                  <li css={dropDownList}>
+                    <a href="#">Running / Athlétisme</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Trail / Outdoor</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Fitness / Crossfit</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Yoga / Pilate / Danse</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Ville</a>
+                  </li>
+                </ul>
+              </div>
+              <div css={dropDownCategories}>
+                <div
+                  css={[
+                    dropDownCategoriesTitle,
+                    css`
+                      padding-left: 5vw;
+                    `,
+                  ]}
+                >
+                  Marques
+                </div>
+                <ul css={dropDownUnorderList}>
+                  <div css={brandColumns}>
+                    <div css={brandColumn}>
+                      <li css={dropDownList}>
+                        <a href="#">Vibram FiveFingers</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Altra</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Merell</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Xero Shoes</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Aylla</a>
+                      </li>
+                    </div>
+                    <div css={brandColumn}>
+                      <li css={dropDownList}>
+                        <a href="#">Gumbies</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Inov-8</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Topo</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Skinners</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Luna Sandals</a>
+                      </li>
+                    </div>
+                  </div>
+                </ul>
+              </div>
             </div>
-            <div>
-              Par activités
-              <a>Running/Athlétisme</a>
-              <a>Trail/Outdoor</a>
-              <a>Fitness/Crossfit</a>
-              <a>Yoga/Pilate/Danse</a>
-              <a>Ville</a>
+          </li>
+          <li css={dropdownWrapper}>
+            <a css={navbarLinks} href="#man">
+              Homme
+            </a>
+            <div css={dropDownNavbarLinks}>
+              <div css={dropDownCategories}>
+                <div css={dropDownCategoriesTitle}>Découvrez</div>
+                <ul css={dropDownUnorderList}>
+                  <li css={dropDownList}>
+                    <a href="#">Nos chaussures minimalistes hommes</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Nos chaussures chaussettes</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Nos chaussures minimalistre enfants</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Nouveautés</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Soldes</a>
+                  </li>
+                </ul>
+              </div>
+              <div css={dropDownCategories}>
+                <div css={dropDownCategoriesTitle}>Par activités</div>
+                <ul css={dropDownUnorderList}>
+                  <li css={dropDownList}>
+                    <a href="#">Running / Athlétisme</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Trail / Outdoor</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Fitness / Crossfit</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Yoga / Pilate / Danse</a>
+                  </li>
+                  <li css={dropDownList}>
+                    <a href="#">Ville</a>
+                  </li>
+                </ul>
+              </div>
+              <div css={dropDownCategories}>
+                <div
+                  css={[
+                    dropDownCategoriesTitle,
+                    css`
+                      padding-left: 5vw;
+                    `,
+                  ]}
+                >
+                  Marques
+                </div>
+                <ul css={dropDownUnorderList}>
+                  <div css={brandColumns}>
+                    <div css={brandColumn}>
+                      <li css={dropDownList}>
+                        <a href="#">Vibram FiveFingers</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Altra</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Merell</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Xero Shoes</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Aylla</a>
+                      </li>
+                    </div>
+                    <div css={brandColumn}>
+                      <li css={dropDownList}>
+                        <a href="#">Gumbies</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Inov-8</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Topo</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Skinners</a>
+                      </li>
+                      <li css={dropDownList}>
+                        <a href="#">Luna Sandals</a>
+                      </li>
+                    </div>
+                  </div>
+                </ul>
+              </div>
             </div>
-            <div>
-              Marques
-              <a>Vibram FiveFingers</a>
-              <a>Altra</a>
-              <a>Merell</a>
-              <a>Xero Shoes</a>
-              <a>Aylla</a>
-              <a>Gumbies</a>
-              <a>Inov-8</a>
-              <a>Topo</a>
-              <a>Skinners</a>
-              <a>Luna Sandals</a>
-            </div>
-          </div>
-        </li>
-        <li css={iconLinks}>
-          <IoPersonSharp />
-        </li>
-        <li css={iconLinks}>
-          <BsBookmarkFill />
-        </li>
-        <li css={iconLinks}>
-          <FaBasketShopping />
-        </li>
-      </ul>
+          </li>
+          <li css={iconLinks}>
+            <IoPersonSharp />
+          </li>
+          <li css={iconLinks}>
+            <BsBookmarkFill />
+          </li>
+          <li css={iconLinks}>
+            <FaBasketShopping />
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }

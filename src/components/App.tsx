@@ -6,10 +6,10 @@ function App() {
   return (
     <>
       <Band />
-      <div className="container">
-        <NavBar />
-        <InfiniteSlider />
+      <NavBar />
+      <InfiniteSlider />
       </div>
+
     </>
   );
 }
