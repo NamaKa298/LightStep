@@ -1,10 +1,15 @@
-import NavBar from "./NavBar";
 import Band from "./Band";
+import InfiniteSlider from "./InfiniteSlider";
+import NavBar from "./NavBar";
+
 function App() {
   return (
     <>
       <Band />
       <NavBar />
+      <InfiniteSlider />
+      </div>
+
     </>
   );
 }
