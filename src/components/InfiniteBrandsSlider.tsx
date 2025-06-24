@@ -110,7 +110,7 @@ const Logo = styled.img`
   }
 `;
 
-const InfiniteSlider: React.FC = () => {
+const InfiniteBrandsSlider: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<{
@@ -181,4 +181,4 @@ const InfiniteSlider: React.FC = () => {
   );
 };
 
-export default InfiniteSlider;
+export default InfiniteBrandsSlider;
