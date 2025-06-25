@@ -1,14 +1,14 @@
 import Band from "./Band";
+import HomeCategoriesPictures from "./HomeCategoriesPictures";
 import InfiniteBrandsSlider from "./InfiniteBrandsSlider";
 import NavBar from "./NavBar";
-import HomeCategoriesPictures from "./HomeCategoriesPictures";
 
 function App() {
   return (
     <>
       <Band />
-      <NavBar />
       <div className="container">
+        <NavBar />
         <HomeCategoriesPictures />
         <InfiniteBrandsSlider />
       </div>
