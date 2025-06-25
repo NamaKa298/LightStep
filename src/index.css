@@ -1,3 +1,7 @@
+:root {
+  --global-margin: 8vw;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -10,5 +14,6 @@ body {
 }
 
 .container {
-  margin: 0 8vw;
+  margin-left: var(--global-margin);
+  margin-right: var(--global-margin);
 }
