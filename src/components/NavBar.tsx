@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import { BsBookmarkFill } from "react-icons/bs";
 import { FaBasketShopping } from "react-icons/fa6";
 import { IoPersonSharp } from "react-icons/io5";
-import logo from "../assets/LightStep_logo.png";
+import logo from "../assets/LightStep_logo.webp";
 
 const Title1 = css`
   font-family: "Calligraffitti", sans-serif;
@@ -61,11 +61,11 @@ const dropDownNavbarLinks = css`
   font-size: 16px;
   font-weight: 400;
   justify-content: space-between;
-  padding: 1vw 5vw;
+  padding: 1vw var(--global-margin);
   background-color: #ffff;
   z-index: 1000;
   top: calc(100% - 20px);
-  left: 0;
+  left: calc(-1 * var(--global-margin));
 
   &::before {
     content: "";
@@ -111,7 +111,6 @@ const navBarSelection = css`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 0 8vw;
   position: relative;
 `;
 
