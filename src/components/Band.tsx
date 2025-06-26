@@ -14,7 +14,7 @@ const band = css`
 `;
 
 const bandText = css`
-  margin-left: 5vw;
+  margin-left: var(--global-margin);
   background-color: #2b6a62;
 `;
 
@@ -33,15 +33,13 @@ const bandUnorderListSelect = css`
   display: flex;
   gap: 16px;
   list-style: none;
-  margin-right: 5vw;
+  margin-right: var(--global-margin);
 `;
 
 export default function Band() {
   return (
     <div css={band}>
-      <div css={bandText}>
-        Livraison gratuite partout en france à partir de 120€ d'achat
-      </div>
+      <div css={bandText}>Livraison gratuite partout en france à partir de 120€ d'achat</div>
       <ul css={bandUnorderListSelect}>
         <li css={bandSelect}>
           <a css={bandLinks} href="#connection">

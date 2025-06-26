@@ -1,4 +1,5 @@
 import Band from "./Band";
+import Footer from "./Footer";
 import HomeCategoriesPictures from "./HomeCategoriesPictures";
 import InfiniteBrandsSlider from "./InfiniteBrandsSlider";
 import NavBar from "./NavBar";
@@ -12,6 +13,7 @@ function App() {
         <HomeCategoriesPictures />
         <InfiniteBrandsSlider />
       </div>
+      <Footer />
     </>
   );
 }
