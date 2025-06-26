@@ -2,6 +2,8 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
+import NewsLetterForm from "./NewsLetterForm";
+
 //Import des React icons
 import { FaFacebookSquare, FaInstagramSquare } from "react-icons/fa";
 import LightStepLogo from "../assets/LightStep_logo.webp";
@@ -15,7 +17,7 @@ import Visa_logo from "../assets/footer_logos/visa-ico.webp";
 
 const FooterSection = styled.section`
   /* Apparence */
-  border-top: 1px solid #00000061;
+  border-top: 1px solid #00000045;
   background-color: #ececec;
 `;
 
@@ -28,7 +30,6 @@ const FooterContainer = styled.div`
   align-items: flex-start;
   /* Typographie */
   font-size: 16px;
-  line-height: 1.5;
   font-family: "Montserra", sans-serif;
 `;
 
@@ -48,6 +49,7 @@ const BrandContainer = styled.div`
 const LogoAndText = css`
   display: flex;
   align-items: center;
+  text-align: center;
 `;
 
 const LogoTextBlock = css`
@@ -119,7 +121,7 @@ const FooterLogosImg = css`
 `;
 
 const ColorLogo = css`
-  filter: grayscale(0%);
+  filter: grayscale(50%);
 `;
 
 const CopyrightBanner = styled.div`
@@ -134,7 +136,7 @@ const CopyrightBanner = styled.div`
   text-align: center;
   color: #00000097;
   border-top: 1px solid #adadad78;
-  background-color: #004e36;
+  background-color: #0000004c;
   color: #fff;
 `;
 
@@ -188,6 +190,7 @@ function Footer() {
             <li css={ColumnTitle}>Subscribe</li>
             <li css={ColumnList}>Join our community to receive updates!</li>
           </ul>
+          <NewsLetterForm />
         </div>
       </FooterContainer>
       <FooterLogos>
@@ -199,7 +202,7 @@ function Footer() {
       </FooterLogos>
       <CopyrightBanner>
         <p css={CopyrightSigle}>© 2025 LIGHTSTEP</p>
-        <div css={FooterLinks}>/General Terms/ /Privacy Policy/ /Cookie Policy/ /Imprint/</div>
+        <div css={FooterLinks}>General Terms | Privacy Policy | Cookie Policy | Imprint</div>
       </CopyrightBanner>
     </FooterSection>
   );
