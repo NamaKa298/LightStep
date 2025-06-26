@@ -1,8 +1,8 @@
 import Band from "./Band";
+import Footer from "./Footer";
 import HomeCategoriesPictures from "./HomeCategoriesPictures";
 import InfiniteBrandsSlider from "./InfiniteBrandsSlider";
 import NavBar from "./NavBar";
-import Footer from "./Footer";
 
 function App() {
   return (
