@@ -9,7 +9,8 @@ const Title1 = css`
   font-family: "Calligraffitti", sans-serif;
   padding: 4px;
   color: black;
-  font-size: 48px;
+  font-size: 36px;
+  font-weight: 1000;
 `;
 
 const navbarLinks = css`
@@ -23,9 +24,10 @@ const navbarLinks = css`
   }
 `;
 
-const iconLinks = css`
+const NavbarIcons = css`
   &:hover {
     color: #004e36;
+    cursor: pointer;
   }
 `;
 
@@ -35,7 +37,7 @@ const UnorderedListLinks = css`
   width: 100%;
   gap: 50px;
   font-family: "Montserra", sans-serif;
-  font-size: 22px;
+  font-size: 16px;
   list-style: none;
 `;
 
@@ -48,8 +50,8 @@ const navBarContainer = css`
 `;
 
 const navBarLogo = css`
-  width: 102.18px;
-  height: 96px;
+  width: auto;
+  height: 60px;
 `;
 
 const dropDownNavbarLinks = css`
@@ -64,19 +66,20 @@ const dropDownNavbarLinks = css`
   padding: 1vw var(--global-margin);
   background-color: #ffff;
   z-index: 1000;
-  top: calc(100% - 20px);
+  top: 90%;
   left: calc(-1 * var(--global-margin));
 
   &::before {
     content: "";
     position: absolute;
+    height: 20px;
     top: -20px;
     left: 0;
     width: 100%;
-    height: 20px;
     background: transparent;
   }
 `;
+
 const dropdownWrapper = css`
   position: static;
   &:hover > div {
@@ -86,10 +89,11 @@ const dropdownWrapper = css`
   & > div:hover + a {
     color: #004e36;
     text-decoration: underline;
-    text-underline-offset: 1vw;
-    text-decoration-thickness: 5px;
+    text-underline-offset: 17px;
+    text-decoration-thickness: 3px;
   }
 `;
+
 const dropDownCategoriesTitle = css`
   font-weight: 600;
   font-size: 20px;
@@ -346,13 +350,13 @@ function NavBar() {
               </div>
             </div>
           </li>
-          <li css={iconLinks}>
+          <li css={NavbarIcons}>
             <IoPersonSharp />
           </li>
-          <li css={iconLinks}>
+          <li css={NavbarIcons}>
             <BsBookmarkFill />
           </li>
-          <li css={iconLinks}>
+          <li css={NavbarIcons}>
             <FaBasketShopping />
           </li>
         </ul>

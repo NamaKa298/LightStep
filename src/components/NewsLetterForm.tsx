@@ -20,6 +20,13 @@ const NewsLetterFormInput = css`
   border-radius: 4px;
   font-size: 14px;
   color: #00000094;
+
+  &:focus {
+    background-color: #f8f9fa;
+    box-shadow: 0 0 6px #028a61;
+    transition: all 0.1s ease;
+    outline: 1px solid #004e36;
+  }
 `;
 
 const NewsLetterFormButton = css`
