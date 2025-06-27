@@ -4,7 +4,7 @@ import { join } from "path";
 
 async function initDatabase() {
   try {
-    console.log("Connecting to database...");
+    console.log("🔄 Préparation de l'initialisation...");
 
     // Read the SQL file
     const sqlFile = join(process.cwd(), "scripts", "init-db.sql");
@@ -13,10 +13,11 @@ async function initDatabase() {
     // Split by semicolon to execute each statement separately
     const statements = sql.split(";").filter((stmt) => stmt.trim());
 
+    console.log("🔌 Première connexion à PostgreSQL (automatique)...");
     for (const statement of statements) {
       if (statement.trim()) {
         console.log("Executing:", statement.trim().substring(0, 50) + "...");
-        await pool.query(statement);
+        await pool.query(statement); // ← VRAIE connexion ici !
       }
     }
 

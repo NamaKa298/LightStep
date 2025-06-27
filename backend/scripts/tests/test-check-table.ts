@@ -1,4 +1,4 @@
-import { pool } from "../src/db";
+import { pool } from "../../src/db";
 
 async function checkTable() {
   try {

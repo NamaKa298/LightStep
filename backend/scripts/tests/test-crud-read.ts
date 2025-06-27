@@ -1,4 +1,4 @@
-import { pool } from "../src/db";
+import { pool } from "../../src/db";
 
 // 📖 LIRE et RECHERCHER des produits
 async function readProducts() {

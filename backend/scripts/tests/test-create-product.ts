@@ -1,4 +1,4 @@
-import { pool } from "../src/db";
+import { pool } from "../../src/db";
 
 // 🆕 CRÉER un nouveau produit
 async function createProduct() {
