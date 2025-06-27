@@ -62,16 +62,15 @@ const ContactWidget: React.FC = () => {
           ) : (
             <form onSubmit={handleSubmit} css={formStyle}>
               <div css={inputGroupStyle}>
-                <label htmlFor="name">Nom</label>
+                <label htmlFor="name">Nom (facultatif)</label>
                 <input
                   type="text"
                   id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  required
                   css={inputStyle}
-                  placeholder="Nom"
+                  placeholder="Enter your name"
                 />
               </div>
 
@@ -85,7 +84,7 @@ const ContactWidget: React.FC = () => {
                   onChange={handleChange}
                   required
                   css={inputStyle}
-                  placeholder="email"
+                  placeholder="Enter your email"
                 />
               </div>
 
@@ -99,7 +98,7 @@ const ContactWidget: React.FC = () => {
                   required
                   rows={4}
                   css={textareaStyle}
-                  placeholder="Message"
+                  placeholder="Type your message"
                 />
               </div>
 
@@ -127,7 +126,7 @@ const widgetContainerStyle = css`
 `;
 
 const toggleButtonStyle = css`
-  background-color: #007753;
+  background-color: #006345;
   color: #f5f5f5;
   border: none;
   border-radius: 40%;
@@ -135,7 +134,6 @@ const toggleButtonStyle = css`
   height: 60px;
   font-size: 16px;
   cursor: pointer;
-  box-shadow: 0 0 6px #004e36;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,12 +141,12 @@ const toggleButtonStyle = css`
 
   &:hover {
     background-color: #004e36;
-    transform: scale(1.05);
+    /* transform: scale(1.05); */
   }
 `;
 
 const formContainerStyle = css`
-  background: #f7f7f7;
+  background: #fafafa;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   padding: 20px;
@@ -191,17 +189,18 @@ const inputGroupStyle = css`
 
 const inputStyle = css`
   padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid #d3d3d3;
+  border-radius: 8px;
   font-size: 14px;
+  background-color: #adadad18;
   &::placeholder {
-    color: #adadadcf;
+    color: #adadadef;
     font-size: 13px;
   }
 
   &:focus {
     outline: none;
-    border-color: #004e36;
+    border-color: #006345;
   }
 `;
 
@@ -211,11 +210,11 @@ const textareaStyle = css`
 `;
 
 const submitButtonStyle = css`
-  background-color: #004e36;
+  background-color: #006345;
   color: white;
   border: none;
   padding: 10px 15px;
-  border-radius: 4px;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.2s;

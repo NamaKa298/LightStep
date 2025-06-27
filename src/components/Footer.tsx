@@ -14,6 +14,68 @@ import Payment_logo from "../assets/footer_logos/modes_de_paiement.webp";
 import Paypal_logo from "../assets/footer_logos/paypal-ico.webp";
 import Visa_logo from "../assets/footer_logos/visa-ico.webp";
 
+/* ---------------------- Composant TypeScript ---------------------- */
+
+function Footer() {
+  return (
+    <FooterSection>
+      <FooterContainer>
+        <BrandContainer>
+          <div css={LogoAndText}>
+            <img css={LogoStyle} src={LightStepLogo} alt="Logo LightStep" />
+            <div css={LogoTextBlock}>
+              LightStep <p css={LogoSlogan}>Free to move!</p>
+            </div>
+          </div>
+          <SocialNetworks>
+            <FaFacebookSquare size={36} />
+            <FaInstagramSquare size={36} />
+          </SocialNetworks>
+        </BrandContainer>
+        <div>
+          <ul>
+            <li css={ColumnTitle}>Customer Service</li>
+            <li css={ColumnList}>Contact Us</li>
+            <li css={ColumnList}>Payments</li>
+            <li css={ColumnList}>Shipping & Returns</li>
+            <li css={ColumnList}>Guarantee</li>
+            <li css={ColumnList}>Retailers</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li css={ColumnTitle}>About Us</li>
+            <li css={ColumnList}>The Story of LightStep</li>
+            <li css={ColumnList}>LightStep World</li>
+            <li css={ColumnList}>Size Guide for Women</li>
+            <li css={ColumnList}>Size Guide for Men</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li css={ColumnTitle}>Subscribe</li>
+            <li css={ColumnList}>Join our community to receive updates!</li>
+          </ul>
+          <NewsLetterForm />
+        </div>
+      </FooterContainer>
+      <FooterLogos>
+        <img css={FooterLogosImg} src={Visa_logo} alt="" />
+        <img css={FooterLogosImg} src={Master_logo} alt="" />
+        <img css={FooterLogosImg} src={Paypal_logo} alt="" />
+        <img css={FooterLogosImg} src={Payment_logo} alt="" />
+        <img css={[FooterLogosImg, ColorLogo]} src={EntrepriseFrançaise_logo} alt="" />
+      </FooterLogos>
+      <CopyrightBanner>
+        <p css={CopyrightSigle}>© 2025 LIGHTSTEP</p>
+        <div css={FooterLinks}>General Terms | Privacy Policy | Cookie Policy | Imprint</div>
+      </CopyrightBanner>
+    </FooterSection>
+  );
+}
+
+/* ---------------------- Style avec Emotion ---------------------- */
+
 const FooterSection = styled.section`
   /* Apparence */
   border-top: 1px solid #00000045;
@@ -29,7 +91,6 @@ const FooterContainer = styled.div`
   align-items: flex-start;
   /* Typographie */
   font-size: 16px;
-  font-family: "Montserra", sans-serif;
 `;
 
 const LogoStyle = css`
@@ -148,63 +209,5 @@ const FooterLinks = css`
   position: absolute;
   text-align: center;
 `;
-
-function Footer() {
-  return (
-    <FooterSection>
-      <FooterContainer>
-        <BrandContainer>
-          <div css={LogoAndText}>
-            <img css={LogoStyle} src={LightStepLogo} alt="Logo LightStep" />
-            <div css={LogoTextBlock}>
-              LightStep <p css={LogoSlogan}>Free to move!</p>
-            </div>
-          </div>
-          <SocialNetworks>
-            <FaFacebookSquare size={36} />
-            <FaInstagramSquare size={36} />
-          </SocialNetworks>
-        </BrandContainer>
-        <div>
-          <ul>
-            <li css={ColumnTitle}>Customer Service</li>
-            <li css={ColumnList}>Contact Us</li>
-            <li css={ColumnList}>Payments</li>
-            <li css={ColumnList}>Shipping & Returns</li>
-            <li css={ColumnList}>Guarantee</li>
-            <li css={ColumnList}>Retailers</li>
-          </ul>
-        </div>
-        <div>
-          <ul>
-            <li css={ColumnTitle}>About Us</li>
-            <li css={ColumnList}>The Story of LightStep</li>
-            <li css={ColumnList}>LightStep World</li>
-            <li css={ColumnList}>Size Guide for Women</li>
-            <li css={ColumnList}>Size Guide for Men</li>
-          </ul>
-        </div>
-        <div>
-          <ul>
-            <li css={ColumnTitle}>Subscribe</li>
-            <li css={ColumnList}>Join our community to receive updates!</li>
-          </ul>
-          <NewsLetterForm />
-        </div>
-      </FooterContainer>
-      <FooterLogos>
-        <img css={FooterLogosImg} src={Visa_logo} alt="" />
-        <img css={FooterLogosImg} src={Master_logo} alt="" />
-        <img css={FooterLogosImg} src={Paypal_logo} alt="" />
-        <img css={FooterLogosImg} src={Payment_logo} alt="" />
-        <img css={[FooterLogosImg, ColorLogo]} src={EntrepriseFrançaise_logo} alt="" />
-      </FooterLogos>
-      <CopyrightBanner>
-        <p css={CopyrightSigle}>© 2025 LIGHTSTEP</p>
-        <div css={FooterLinks}>General Terms | Privacy Policy | Cookie Policy | Imprint</div>
-      </CopyrightBanner>
-    </FooterSection>
-  );
-}
 
 export default Footer;
