@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import HomeCategoriesPictures from "./HomeCategoriesPictures";
 import InfiniteBrandsSlider from "./InfiniteBrandsSlider";
 import NavBar from "./NavBar";
+import ServicesBanner from "./ServicesBanner";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <HomeCategoriesPictures />
         <InfiniteBrandsSlider />
         <ContactWidget />
+        <ServicesBanner />
       </div>
       <Footer />
     </>

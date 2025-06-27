@@ -35,6 +35,77 @@ const brands: Brand[] = [
   { id: "10", name: "Merell", logo: Merell_logo },
 ];
 
+const InfiniteBrandsSlider: React.FC = () => {
+  const [isPaused, setIsPaused] = useState(false);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<{
+    id: number | null;
+    startTime: number;
+    progress: number;
+  }>({ id: null, startTime: 0, progress: 0 });
+  const speed = 0.1;
+
+  const animate = useCallback(
+    (timestamp: number) => {
+      if (!sliderRef.current) return;
+
+      if (!animationRef.current.startTime) {
+        animationRef.current.startTime = timestamp;
+      }
+
+      const elapsed = timestamp - animationRef.current.startTime;
+      const translateX = (animationRef.current.progress + elapsed * speed) % (sliderRef.current.scrollWidth / 2);
+
+      sliderRef.current.style.transform = `translateX(-${translateX}px)`;
+      animationRef.current.id = requestAnimationFrame(animate);
+    },
+    [speed]
+  );
+
+  useEffect(() => {
+    // Crée une copie locale de la référence pour le cleanup
+    const currentAnimationRef = animationRef.current;
+
+    if (!isPaused) {
+      animationRef.current.startTime = 0;
+      animationRef.current.id = requestAnimationFrame(animate);
+    } else {
+      if (sliderRef.current) {
+        const style = window.getComputedStyle(sliderRef.current);
+        const matrix = new DOMMatrix(style.transform);
+        animationRef.current.progress = Math.abs(matrix.m41);
+      }
+      if (animationRef.current.id) {
+        cancelAnimationFrame(animationRef.current.id);
+      }
+    }
+
+    return () => {
+      // Utilise la copie locale dans le cleanup
+      if (currentAnimationRef.id) {
+        cancelAnimationFrame(currentAnimationRef.id);
+      }
+    };
+  }, [isPaused, animate]);
+
+  return (
+    <>
+      <div css={CrossSeparator}>
+        <TitleSection>Nos Marques</TitleSection>
+        <img src={Cross_separator} alt="" />
+      </div>
+      <Separator />
+      <SliderContainer>
+        <Slider ref={sliderRef} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+          {[...brands, ...brands].map((brand, index) => (
+            <Logo key={`${brand.id}-${index}`} src={brand.logo} alt={brand.name} />
+          ))}
+        </Slider>
+      </SliderContainer>
+    </>
+  );
+};
+
 const CrossSeparator = css`
   display: flex;
   align-items: end;
@@ -109,76 +180,5 @@ const Logo = styled.img`
     margin: 0 20px;
   }
 `;
-
-const InfiniteBrandsSlider: React.FC = () => {
-  const [isPaused, setIsPaused] = useState(false);
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<{
-    id: number | null;
-    startTime: number;
-    progress: number;
-  }>({ id: null, startTime: 0, progress: 0 });
-  const speed = 0.1;
-
-  const animate = useCallback(
-    (timestamp: number) => {
-      if (!sliderRef.current) return;
-
-      if (!animationRef.current.startTime) {
-        animationRef.current.startTime = timestamp;
-      }
-
-      const elapsed = timestamp - animationRef.current.startTime;
-      const translateX = (animationRef.current.progress + elapsed * speed) % (sliderRef.current.scrollWidth / 2);
-
-      sliderRef.current.style.transform = `translateX(-${translateX}px)`;
-      animationRef.current.id = requestAnimationFrame(animate);
-    },
-    [speed]
-  );
-
-  useEffect(() => {
-    // Crée une copie locale de la référence pour le cleanup
-    const currentAnimationRef = animationRef.current;
-
-    if (!isPaused) {
-      animationRef.current.startTime = 0;
-      animationRef.current.id = requestAnimationFrame(animate);
-    } else {
-      if (sliderRef.current) {
-        const style = window.getComputedStyle(sliderRef.current);
-        const matrix = new DOMMatrix(style.transform);
-        animationRef.current.progress = Math.abs(matrix.m41);
-      }
-      if (animationRef.current.id) {
-        cancelAnimationFrame(animationRef.current.id);
-      }
-    }
-
-    return () => {
-      // Utilise la copie locale dans le cleanup
-      if (currentAnimationRef.id) {
-        cancelAnimationFrame(currentAnimationRef.id);
-      }
-    };
-  }, [isPaused, animate]);
-
-  return (
-    <>
-      <div css={CrossSeparator}>
-        <TitleSection>Nos Marques</TitleSection>
-        <img src={Cross_separator} alt="" />
-      </div>
-      <Separator />
-      <SliderContainer>
-        <Slider ref={sliderRef} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
-          {[...brands, ...brands].map((brand, index) => (
-            <Logo key={`${brand.id}-${index}`} src={brand.logo} alt={brand.name} />
-          ))}
-        </Slider>
-      </SliderContainer>
-    </>
-  );
-};
 
 export default InfiniteBrandsSlider;
