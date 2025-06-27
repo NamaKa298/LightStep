@@ -17,11 +17,11 @@ LightStep/
 │   │   └── routes/
 │   │       └── products.ts   ← Routes API
 │   └── scripts/
-│       ├── crud-create.ts    ← Créer des produits
-│       ├── crud-read.ts      ← Lire/rechercher
-│       ├── crud-update.ts    ← Modifier des produits
-│       ├── crud-delete.ts    ← Supprimer des produits
-│       └── test-api.ts       ← Tester l'API
+│       ├── init-db.ts           ← Créer/reset les tables
+│       ├── migrate-full.ts      ← Évolutions de structure
+│       ├── add-product-interactive.ts ← Ajouter des produits
+│       ├── test-check-table.ts  ← Vérifier structure/données
+│       └── test-api.ts          ← Tester l'API
 └── frontend/ (Vite/React)
 ```
 
@@ -48,48 +48,43 @@ npm run test-api
 
 ## 🛠️ **Gestion des produits**
 
-### **📊 Voir tous les produits**
+### **📊 Voir tous les produits et la structure**
 
 ```bash
-npm run crud-read
+npm run test-check
 ```
 
-### **➕ Ajouter UN produit**
+Affiche en JSON :
 
-1. Éditez `scripts/crud-create.ts`
-2. Modifiez l'objet `newProduct` :
+- ✅ Structure complète de la table (colonnes, types, contraintes)
+- ✅ Contenu de la table (tous les produits)
 
-```typescript
-const newProduct = {
-  name: "Nom de la chaussure",
-  brand: "Marque",
-  price: 99.99,
-  type: "minimalist_shoes", // ou "zero_drop", "barefoot"
-  activity: "running", // ou "gym", "trail", "casual"
-  gender: "unisex", // ou "male", "female"
-  size: [36, 37, 38, 39, 40], // tailles disponibles
-};
+### **➕ Ajouter des produits (mode interactif)**
+
+```bash
+npm run add-interactive
 ```
 
-3. Exécutez : `npm run crud-create`
+Script interactif qui vous guide pour ajouter :
 
-### **➕ Ajouter PLUSIEURS produits**
+- ✅ Un produit unique
+- ✅ Plusieurs produits depuis un fichier JSON
 
-1. Éditez `scripts/add-multiple-products.ts`
-2. Ajoutez vos produits dans le tableau `newProducts`
-3. Exécutez : `npm run add-multiple`
+### **🏗️ Créer/Reset la base de données**
 
-### **✏️ Modifier un produit**
+```bash
+npm run init-db
+```
 
-1. Éditez `scripts/crud-update.ts`
-2. Changez les valeurs dans les exemples
-3. Exécutez : `npm run crud-update`
+**⚠️ ATTENTION :** Supprime toutes les données existantes !
 
-### **🗑️ Supprimer des produits**
+### **� Faire évoluer la structure (sans perte de données)**
 
-1. Éditez `scripts/crud-delete.ts`
-2. Modifiez les ID ou conditions
-3. Exécutez : `npm run crud-delete`
+```bash
+npm run migrate-full
+```
+
+Ajoute de nouvelles colonnes sans supprimer les produits existants.
 
 ---
 
@@ -124,6 +119,9 @@ await fetch("http://localhost:3001/api/products", {
     activity: "running",
     gender: "unisex",
     size: [38, 39, 40],
+    description: "Description du produit",
+    image_url: "https://example.com/image.jpg",
+    stock: 10,
   }),
 });
 
@@ -133,6 +131,8 @@ await fetch("http://localhost:3001/api/products/1", {
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
     name: "Nom modifié",
+    price: 89.99,
+    stock: 5,
     // ... autres champs
   }),
 });
@@ -192,7 +192,7 @@ npm run init-db
 ### **Vérifier la structure**
 
 ```bash
-npx ts-node scripts/check-table.ts
+npm run test-check
 ```
 
 ### **En cas de problème de connexion**
@@ -223,14 +223,21 @@ npm run dev
 
 ### **Ajouter un nouveau champ à la table**
 
-1. Modifiez `scripts/init-db.sql` :
+1. Modifiez `scripts/migrate-full.sql` :
 
 ```sql
-ALTER TABLE products ADD COLUMN description TEXT;
+-- Ajouter une nouvelle colonne
+ALTER TABLE products
+ADD COLUMN IF NOT EXISTS nouvelle_colonne TEXT;
 ```
 
-2. Mettez à jour les routes dans `routes/products.ts`
-3. Ajoutez le champ dans vos scripts CRUD
+2. Exécutez la migration :
+
+```bash
+npm run migrate-full
+```
+
+3. Mettez à jour les routes dans `routes/products.ts`
 
 ### **Créer une nouvelle table (ex: commandes)**
 
@@ -242,16 +249,16 @@ ALTER TABLE products ADD COLUMN description TEXT;
 
 ## 📊 **Scripts disponibles**
 
-| Script      | Commande               | Description                            |
-| ----------- | ---------------------- | -------------------------------------- |
-| Serveur dev | `npm run dev`          | Lance le serveur en mode développement |
-| Init DB     | `npm run init-db`      | Initialise la base de données          |
-| Créer       | `npm run crud-create`  | Ajoute un produit                      |
-| Multiple    | `npm run add-multiple` | Ajoute plusieurs produits              |
-| Lire        | `npm run crud-read`    | Affiche tous les produits + recherches |
-| Modifier    | `npm run crud-update`  | Modifie des produits                   |
-| Supprimer   | `npm run crud-delete`  | Supprime des produits                  |
-| Test API    | `npm run test-api`     | Teste toutes les routes API            |
+| Script            | Commande                   | Description                            |
+| ----------------- | -------------------------- | -------------------------------------- |
+| Serveur dev       | `npm run dev`              | Lance le serveur en mode développement |
+| Init DB           | `npm run init-db`          | Initialise/reset la base de données    |
+| Migration         | `npm run migrate-full`     | Fait évoluer la structure (sans perte) |
+| Ajouter           | `npm run add-interactive`  | Ajoute des produits (mode interactif)  |
+| Vérifier          | `npm run test-check`       | Affiche structure + données (JSON)     |
+| Test API          | `npm run test-api`         | Teste toutes les routes API            |
+| Lister DBs        | `npm run list-db`          | Liste toutes les bases PostgreSQL      |
+| Voir localisation | `npm run show-db-location` | Affiche où sont stockées les données   |
 
 ---
 
@@ -259,21 +266,22 @@ ALTER TABLE products ADD COLUMN description TEXT;
 
 ### **Pour ajouter des produits régulièrement :**
 
-1. Éditez `scripts/add-multiple-products.ts`
-2. Ajoutez vos nouveaux produits dans le tableau
-3. `npm run add-multiple`
+1. `npm run add-interactive`
+2. Choisissez "Ajouter depuis JSON"
+3. Modifiez `scripts/products-to-add.json`
 4. `npm run test-api` pour vérifier
 
-### **Pour modifier des prix (soldes, etc.) :**
+### **Pour modifier la structure (nouvelles colonnes) :**
 
-1. Éditez `scripts/crud-update.ts`
-2. Modifiez les requêtes selon vos besoins
-3. `npm run crud-update`
+1. Éditez `scripts/migrate-full.sql`
+2. `npm run migrate-full`
+3. `npm run test-check` pour vérifier
 
-### **Pour nettoyer la base :**
+### **Pour vérifier l'état de votre base :**
 
-1. `npm run crud-delete` (supprime les doublons, tests, etc.)
-2. `npm run crud-read` pour vérifier
+1. `npm run test-check` (voir structure + données)
+2. `npm run list-db` (voir toutes les bases)
+3. `npm run test-api` (tester les routes)
 
 ---
 
@@ -282,14 +290,15 @@ ALTER TABLE products ADD COLUMN description TEXT;
 ✅ **À FAIRE :**
 
 - Toujours tester avec `npm run test-api` après des modifications
-- Sauvegarder la base avant des suppressions importantes
-- Utiliser des scripts plutôt que des commandes SQL directes
+- Utiliser `npm run migrate-full` pour les évolutions de structure
+- Vérifier avec `npm run test-check` avant et après les changements
+- Utiliser `npm run add-interactive` pour ajouter des produits
 
 ❌ **À ÉVITER :**
 
+- Utiliser `npm run init-db` en production (supprime tout !)
 - Modifier directement la base de données sans script
-- Supprimer tous les produits sans sauvegarde
-- Lancer plusieurs scripts en même temps
+- Lancer plusieurs scripts de base de données en même temps
 
 ---
 
@@ -297,10 +306,11 @@ ALTER TABLE products ADD COLUMN description TEXT;
 
 Avec ce guide, vous pouvez :
 
-- ✅ Ajouter/modifier/supprimer des produits
-- ✅ Gérer votre base de données
-- ✅ Tester votre API
-- ✅ Dépanner les problèmes courants
-- ✅ Étendre les fonctionnalités
+- ✅ Voir la structure et les données en JSON (`npm run test-check`)
+- ✅ Ajouter des produits facilement (`npm run add-interactive`)
+- ✅ Faire évoluer votre base sans perte (`npm run migrate-full`)
+- ✅ Tester votre API (`npm run test-api`)
+- ✅ Gérer plusieurs bases PostgreSQL (`npm run list-db`)
+- ✅ Diagnostiquer les problèmes rapidement
 
 **Bonne gestion de votre boutique LightStep ! 🏃‍♀️👟**

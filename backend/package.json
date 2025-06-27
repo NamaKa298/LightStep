@@ -16,6 +16,7 @@
     "test-update": "ts-node scripts/tests/test-crud-update.ts",
     "test-delete": "ts-node scripts/tests/test-crud-delete.ts",
     "list-db": "ts-node scripts/list-databases.ts",
+    "list-tables": "ts-node scripts/list-tables.ts",
     "add-interactive": "ts-node scripts/add-product-interactive.ts",
     "add-json": "ts-node scripts/add-from-json.ts",
     "show-db-location": "ts-node scripts/show-db-location.ts",

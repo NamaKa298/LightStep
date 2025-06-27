@@ -12,12 +12,12 @@ async function checkTable() {
     `);
 
     console.log("Structure de la table products :");
-    console.table(result.rows);
+    console.log(JSON.stringify(result.rows, null, 2));
 
     // Vérifier les données existantes
     const data = await pool.query("SELECT * FROM products LIMIT 5");
-    console.log("Données existantes :");
-    console.table(data.rows);
+    console.log("\nDonnées existantes :");
+    console.log(JSON.stringify(data.rows, null, 2));
   } catch (error) {
     console.error("Erreur :", error);
   } finally {

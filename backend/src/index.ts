@@ -6,6 +6,26 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// 🔒 Middleware de sécurité pour les modifications
+const requireAdmin = (req: any, res: any, next: any) => {
+  // Pour les routes de lecture (GET), tout le monde peut accéder
+  if (req.method === 'GET') {
+    return next();
+  }
+  
+  // Pour les modifications (POST, PUT, DELETE), vérifier l'origine
+  const allowedOrigins = ['localhost', '127.0.0.1'];
+  const origin = req.get('host') || '';
+  
+  if (!allowedOrigins.some(allowed => origin.includes(allowed))) {
+    return res.status(403).json({
+      error: "❌ Accès interdit - Modifications réservées à l'administrateur",
+      message: "Seules les consultations sont autorisées"
+    });
+  }
+  next();
+};
+
 // Route de base pour tester si l'API fonctionne
 app.get("/", (req, res) => {
   res.json({
@@ -27,7 +47,7 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.use("/api/products", productsRouter);
+app.use("/api/products", requireAdmin, productsRouter);
 
 const PORT = 3001;
 app.listen(PORT, () => {
