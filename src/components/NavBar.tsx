@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import { BsBookmarkFill } from "react-icons/bs";
 import { FaBasketShopping } from "react-icons/fa6";
 import { IoPersonSharp } from "react-icons/io5";
-import logo from "../assets/LightStep_logo.webp";
+import logo from "../assets/images/LightStep_logo.webp";
 
 const Title1 = css`
   font-family: "Calligraffitti", sans-serif;

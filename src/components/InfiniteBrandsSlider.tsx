@@ -3,19 +3,19 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FaChevronRight } from "react-icons/fa";
-import Cross_separator from "../assets/CrossSection.svg";
+import Cross_separator from "../assets/images/CrossSection.svg";
 
 // Import des logos
-import Altra_logo from "../assets/brands_logo/altra.webp";
-import Aylla_logo from "../assets/brands_logo/aylla.webp";
-import Gumbies_logo from "../assets/brands_logo/gumbies.webp";
-import Inov8_logo from "../assets/brands_logo/inov8.webp";
-import LunaSandals_logo from "../assets/brands_logo/luna_sandals.webp";
-import Merell_logo from "../assets/brands_logo/merell.webp";
-import Skinners_logo from "../assets/brands_logo/skinners.webp";
-import TopoAthletic_logo from "../assets/brands_logo/topo_athletic.webp";
-import Vibram_logo from "../assets/brands_logo/vibram.webp";
-import XeroShoes_logo from "../assets/brands_logo/xero_shoes.webp";
+import Altra_logo from "../assets/images/brands_logo/altra.webp";
+import Aylla_logo from "../assets/images/brands_logo/aylla.webp";
+import Gumbies_logo from "../assets/images/brands_logo/gumbies.webp";
+import Inov8_logo from "../assets/images/brands_logo/inov8.webp";
+import LunaSandals_logo from "../assets/images/brands_logo/luna_sandals.webp";
+import Merell_logo from "../assets/images/brands_logo/merell.webp";
+import Skinners_logo from "../assets/images/brands_logo/skinners.webp";
+import TopoAthletic_logo from "../assets/images/brands_logo/topo_athletic.webp";
+import Vibram_logo from "../assets/images/brands_logo/vibram.webp";
+import XeroShoes_logo from "../assets/images/brands_logo/xero_shoes.webp";
 
 interface Brand {
   id: string;
