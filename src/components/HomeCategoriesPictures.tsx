@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import CasualCategory from "../assets/Categories_pictures/casual_category.webp";
-import GymCategory from "../assets/Categories_pictures/gym_category.webp";
-import RunningCategory from "../assets/Categories_pictures/running_category.webp";
-import TrailCategory from "../assets/Categories_pictures/trail_category.webp";
-import YogaCategory from "../assets/Categories_pictures/yoga_categorie.webp";
+import CasualCategory from "../assets/images/Categories_pictures/casual_category.webp";
+import GymCategory from "../assets/images/Categories_pictures/gym_category.webp";
+import RunningCategory from "../assets/images/Categories_pictures/running_category.webp";
+import TrailCategory from "../assets/images/Categories_pictures/trail_category.webp";
+import YogaCategory from "../assets/images/Categories_pictures/yoga_categorie.webp";
 
 // Variables CSS
 const CategorieCard = {

@@ -2,7 +2,7 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { FaChevronRight } from "react-icons/fa";
-import Cross_separator from "../assets/CrossSection.svg";
+import Cross_separator from "../assets/images/CrossSection.svg";
 
 function BestSales() {
   return (

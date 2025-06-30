@@ -3,10 +3,10 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 //Import des Logos
-import EasyReturn_logo from "../assets/Services_logo/EasyReturn.webp";
-import FastDelivery_logo from "../assets/Services_logo/livraison_rapide.webp";
-import Pickup_logo from "../assets/Services_logo/point_de_retrait.webp";
-import ShoeService_logo from "../assets/Services_logo/shoe_service.webp";
+import EasyReturn_logo from "../assets/images/Services_logo/EasyReturn.webp";
+import FastDelivery_logo from "../assets/images/Services_logo/livraison_rapide.webp";
+import Pickup_logo from "../assets/images/Services_logo/point_de_retrait.webp";
+import ShoeService_logo from "../assets/images/Services_logo/shoe_service.webp";
 
 /* ---------------------- Composant TypeScript ---------------------- */
 
