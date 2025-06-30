@@ -36,17 +36,15 @@ function ServicesBanner() {
 /* ---------------------- Style avec Emotion ---------------------- */
 
 const ServicesContainer = styled.div`
-  height: auto;
-  width: 100%;
   display: flex;
+  justify-content: space-between;
   margin: 3rem 0;
 `;
 
 const ServicesColumn = css`
-  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  text-align: center;
   border-right: 1px solid #adadad;
   font-weight: 1000;
 
@@ -58,8 +56,7 @@ const ServicesColumn = css`
 const ServicesLogoImg = css`
   opacity: 70%;
   margin-bottom: 1.3rem;
-  height: 80px;
-  width: auto;
+  height: 70px;
   object-fit: contain;
 `;
 
