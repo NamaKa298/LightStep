@@ -1,0 +1,49 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "init-db": "ts-node scripts/init-db.ts",
+    "migrate-full": "ts-node scripts/migrate-full.ts",
+    "test-api": "ts-node scripts/tests/test-api.ts",
+    "test-create": "ts-node scripts/tests/test-create-product.ts",
+    "test-check": "ts-node scripts/tests/test-check-table.ts",
+    "test-read": "ts-node scripts/tests/test-crud-read.ts",
+    "test-update": "ts-node scripts/tests/test-crud-update.ts",
+    "test-delete": "ts-node scripts/tests/test-crud-delete.ts",
+    "list-db": "ts-node scripts/list-databases.ts",
+    "list-tables": "ts-node scripts/list-tables.ts",
+    "add-interactive": "ts-node scripts/add-product-interactive.ts",
+    "add-json": "ts-node scripts/add-from-json.ts",
+    "show-db-location": "ts-node scripts/show-db-location.ts",
+    "export-production": "ts-node scripts/export-for-production.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.0.4",
+    "@types/pg": "^8.15.4",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}

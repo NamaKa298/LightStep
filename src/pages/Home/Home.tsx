@@ -5,6 +5,7 @@ import Footer from "../../components/Footer";
 import HomeCategoriesPictures from "../../components/HomeCategoriesPictures";
 import InfiniteBrandsSlider from "../../components/InfiniteBrandsSlider";
 import NavBar from "../../components/NavBar";
+import ProductsList from "../../components/ProductsList";
 import ServicesBanner from "../../components/ServicesBanner";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <NavBar />
         <HomeCategoriesPictures />
         <BestSales />
+        <ProductsList />
         <InfiniteBrandsSlider />
         <ContactWidget />
         <ServicesBanner />
