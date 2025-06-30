@@ -8,7 +8,7 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/nouvelle-page",
+    path: "/ShoppingList",
     element: <ShoppingList />,
   },
 ]);
