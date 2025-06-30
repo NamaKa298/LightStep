@@ -45,7 +45,6 @@ const ServicesColumn = css`
   display: flex;
   flex-direction: column;
   text-align: center;
-  border-right: 1px solid #adadad;
   font-weight: 1000;
 
   &:last-child {

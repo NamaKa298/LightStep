@@ -1,18 +1,18 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import NewsLetterForm from "./NewsLetterForm";
+import NewsLetterForm from "../NewsLetterForm";
 
 //Import des React icons
 import { FaFacebookSquare, FaInstagramSquare } from "react-icons/fa";
-import LightStepLogo from "../assets/images/LightStep_logo.webp";
+import LightStepLogo from "../../assets/images/LightStep_logo.webp";
 
 //Import des Logos
-import EntrepriseFrançaise_logo from "../assets/images/footer_logos/entreprise_française.webp";
-import Master_logo from "../assets/images/footer_logos/master-ico.webp";
-import Payment_logo from "../assets/images/footer_logos/modes_de_paiement.webp";
-import Paypal_logo from "../assets/images/footer_logos/paypal-ico.webp";
-import Visa_logo from "../assets/images/footer_logos/visa-ico.webp";
+import EntrepriseFrançaise_logo from "../../assets/images/footer_logos/entreprise_française.webp";
+import Master_logo from "../../assets/images/footer_logos/master-ico.webp";
+import Payment_logo from "../../assets/images/footer_logos/modes_de_paiement.webp";
+import Paypal_logo from "../../assets/images/footer_logos/paypal-ico.webp";
+import Visa_logo from "../../assets/images/footer_logos/visa-ico.webp";
 
 /* ---------------------- Composant TypeScript ---------------------- */
 
