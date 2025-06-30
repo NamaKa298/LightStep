@@ -2,6 +2,7 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { FaChevronRight } from "react-icons/fa";
 import Cross_separator from "../assets/CrossSection.svg";
 
 // Import des logos
@@ -89,9 +90,9 @@ const InfiniteBrandsSlider: React.FC = () => {
   }, [isPaused, animate]);
 
   return (
-    <>
+    <OurBrandsSection>
       <div css={CrossSeparator}>
-        <TitleSection>Nos Marques</TitleSection>
+        <SectionTitle>Nos Marques</SectionTitle>
         <img src={Cross_separator} alt="" />
       </div>
       <Separator />
@@ -102,9 +103,18 @@ const InfiniteBrandsSlider: React.FC = () => {
           ))}
         </Slider>
       </SliderContainer>
-    </>
+      <CtaButton>
+        See all brands <FaChevronRight style={{ marginLeft: "0.5em", verticalAlign: "middle" }} />
+      </CtaButton>
+    </OurBrandsSection>
   );
 };
+
+/* ---------------------- Style avec Emotion ---------------------- */
+
+const OurBrandsSection = styled.section`
+  margin: 10rem 0;
+`;
 
 const CrossSeparator = css`
   display: flex;
@@ -113,7 +123,7 @@ const CrossSeparator = css`
   width: 100%;
 `;
 
-const TitleSection = styled.h1`
+const SectionTitle = styled.h1`
   color: #004e36;
   font-family: "Montserra", sans-serif;
   font-size: 24px;
@@ -130,7 +140,7 @@ const SliderContainer = styled.div`
   overflow: hidden;
   width: 100%;
   position: relative;
-  margin: 2rem 0;
+  margin: 2rem 0 4rem 0;
   padding: 1rem 0;
 
   &::before,
@@ -178,6 +188,24 @@ const Logo = styled.img`
   @media (max-width: 768px) {
     height: 70px;
     margin: 0 20px;
+  }
+`;
+
+const CtaButton = styled.button`
+  padding: 0.75rem 1.2rem;
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0 auto;
+  display: block;
+  background-color: #006b4b;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+
+  &:hover {
+    background-color: #004e36;
+    box-shadow: 0 0 6px #028a61;
+    cursor: pointer;
   }
 `;
 

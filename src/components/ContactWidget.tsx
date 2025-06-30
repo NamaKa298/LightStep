@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 import axios from "axios";
 import React, { useState } from "react";
 import { HiChatBubbleLeftRight } from "react-icons/hi2";
+import { RxCross2 } from "react-icons/rx";
 interface FormData {
   name: string;
   email: string;
@@ -111,7 +112,7 @@ const ContactWidget: React.FC = () => {
       )}
 
       <button onClick={toggleWidget} css={toggleButtonStyle}>
-        {isOpen ? "×" : <HiChatBubbleLeftRight size={36} />}
+        {isOpen ? <RxCross2 size={30} /> : <HiChatBubbleLeftRight size={36} />}
       </button>
     </div>
   );
