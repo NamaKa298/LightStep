@@ -1,6 +1,7 @@
 import Band from "./Band";
 import InfiniteSlider from "./InfiniteSlider";
 import NavBar from "./NavBar";
+import ProductsList from "./ProductsList";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <NavBar />
       <div className="container">
         <InfiniteSlider />
+        <ProductsList />
       </div>
     </>
   );

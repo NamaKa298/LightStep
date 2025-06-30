@@ -1,30 +1,14 @@
 import express from "express";
 import cors from "cors";
 import productsRouter from "./routes/products";
+import authRouter, {
+  authenticateToken,
+  requireAdmin as authRequireAdmin,
+} from "./routes/auth";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// 🔒 Middleware de sécurité pour les modifications
-const requireAdmin = (req: any, res: any, next: any) => {
-  // Pour les routes de lecture (GET), tout le monde peut accéder
-  if (req.method === 'GET') {
-    return next();
-  }
-  
-  // Pour les modifications (POST, PUT, DELETE), vérifier l'origine
-  const allowedOrigins = ['localhost', '127.0.0.1'];
-  const origin = req.get('host') || '';
-  
-  if (!allowedOrigins.some(allowed => origin.includes(allowed))) {
-    return res.status(403).json({
-      error: "❌ Accès interdit - Modifications réservées à l'administrateur",
-      message: "Seules les consultations sont autorisées"
-    });
-  }
-  next();
-};
 
 // Route de base pour tester si l'API fonctionne
 app.get("/", (req, res) => {
@@ -33,6 +17,7 @@ app.get("/", (req, res) => {
     version: "1.0.0",
     endpoints: {
       products: "/api/products",
+      auth: "/api/auth",
       health: "/health",
     },
   });
@@ -47,7 +32,24 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.use("/api/products", requireAdmin, productsRouter);
+// Routes d'authentification
+app.use("/api/auth", authRouter);
+
+// Routes produits avec protection appropriée
+const router = express.Router();
+
+// GET : public (tout le monde peut voir les produits)
+router.get("/", productsRouter);
+router.get("/:id", productsRouter);
+
+// POST, PUT, DELETE : nécessitent authentification admin
+router.use(authenticateToken);
+router.use(authRequireAdmin);
+router.post("/", productsRouter);
+router.put("/:id", productsRouter);
+router.delete("/:id", productsRouter);
+
+app.use("/api/products", router);
 
 const PORT = 3001;
 app.listen(PORT, () => {

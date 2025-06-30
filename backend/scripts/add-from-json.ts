@@ -10,6 +10,15 @@ interface Product {
   activity: string;
   gender: string;
   size: number[];
+  description?: string;
+  image_url?: string;
+  images?: string[];
+  stock?: number;
+  rating?: number;
+  review_count?: number;
+  color?: string;
+  colors?: string[];
+  news?: boolean; // Ajout de la propriété news
 }
 
 async function addFromJSON() {
@@ -35,8 +44,8 @@ async function addFromJSON() {
     );
 
     const query = `
-      INSERT INTO products (name, brand, price, type, activity, gender, size) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO products (name, brand, price, type, activity, gender, size, description, image_url, images, stock, rating, review_count, color, colors) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
       RETURNING *;
     `;
 
@@ -52,6 +61,14 @@ async function addFromJSON() {
         product.activity,
         product.gender,
         product.size,
+        product.description || null,
+        product.image_url || null,
+        product.images || null,
+        product.stock || 0,
+        product.rating || 0.0,
+        product.review_count || 0,
+        product.color || null,
+        product.colors || null,
       ];
 
       const result = await pool.query(query, values);

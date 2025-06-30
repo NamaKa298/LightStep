@@ -23,7 +23,17 @@ router.post("/", async (req: any, res: any) => {
 router.get("/", async (req: any, res: any) => {
   try {
     const { rows } = await pool.query("SELECT * FROM products ORDER BY id");
-    res.json(rows);
+
+    // Convertir les ratings et review_count en nombres
+    const productsWithNumericRatings = rows.map((product) => ({
+      ...product,
+      rating: product.rating ? parseFloat(product.rating) : null,
+      review_count: product.review_count
+        ? parseInt(product.review_count)
+        : null,
+    }));
+
+    res.json(productsWithNumericRatings);
   } catch (error) {
     console.error("Erreur lors de la récupération:", error);
     res
@@ -44,7 +54,16 @@ router.get("/:id", async (req: any, res: any) => {
       return res.status(404).json({ error: "Produit non trouvé" });
     }
 
-    res.json(rows[0]);
+    // Convertir les ratings en nombres
+    const product = {
+      ...rows[0],
+      rating: rows[0].rating ? parseFloat(rows[0].rating) : null,
+      review_count: rows[0].review_count
+        ? parseInt(rows[0].review_count)
+        : null,
+    };
+
+    res.json(product);
   } catch (error) {
     console.error("Erreur lors de la récupération:", error);
     res

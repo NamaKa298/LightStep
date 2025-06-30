@@ -23,6 +23,7 @@ async function exportData() {
         activity: product.activity,
         gender: product.gender,
         size: product.size,
+        news: product.news,
       })),
     };
 
