@@ -185,19 +185,19 @@ function NavBar() {
                 <div css={dropDownCategoriesTitle}>Par activités</div>
                 <ul css={dropDownUnorderList}>
                   <li css={dropDownList}>
-                    <a href="#">Running / Athlétisme</a>
+                    <a href="#">Running</a>
                   </li>
                   <li css={dropDownList}>
-                    <a href="#">Trail / Outdoor</a>
+                    <a href="#">Fitness</a>
                   </li>
                   <li css={dropDownList}>
-                    <a href="#">Fitness / Crossfit</a>
+                    <a href="#">Trail</a>
                   </li>
                   <li css={dropDownList}>
-                    <a href="#">Yoga / Pilate / Danse</a>
+                    <a href="#">Casual</a>
                   </li>
                   <li css={dropDownList}>
-                    <a href="#">Ville</a>
+                    <a href="#">Yoga</a>
                   </li>
                 </ul>
               </div>
@@ -282,19 +282,19 @@ function NavBar() {
                 <div css={dropDownCategoriesTitle}>Par activités</div>
                 <ul css={dropDownUnorderList}>
                   <li css={dropDownList}>
-                    <a href="#">Running / Athlétisme</a>
+                    <a href="#">Running</a>
                   </li>
                   <li css={dropDownList}>
-                    <a href="#">Trail / Outdoor</a>
+                    <a href="#">Fitness</a>
                   </li>
                   <li css={dropDownList}>
-                    <a href="#">Fitness / Crossfit</a>
+                    <a href="#">Trail</a>
                   </li>
                   <li css={dropDownList}>
-                    <a href="#">Yoga / Pilate / Danse</a>
+                    <a href="#">Casual</a>
                   </li>
                   <li css={dropDownList}>
-                    <a href="#">Ville</a>
+                    <a href="#">Yoga</a>
                   </li>
                 </ul>
               </div>
