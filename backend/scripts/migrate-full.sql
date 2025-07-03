@@ -106,10 +106,22 @@ DROP COLUMN IF EXISTS news;
 ALTER TABLE products 
 ADD COLUMN IF NOT EXISTS news BOOLEAN DEFAULT FALSE;
 */
-UPDATE products
-SET news = TRUE
-WHERE id = 1;
 
 UPDATE products
-SET news = FALSE
-WHERE id = 2;
+SET size = ARRAY[36, 37, 38, 39]
+WHERE id = 3;
+
+INSERT INTO categories (...)
+VALUES (ARRAY[36, 37, 38, 39, 40, 41, 43, 43, 44, 45, 46, 47, 48],
+ARRAY['red', 'black', 'blue', 'green', 'yellow', 'white', 'purple', 'pink', 'orange', 'brown', 'gray', 'gold', 'silver'],
+[TRUE, FALSE],
+ARRAY['male', 'female', 'unisex'],
+ARRAY['Vibram FiveFingers', 'Xero Shoes', 'Merrell', 'Altra', 'Aylla', 'Gumbies', 'Inov-8', 'Topo', 'Skinners', 'Luna Sandals'],
+ARRAY['running', 'fitness', 'trail', 'casual', 'yoga'],
+ARRAY[50,200],
+ARRAY[0, 1, 2, 34],
+ARRAY[ 'road', 'trail'],
+ARRAY['minimalist_shoes', 'socks_shoes'],
+ARRAY['light', 'medium', 'heavy'],
+ARRAY['regular', 'wide', 'narrow'],
+ARRAY[0, 1, 2, 3, 5]);

@@ -1,0 +1,98 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Five Fingers Kso Evo Homme",
+      "brand": "Vibram Five Fingers",
+      "price": "150.00",
+      "size": [
+        41,
+        44,
+        45,
+        46,
+        47
+      ],
+      "type": "minimalist_shoes",
+      "activity": "running",
+      "gender": "man",
+      "image_url": "https://www.vibram.fr/13171-home_default/vibram-five-fingers-kso-evo-homme.jpg",
+      "stock": 25,
+      "description": "La populaire KSO de Vibram Five Fingers est de retour avec des améliorations notables comme la semelle ultra fine de Vibram qui a été catégorisée Max-Feel (sensation maxi) et un système de laçage rapide ultra efficace.",
+      "rating": "4.5",
+      "review_count": 127,
+      "images": [
+        "https://www.vibram.fr/12835-home_default/vibram-five-fingers-kso-evo-homme.jpg",
+        "https://www.vibram.fr/12836-home_default/vibram-five-fingers-kso-evo-homme.jpg",
+        "https://www.vibram.fr/12837-home_default/vibram-five-fingers-kso-evo-homme.jpg",
+        "https://www.vibram.fr/12838-home_default/vibram-five-fingers-kso-evo-homme.jpg",
+        "https://www.vibram.fr/12839-home_default/vibram-five-fingers-kso-evo-homme.jpg"
+      ],
+      "color": null,
+      "colors": null,
+      "news": true
+    },
+    {
+      "id": 2,
+      "name": "Vibram One Quarter Femme Slipon",
+      "brand": "Vibram Five Fingers",
+      "price": "85.00",
+      "size": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "type": "minimalist_shoes",
+      "activity": "casual",
+      "gender": "female",
+      "image_url": "https://www.vibram.fr/11574-home_default/vibram-one-quarter-femme-slipon-a.jpg",
+      "stock": 25,
+      "description": "Super pour les journées de pluie devant le feu de cheminée.",
+      "rating": "4.5",
+      "review_count": 127,
+      "images": [
+        "https://www.vibram.fr/11075-home_default/vibram-one-quarter-femme-slipon-a.jpg"
+      ],
+      "color": "noir",
+      "colors": [
+        "black",
+        "red"
+      ],
+      "news": false
+    },
+    {
+      "id": 3,
+      "name": "Five Fingers V-Run Femme blue",
+      "brand": "Vibram Five Fingers",
+      "price": "160.00",
+      "size": [
+        36,
+        37,
+        38,
+        39
+      ],
+      "type": "minimalist_shoes",
+      "activity": "running",
+      "gender": "female",
+      "image_url": "https://images.hardloop.fr/507215/vibram-five-fingers-v-run-chaussures-running-femme.jpg?w=auto&h=auto&q=80",
+      "stock": 0,
+      "description": "Les Vibram FiveFingers V-Run sont les chaussures 5 doigts idéales pour les fans de la course sur route ou piste ainsi que pour les coureuses qui souhaitent s'initier à la course minimaliste d'une façon progressive.",
+      "rating": "5.0",
+      "review_count": 5,
+      "images": [
+        "https://images.hardloop.fr/507213-small_default/vibram-five-fingers-v-run-chaussures-running-femme.jpg?w=auto&h=auto&q=80",
+        "https://images.hardloop.fr/507214-small_default/vibram-five-fingers-v-run-chaussures-running-femme.jpg?w=auto&h=auto&q=80",
+        "https://images.hardloop.fr/507215-small_default/vibram-five-fingers-v-run-chaussures-running-femme.jpg?w=auto&h=auto&q=80"
+      ],
+      "color": null,
+      "colors": [
+        "blue"
+      ],
+      "news": false
+    }
+  ],
+  "exportDate": "2025-07-03T12:54:46.392Z",
+  "totalProducts": 3
+}
