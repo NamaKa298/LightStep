@@ -2,9 +2,11 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { FaChevronRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import Cross_separator from "../assets/images/CrossSection.svg";
 
 function BestSales() {
+  const navigate = useNavigate();
   return (
     <BestSalesSection>
       <div css={CrossSeparator}>
@@ -12,7 +14,7 @@ function BestSales() {
         <img src={Cross_separator} alt="" />
       </div>
       <Separator />
-      <CtaButton>
+      <CtaButton onClick={() => navigate("/ShoppingList")}>
         Je découvre <FaChevronRight style={{ marginLeft: "0.5em", verticalAlign: "middle" }} />
       </CtaButton>
     </BestSalesSection>
