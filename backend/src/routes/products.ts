@@ -1,5 +1,6 @@
 import express from "express";
 import { pool } from "../db";
+import { addImageUrlsToProducts } from "../image-utils";
 
 const router = express.Router();
 
@@ -22,7 +23,9 @@ router.post("/", async (req: any, res: any) => {
 // Récupérer tous les produits
 router.get("/", async (req: any, res: any) => {
   try {
-    const { rows } = await pool.query("SELECT * FROM products ORDER BY id");
+    const { rows } = await pool.query(
+      "SELECT * FROM products WHERE is_active = true ORDER BY id"
+    );
 
     // Convertir les ratings et review_count en nombres
     const productsWithNumericRatings = rows.map((product) => ({
@@ -33,7 +36,15 @@ router.get("/", async (req: any, res: any) => {
         : null,
     }));
 
-    res.json(productsWithNumericRatings);
+    // 🚀 AJOUT : Reconstruire automatiquement les URLs d'images
+    console.log("🔧 Reconstruction des URLs d'images...");
+    const productsWithUrls = addImageUrlsToProducts(productsWithNumericRatings);
+    console.log(
+      "✅ URLs reconstruites, exemple:",
+      productsWithUrls[0]?.image_url_full
+    );
+
+    res.json(productsWithUrls);
   } catch (error) {
     console.error("Erreur lors de la récupération:", error);
     res

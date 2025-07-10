@@ -13,7 +13,8 @@ type Product = {
   activity?: string;
   gender?: string;
   description?: string;
-  image_url?: string;
+  image_url?: string; // Nom du fichier stocké en base
+  image_url_full?: string; // URL complète reconstruite par l'API
   images?: string[];
   stock?: number;
   rating?: number;
@@ -27,21 +28,27 @@ export default function ProductsList() {
 
   useEffect(() => {
     fetch("http://localhost:3001/api/products")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        return res.json();
+      })
       .then((data) => {
-        console.log("🔍 Données reçues:", data);
+        console.log("✅ Produits chargés:", data.length);
         setProducts(data);
       })
       .catch((error) => {
-        console.error("Erreur lors du chargement des produits:", error);
+        console.error("❌ Erreur:", error.message);
       });
   }, []);
 
   const productsTable = css`
     display: flex;
     flex-direction: row;
-    font-family: "Montserra", sans-serif;
+    font-family: "Montserrat", sans-serif;
   `;
+
   const productModel = css`
     font-size: 15px;
     font-weight: 400;
@@ -68,7 +75,11 @@ export default function ProductsList() {
           <div key={product.id}>
             <img
               css={productImage}
-              src={product.image_url}
+              src={
+                product.image_url_full ||
+                product.image_url ||
+                "/placeholder-image.jpg"
+              }
               alt={product.name}
             />
             <h3 css={productModel}>{product.name}</h3>

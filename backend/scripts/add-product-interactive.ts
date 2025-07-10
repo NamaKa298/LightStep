@@ -1,6 +1,21 @@
 import { pool } from "../src/db";
 import * as readline from "readline";
 
+/**
+ * Script d'ajout interactif de produits
+ *
+ * UTILISATION :
+ * - Exécutez : npm run add-interactive
+ * - Répondez aux questions pour ajouter un produit
+ * - Compatible avec le nouveau schéma SQL optimisé
+ *
+ * CHAMPS GÉRÉS :
+ * - Obligatoires : name, brand, price, sizes
+ * - Sélection guidée : type, category, gender
+ * - Optionnels : description, stock, color
+ * - Auto : is_active=true, autres champs par défaut
+ */
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -37,48 +52,70 @@ async function addProductInteractive() {
     const sizes = parseSizes(sizeInput);
 
     console.log("\n🔖 Type de chaussure :");
-    console.log("   1. minimalist_shoes");
-    console.log("   2. zero_drop");
-    console.log("   3. casual");
-    console.log("   4. autre");
-    const typeChoice = await askQuestion("   Choix (1-4) : ");
+    console.log("   1. Trail Running");
+    console.log("   2. Minimaliste");
+    console.log("   3. Casual");
+    console.log("   4. Running");
+    console.log("   5. Autre");
+    const typeChoice = await askQuestion("   Choix (1-5) : ");
     const typeMap = {
-      "1": "minimalist_shoes",
-      "2": "zero_drop",
-      "3": "casual",
-      "4": "autre",
+      "1": "Trail Running",
+      "2": "Minimaliste",
+      "3": "Casual",
+      "4": "Running",
+      "5": "Autre",
     };
-    const type = typeMap[typeChoice as keyof typeof typeMap] || "autre";
+    const type = typeMap[typeChoice as keyof typeof typeMap] || "Autre";
 
-    console.log("\n🏃 Activité :");
-    console.log("   1. running");
-    console.log("   2. trail");
-    console.log("   3. gym");
-    console.log("   4. casual");
-    console.log("   5. autre");
-    const activityChoice = await askQuestion("   Choix (1-5) : ");
-    const activityMap = {
-      "1": "running",
-      "2": "trail",
-      "3": "gym",
-      "4": "casual",
-      "5": "autre",
+    console.log("\n📂 Catégorie :");
+    console.log("   1. trail");
+    console.log("   2. casual");
+    console.log("   3. running");
+    console.log("   4. gym");
+    console.log("   5. yoga");
+    const categoryChoice = await askQuestion("   Choix (1-5) : ");
+    const categoryMap = {
+      "1": "trail",
+      "2": "casual",
+      "3": "running",
+      "4": "gym",
+      "5": "yoga",
     };
-    const activity =
-      activityMap[activityChoice as keyof typeof activityMap] || "autre";
+    const category =
+      categoryMap[categoryChoice as keyof typeof categoryMap] || "casual";
 
     console.log("\n👫 Genre :");
-    console.log("   1. male");
-    console.log("   2. female");
-    console.log("   3. unisex");
+    console.log("   1. M (Homme)");
+    console.log("   2. F (Femme)");
+    console.log("   3. U (Unisex)");
     const genderChoice = await askQuestion("   Choix (1-3) : ");
     const genderMap = {
-      "1": "male",
-      "2": "female",
-      "3": "unisex",
+      "1": "M",
+      "2": "F",
+      "3": "U",
     };
-    const gender =
-      genderMap[genderChoice as keyof typeof genderMap] || "unisex";
+    const gender = genderMap[genderChoice as keyof typeof genderMap] || "U";
+
+    // Champs optionnels
+    console.log("\n📝 Description (optionnel) :");
+    const description = await askQuestion("   Description : ");
+
+    // Stock par taille
+    console.log("\n📦 Stock par taille :");
+    console.log(
+      "   Entrez le stock pour chaque taille (appuyez sur Entrée pour 0)"
+    );
+    const stock: number[] = [];
+
+    for (let i = 0; i < sizes.length; i++) {
+      const size = sizes[i];
+      const stockInput = await askQuestion(`   📏 Taille ${size} - Stock : `);
+      const sizeStock = stockInput ? parseInt(stockInput) : 0;
+      stock.push(isNaN(sizeStock) ? 0 : sizeStock);
+    }
+
+    console.log("\n🎨 Couleur principale (optionnel) :");
+    const color = await askQuestion("   Couleur : ");
 
     // Validation
     if (!name || !brand || isNaN(price) || sizes.length === 0) {
@@ -89,13 +126,22 @@ async function addProductInteractive() {
     // Récapitulatif
     console.log("\n📋 RÉCAPITULATIF :");
     console.log("=".repeat(40));
-    console.log(`📝 Nom      : ${name}`);
-    console.log(`🏷️  Marque   : ${brand}`);
-    console.log(`💰 Prix     : ${price}€`);
-    console.log(`📏 Tailles  : ${sizes.join(", ")}`);
-    console.log(`🔖 Type     : ${type}`);
-    console.log(`🏃 Activité : ${activity}`);
-    console.log(`👫 Genre    : ${gender}`);
+    console.log(`📝 Nom       : ${name}`);
+    console.log(`🏷️  Marque    : ${brand}`);
+    console.log(`💰 Prix      : ${price}€`);
+    console.log(`📏 Tailles   : ${sizes.join(", ")}`);
+    console.log(`🔖 Type      : ${type}`);
+    console.log(`📂 Catégorie : ${category}`);
+    console.log(`👫 Genre     : ${gender}`);
+    if (description) console.log(`📝 Description : ${description}`);
+
+    // Affichage du stock par taille
+    console.log("📦 Stock par taille :");
+    for (let i = 0; i < sizes.length; i++) {
+      console.log(`   📏 Taille ${sizes[i]} : ${stock[i]} unité(s)`);
+    }
+
+    if (color) console.log(`🎨 Couleur   : ${color}`);
 
     const confirm = await askQuestion("\n✅ Confirmer l'ajout ? (o/n) : ");
 
@@ -107,12 +153,24 @@ async function addProductInteractive() {
     // Insertion en base
     console.log("\n🚀 Ajout en cours...");
     const query = `
-      INSERT INTO products (name, brand, price, type, activity, gender, size) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO products (name, brand, price, type, category, gender, sizes, is_active, stock, description, color) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
       RETURNING *;
     `;
 
-    const values = [name, brand, price, type, activity, gender, sizes];
+    const values = [
+      name,
+      brand,
+      price,
+      type,
+      category,
+      gender,
+      sizes,
+      true, // is_active par défaut
+      stock,
+      description || null,
+      color || null,
+    ];
     const result = await pool.query(query, values);
 
     console.log(`✅ Produit ajouté avec succès !`);
