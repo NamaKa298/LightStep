@@ -105,7 +105,7 @@ DROP COLUMN IF EXISTS news;
 
 ALTER TABLE products 
 ADD COLUMN IF NOT EXISTS news BOOLEAN DEFAULT FALSE;
-*/
+
 
 UPDATE products
 SET size = ARRAY[36, 37, 38, 39]
@@ -125,3 +125,5 @@ ARRAY['minimalist_shoes', 'socks_shoes'],
 ARRAY['light', 'medium', 'heavy'],
 ARRAY['regular', 'wide', 'narrow'],
 ARRAY[0, 1, 2, 3, 5]);
+*/
+

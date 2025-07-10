@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "name": "Nom du produit",
+    "brand": "Marque",
+    "price": 99.99,
+    "size": [38, 39, 40, 41, 42],
+    "type": "minimalist_shoes",
+    "activity": "running",
+    "gender": "unisex",
+    "image_url": "https://exemple.com/image-principale.jpg",
+    "stock": 50,
+    "description": "Description détaillée du produit...",
+    "rating": 4.5,
+    "review_count": 25,
+    "images": ["https://exemple.com/image1.jpg", "https://exemple.com/image2.jpg", "https://exemple.com/image3.jpg"],
+    "color": "noir",
+    "colors": ["noir", "blanc", "rouge"],
+    "news": true
+  }
+]
