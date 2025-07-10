@@ -1,10 +1,14 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 import productsRouter from "./routes/products";
 import authRouter, {
   authenticateToken,
   requireAdmin as authRequireAdmin,
 } from "./routes/auth";
+
+// Charger les variables d'environnement
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -35,21 +39,8 @@ app.get("/health", (req, res) => {
 // Routes d'authentification
 app.use("/api/auth", authRouter);
 
-// Routes produits avec protection appropriée
-const router = express.Router();
-
-// GET : public (tout le monde peut voir les produits)
-router.get("/", productsRouter);
-router.get("/:id", productsRouter);
-
-// POST, PUT, DELETE : nécessitent authentification admin
-router.use(authenticateToken);
-router.use(authRequireAdmin);
-router.post("/", productsRouter);
-router.put("/:id", productsRouter);
-router.delete("/:id", productsRouter);
-
-app.use("/api/products", router);
+// Routes produits
+app.use("/api/products", productsRouter);
 
 const PORT = 3001;
 app.listen(PORT, () => {
