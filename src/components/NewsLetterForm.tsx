@@ -38,7 +38,7 @@ const NewsLetterFormButton = css`
   color: #000000ae;
 `;
 
-const NewsletterForm = () => {
+function NewsletterForm() {
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -73,6 +73,6 @@ const NewsletterForm = () => {
       </button>
     </NewsLetterForm>
   );
-};
+}
 
 export default NewsletterForm;
