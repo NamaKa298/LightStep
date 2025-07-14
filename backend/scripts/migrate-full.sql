@@ -127,3 +127,13 @@ ARRAY['regular', 'wide', 'narrow'],
 ARRAY[0, 1, 2, 3, 5]);
 */
 
+/* \copy products(name,sale,brand,base_price,weight,type,category,gender,ground_type,stability,drop,rating,"1_star","2_star","3_star","4_star","5_star",review_count,is_recommended,news,sole_details,upper,material,utilisation,care_instructions,description
+) FROM './products.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',', QUOTE '"', ESCAPE '\', NULL '')*/
+
+-- ALTER TABLE types
+-- ALTER COLUMN name TYPE VARCHAR(30);
+
+INSERT INTO uses(name) VALUES
+('Occasionel'),
+('Régulier'),
+('Intensif');
