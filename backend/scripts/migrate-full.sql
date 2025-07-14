@@ -99,29 +99,6 @@ CHECK (review_count >= 0);
 DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS old_unused_table;
 
-
-ALTER TABLE products 
-DROP COLUMN IF EXISTS news;
-
-ALTER TABLE products 
-ADD COLUMN IF NOT EXISTS news BOOLEAN DEFAULT FALSE;
 */
-
-UPDATE products
-SET size = ARRAY[36, 37, 38, 39]
-WHERE id = 3;
-
-INSERT INTO categories (...)
-VALUES (ARRAY[36, 37, 38, 39, 40, 41, 43, 43, 44, 45, 46, 47, 48],
-ARRAY['red', 'black', 'blue', 'green', 'yellow', 'white', 'purple', 'pink', 'orange', 'brown', 'gray', 'gold', 'silver'],
-[TRUE, FALSE],
-ARRAY['male', 'female', 'unisex'],
-ARRAY['Vibram FiveFingers', 'Xero Shoes', 'Merrell', 'Altra', 'Aylla', 'Gumbies', 'Inov-8', 'Topo', 'Skinners', 'Luna Sandals'],
-ARRAY['running', 'fitness', 'trail', 'casual', 'yoga'],
-ARRAY[50,200],
-ARRAY[0, 1, 2, 34],
-ARRAY[ 'road', 'trail'],
-ARRAY['minimalist_shoes', 'socks_shoes'],
-ARRAY['light', 'medium', 'heavy'],
-ARRAY['regular', 'wide', 'narrow'],
-ARRAY[0, 1, 2, 3, 5]);
+ALTER TABLE products
+ALTER COLUMN sole_details TYPE VARCHAR(200);
