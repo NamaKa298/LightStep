@@ -100,5 +100,20 @@ DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS old_unused_table;
 
 */
-ALTER TABLE products
-ALTER COLUMN sole_details TYPE VARCHAR(200);
+
+ALTER TABLE products DROP COLUMN IF EXISTS category_id;
+ALTER TABLE products DROP COLUMN IF EXISTS ground_type_id;
+
+
+-- Créez les tables de jointure
+CREATE TABLE product_categories (
+  product_id INT REFERENCES products(id) ON DELETE CASCADE,
+  category_id INT REFERENCES categories(id) ON DELETE CASCADE,
+  PRIMARY KEY (product_id, category_id)
+);
+
+CREATE TABLE product_ground_types (
+  product_id INT REFERENCES products(id) ON DELETE CASCADE,
+  ground_type_id INT REFERENCES ground_types(id) ON DELETE CASCADE,
+  PRIMARY KEY (product_id, ground_type_id)
+);

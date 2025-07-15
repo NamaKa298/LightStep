@@ -30,15 +30,38 @@ interface Products {
   care_instructions: string;
   description: string;
 }
+
+interface ProductCategory {
+  name: string;
+  category: string;
+}
+
+interface ProductGroundType {
+  name: string;
+  ground_type: string;
+}
+
 async function importProducts() {
   const client = await pool.connect();
 
   try {
-    // 1. Lire le fichier CSV
-    const csvData = fs.readFileSync("products.csv", "utf8");
+    await client.query("BEGIN");
+
+    // 1. Importer les produits
+    const csvData = fs.readFileSync("seed_data/products.csv", "utf8");
     const products: Products[] = parse(csvData, { columns: true });
 
     for (const p of products) {
+      const existingProduct = await client.query(
+        "SELECT id FROM products WHERE name = $1",
+        [p.name]
+      );
+
+      if (existingProduct.rows.length > 0) {
+        console.log(`⏩ Skipping (le produit existe déjà): ${p.name}`);
+        continue;
+      }
+
       const brand_id = (
         await client.query("SELECT id FROM brands WHERE name = $1", [p.brand])
       ).rows[0]?.id;
@@ -47,54 +70,20 @@ async function importProducts() {
         await client.query("SELECT id FROM types WHERE name = $1", [p.type])
       ).rows[0]?.id;
 
-      const category_id = (
-        await client.query("SELECT id FROM categories WHERE name = $1", [
-          p.category,
-        ])
-      ).rows[0]?.id;
-
       const gender_id = (
         await client.query("SELECT id FROM genders WHERE name = $1", [p.gender])
       ).rows[0]?.id;
 
-      const ground_type_id = (
-        await client.query("SELECT id FROM ground_types WHERE name = $1", [
-          p.ground_type,
-        ])
-      ).rows[0]?.id;
-
-      await client.query(
+      const productInsert = await client.query(
         `
         INSERT INTO products (
-          sale,
-          name,
-          brand_id,
-          base_price,
-          weight,
-          type_id,
-          category_id,
-          gender_id,
-          ground_type_id,
-          stability,
-          drop,
-          rating,
-          "1_star",
-          "2_star",
-          "3_star",
-          "4_star",
-          "5_star",
-          review_count,
-          is_recommended,
-          news,
-          sole_details,
-          upper,
-          material,
-          uses,
-          care_instructions,
-          description
-
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
-      `,
+          sale, name, brand_id, base_price, weight, type_id, gender_id,
+          stability, drop, rating, "1_star", "2_star", "3_star", "4_star",
+          "5_star", review_count, is_recommended, news, sole_details, upper,
+          material, uses, care_instructions, description
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
+        RETURNING id
+        `,
         [
           p.sale,
           p.name,
@@ -102,9 +91,7 @@ async function importProducts() {
           p.base_price,
           p.weight,
           type_id,
-          category_id,
           gender_id,
-          ground_type_id,
           p.stability,
           p.drop,
           p.rating,
@@ -124,9 +111,61 @@ async function importProducts() {
           p.description,
         ]
       );
-
-      console.log(`✅ ${p.name} importé`);
+      const productId = productInsert.rows[0].id;
+      console.log(`✅ ${p.name} importé (ID: ${productId})`);
     }
+
+    // 2. Importer les associations produits-catégories
+    const csvCategoriesData = fs.readFileSync(
+      "seed_data/product_categories.csv",
+      "utf8"
+    );
+    const categories: ProductCategory[] = parse(csvCategoriesData, {
+      columns: true,
+    });
+
+    for (const c of categories) {
+      // Récupérer l'ID de la catégorie
+      const categoryRes = await client.query(
+        "SELECT id FROM categories WHERE name = $1",
+        [c.category]
+      );
+      const category_id = categoryRes.rows[0]?.id;
+
+      // Récupérer l'ID du produit
+      const productRes = await client.query(
+        "SELECT id FROM products WHERE name = $1",
+        [c.name]
+      );
+      const product_id = productRes.rows[0]?.id;
+
+      if (category_id && product_id) {
+        // Vérifier si l'association existe déjà
+        const existingLink = await client.query(
+          "SELECT 1 FROM product_categories WHERE product_id = $1 AND category_id = $2",
+          [product_id, category_id]
+        );
+
+        if (existingLink.rows.length === 0) {
+          await client.query(
+            "INSERT INTO product_categories (product_id, category_id) VALUES ($1, $2)",
+            [product_id, category_id]
+          );
+          console.log(`   ↳ Catégorie assignée: ${c.category} à ${c.name}`);
+        }
+      } else {
+        if (!category_id)
+          console.warn(`⚠️ Catégorie non trouvée: ${c.category}`);
+        if (!product_id) console.warn(`⚠️ Produit non trouvé: ${c.name}`);
+      }
+    }
+
+    await client.query("COMMIT");
+    console.log("🎉 Import terminé avec succès!");
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Erreur lors de l'import:", err);
+    throw err;
   } finally {
     client.release();
     await pool.end();
