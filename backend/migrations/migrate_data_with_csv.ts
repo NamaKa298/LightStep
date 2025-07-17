@@ -41,6 +41,16 @@ interface ProductGroundType {
   ground_type: string;
 }
 
+interface VariantsProduct {
+  name: string;
+  sku: string;
+  sizes: string;
+  colors: string;
+  stocks: number;
+  price: number;
+  is_active: boolean;
+}
+
 async function importProducts() {
   const client = await pool.connect();
 
@@ -120,6 +130,7 @@ async function importProducts() {
       "seed_data/product_categories.csv",
       "utf8"
     );
+
     const categories: ProductCategory[] = parse(csvCategoriesData, {
       columns: true,
     });
@@ -158,6 +169,105 @@ async function importProducts() {
           console.warn(`⚠️ Catégorie non trouvée: ${c.category}`);
         if (!product_id) console.warn(`⚠️ Produit non trouvé: ${c.name}`);
       }
+    }
+
+    // 2. Importer les associations produits-ground_types
+    const csvGroundTypesData = fs.readFileSync(
+      "seed_data/product_ground_types.csv",
+      "utf8"
+    );
+
+    const ground_types: ProductGroundType[] = parse(csvGroundTypesData, {
+      columns: true,
+    });
+
+    for (const gt of ground_types) {
+      // Récupérer l'ID de la catégorie
+      const groundTypeRes = await client.query(
+        "SELECT id FROM ground_types WHERE name = $1",
+        [gt.ground_type]
+      );
+      const ground_type_id = groundTypeRes.rows[0]?.id;
+
+      // Récupérer l'ID du produit
+      const productRes = await client.query(
+        "SELECT id FROM products WHERE name = $1",
+        [gt.name]
+      );
+      const product_id = productRes.rows[0]?.id;
+
+      if (ground_type_id && product_id) {
+        // Vérifier si l'association existe déjà
+        const existingLink = await client.query(
+          "SELECT 1 FROM product_ground_types WHERE product_id = $1 AND ground_type_id = $2",
+          [product_id, ground_type_id]
+        );
+
+        if (existingLink.rows.length === 0) {
+          await client.query(
+            "INSERT INTO product_ground_types (product_id, ground_type_id) VALUES ($1, $2)",
+            [product_id, ground_type_id]
+          );
+          console.log(
+            `   ↳ Ground Type assignée: ${gt.ground_type} à ${gt.name}`
+          );
+        }
+      } else {
+        if (!ground_type_id)
+          console.warn(`⚠️ Ground Type non trouvée: ${gt.ground_type}`);
+        if (!product_id) console.warn(`⚠️ Produit non trouvé: ${gt.name}`);
+      }
+    }
+
+    const csvVariantsProductData = fs.readFileSync(
+      "seed_data/product_variants.csv",
+      "utf8"
+    );
+    const product_variants: VariantsProduct[] = parse(csvVariantsProductData, {
+      columns: true,
+    });
+
+    for (const vp of product_variants) {
+      const existingVariant = await client.query(
+        "SELECT sku FROM product_variants WHERE sku = $1",
+        [vp.sku]
+      );
+
+      if (existingVariant.rows.length > 0) {
+        console.log(`⏩ Variante existante ignorée: ${vp.sku}`);
+        continue;
+      }
+
+      const product_id = (
+        await client.query("SELECT id FROM products WHERE name = $1", [vp.name])
+      ).rows[0]?.id;
+
+      const size_id = (
+        await client.query("SELECT id FROM sizes WHERE eu_size = $1", [
+          vp.sizes,
+        ])
+      ).rows[0]?.id;
+
+      const color_id = (
+        await client.query("SELECT id FROM colors WHERE name = $1", [vp.colors])
+      ).rows[0]?.id;
+
+      const variantInsert = await client.query(
+        `
+        INSERT INTO product_variants (
+          product_id, sku, size_id, color_id, stock, price, is_active
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+        `,
+        [
+          product_id,
+          vp.sku,
+          size_id,
+          color_id,
+          vp.stocks,
+          vp.price,
+          vp.is_active,
+        ]
+      );
     }
 
     await client.query("COMMIT");

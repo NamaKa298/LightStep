@@ -38,7 +38,7 @@ export function buildImageUrl(imageName: string | null): string | null {
  * @param products Produits avec champ image_url (nom uniquement)
  * @returns Produits avec image_url_full ajouté
  */
-export function addImageUrlsToProducts(products: any[]): any[] {
+export function addImageUrlsToProductVariants(products: any[]): any[] {
   return products.map((product) => ({
     ...product,
     image_url_full: buildImageUrl(product.image_url),
@@ -50,7 +50,7 @@ export function addImageUrlsToProducts(products: any[]): any[] {
  *
  * // Dans une API route
  * const products = await pool.query('SELECT * FROM products');
- * const productsWithUrls = addImageUrlsToProducts(products.rows);
+ * const productsWithUrls = addImageUrlsToProductVariants (products.rows);
  * res.json(productsWithUrls);
  *
  * // Pour un produit unique
