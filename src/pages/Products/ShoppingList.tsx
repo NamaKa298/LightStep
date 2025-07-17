@@ -5,6 +5,7 @@ import NavBar from "../../components/NavBar";
 import Filter from "../../components/Filter";
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
+import ProductsList from "../../components/ProductsList";
 
 function ShoppingList() {
   return (
@@ -14,6 +15,7 @@ function ShoppingList() {
         <NavBar />
         <ContactWidget />
         <Filter />
+        <ProductsList />
       </MainContent>
       <Footer />
     </AppContainer>
