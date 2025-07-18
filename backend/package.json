@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "build": "tsc",
     "init-db": "ts-node scripts/init-db.ts",
-    "migrate-full": "ts-node scripts/migrate-full.ts",
+    "migrate-full": "ts-node migrations/migrate-full.ts",
     "add-interactive": "ts-node scripts/add-product-interactive.ts",
     "add-json": "ts-node scripts/add-from-json.ts",
     "upload-images": "ts-node scripts/upload-images-r2.ts",
