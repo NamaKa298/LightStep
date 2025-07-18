@@ -7,46 +7,50 @@ async function migrateDatabase() {
     console.log("🔄 Migration de la base de données...");
 
     // Lire le fichier SQL de migration
-    const sqlFile = join(process.cwd(), "scripts", "migrate-full.sql");
+    const sqlFile = join(process.cwd(), "migrations", "migrate-full.sql");
     const sql = readFileSync(sqlFile, "utf8");
 
     // Nettoyer le SQL : supprimer tous les commentaires
     let cleanedSql = sql
       // Supprimer les commentaires ligne par ligne
-      .split('\n')
-      .filter(line => {
+      .split("\n")
+      .filter((line) => {
         const trimmed = line.trim();
-        return !trimmed.startsWith('--') && trimmed.length > 0;
+        return !trimmed.startsWith("--") && trimmed.length > 0;
       })
-      .join('\n')
+      .join("\n")
       // Supprimer les commentaires bloc /* */
-      .replace(/\/\*[\s\S]*?\*\//g, '');
+      .replace(/\/\*[\s\S]*?\*\//g, "");
 
     // Séparer les instructions SQL
     const statements = cleanedSql
-      .split(';')
-      .map(stmt => stmt.trim())
-      .filter(stmt => {
+      .split(";")
+      .map((stmt) => stmt.trim())
+      .filter((stmt) => {
         // Garder seulement les instructions non vides
         return stmt.length > 0 && !stmt.match(/^\s*$/);
       });
 
     console.log("🔌 Connexion à PostgreSQL pour migration...");
-    
+
     console.log(`📝 Instructions SQL trouvées : ${statements.length}`);
     statements.forEach((stmt, index) => {
       console.log(`${index + 1}. ${stmt.substring(0, 50)}...`);
     });
-    
+
     for (const statement of statements) {
       if (statement.trim()) {
-        console.log("\n🔄 Executing:", statement.trim().substring(0, 60) + "...");
+        console.log(
+          "\n🔄 Executing:",
+          statement.trim().substring(0, 60) + "..."
+        );
         try {
           await pool.query(statement);
           console.log("✅ Success!");
         } catch (error: any) {
           // Ignorer les erreurs de contrainte qui existe déjà
-          if (error.code === '42710') { // constraint already exists
+          if (error.code === "42710") {
+            // constraint already exists
             console.log("⚠️  Constraint already exists, skipping...");
           } else {
             throw error; // Re-lancer les autres erreurs

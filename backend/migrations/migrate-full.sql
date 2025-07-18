@@ -99,6 +99,7 @@ CHECK (review_count >= 0);
 DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS old_unused_table;
 
+<<<<<<< HEAD:backend/scripts/migrate-full.sql
 
 ALTER TABLE products 
 DROP COLUMN IF EXISTS news;
@@ -137,3 +138,9 @@ INSERT INTO uses(name) VALUES
 ('Occasionel'),
 ('Régulier'),
 ('Intensif');
+=======
+*/
+
+ALTER TABLE products
+ADD COLUMN IF NOT EXISTS use_id INTEGER REFERENCES uses(id);
+>>>>>>> db_recuperation:backend/migrations/migrate-full.sql

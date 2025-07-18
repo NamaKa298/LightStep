@@ -5,8 +5,7 @@
 -- DROP TABLE IF EXISTS old_table;  -- Décommentez pour supprimer old_table
 
 -- TABLE PRODUCTS OPTIMISÉE POUR NEON (économie d'espace)
-DROP TABLE IF EXISTS order_items, orders, product_variants, products, 
-categories, genders, ground_types, sizes, colors, brands, uses, types, users CASCADE;
+
 
 CREATE TABLE genders (
   id SERIAL PRIMARY KEY,
@@ -65,7 +64,6 @@ CREATE TABLE products (
   base_price DECIMAL(8,2) NOT NULL,
   is_active BOOLEAN,
   brand_id INTEGER REFERENCES brands(id),
-  price DECIMAL(8,2) NOT NULL,
   weight DECIMAL(5,1),
   type_id INTEGER REFERENCES types(id),
   category_id INTEGER REFERENCES categories(id),
