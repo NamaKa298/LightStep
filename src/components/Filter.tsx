@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
 
 type FilterOption = {
+  id?: number;
   name: string;
   count?: number;
   hex_code?: string;
@@ -14,6 +15,7 @@ type FiltersData = {
   ground_types: FilterOption[];
   uses: FilterOption[];
   colors: FilterOption[];
+  genders: FilterOption[];
 };
 
 type FiltersProps = {
@@ -28,13 +30,12 @@ export default function Filters({ onFilterChange }: FiltersProps) {
     ground_types: [] as string[],
     uses: [] as string[],
     colors: [] as string[],
-    gender: "",
+    genders: [] as string[],
     minPrice: "",
     maxPrice: "",
   });
 
   useEffect(() => {
-    // Charger les options de filtre
     fetch("http://localhost:3001/api/products/filters")
       .then((res) => res.json())
       .then((data) => {
@@ -44,6 +45,7 @@ export default function Filters({ onFilterChange }: FiltersProps) {
           ground_types: data.ground_types,
           uses: data.uses,
           colors: data.colors,
+          genders: data.genders,
         });
       });
   }, []);
@@ -52,6 +54,10 @@ export default function Filters({ onFilterChange }: FiltersProps) {
     // Notifier le parent des changements de filtre
     onFilterChange(selectedFilters);
   }, [selectedFilters, onFilterChange]);
+
+  if (!filtersData) {
+    return <div>Chargement des filtres...</div>;
+  }
 
   const handleCheckboxChange = (
     filterType: keyof typeof selectedFilters,
@@ -74,16 +80,6 @@ export default function Filters({ onFilterChange }: FiltersProps) {
     });
   };
 
-  const handleRadioChange = (
-    filterType: keyof typeof selectedFilters,
-    value: string
-  ) => {
-    setSelectedFilters((prev) => ({
-      ...prev,
-      [filterType]: prev[filterType] === value ? "" : value,
-    }));
-  };
-
   const handlePriceChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     type: "minPrice" | "maxPrice"
@@ -94,23 +90,31 @@ export default function Filters({ onFilterChange }: FiltersProps) {
     }));
   };
 
+  const allFilter = css`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 20%;
+  `;
+
   const filterSection = css`
     margin-bottom: 20px;
     padding: 15px;
-    background: #f5f5f5;
     border-radius: 8px;
   `;
 
   const filterTitle = css`
-    font-weight: bold;
     margin-bottom: 10px;
     font-size: 16px;
+    font-style: italic;
   `;
 
   const filterOption = css`
     display: flex;
     align-items: center;
     margin: 5px 0;
+    gap: 10px;
+    padding: 5px;
   `;
 
   const colorSwatch = css`
@@ -138,58 +142,42 @@ export default function Filters({ onFilterChange }: FiltersProps) {
   if (!filtersData) return <div>Chargement des filtres...</div>;
 
   return (
-    <div>
+    <div css={allFilter}>
       {/* Filtre par genre */}
       <div css={filterSection}>
-        <div css={filterTitle}>Genre</div>
-        <div css={filterOption}>
-          <input
-            type="radio"
-            id="gender-men"
-            checked={selectedFilters.gender === "men"}
-            onChange={() => handleRadioChange("gender", "men")}
-          />
-          <label htmlFor="gender-men">Homme</label>
-        </div>
-        <div css={filterOption}>
-          <input
-            type="radio"
-            id="gender-women"
-            checked={selectedFilters.gender === "women"}
-            onChange={() => handleRadioChange("gender", "women")}
-          />
-          <label htmlFor="gender-women">Femme</label>
-        </div>
-        <div css={filterOption}>
-          <input
-            type="radio"
-            id="gender-unisex"
-            checked={selectedFilters.gender === "unisex"}
-            onChange={() => handleRadioChange("gender", "unisex")}
-          />
-          <label htmlFor="gender-unisex">Unisexe</label>
-        </div>
+        <div css={filterTitle}>GENRE</div>
+        {filtersData.genders.map((gender) => (
+          <div key={gender.id} css={filterOption}>
+            <input
+              type="checkbox"
+              id={`${gender.id}`}
+              checked={selectedFilters.genders.includes(gender.name)}
+              onChange={() => handleCheckboxChange("genders", gender.name)}
+            />
+            <label htmlFor={`gender-${gender.id}`}>{gender.name}</label>
+          </div>
+        ))}
       </div>
 
       {/* Filtre par marque */}
       <div css={filterSection}>
-        <div css={filterTitle}>Marques</div>
+        <div css={filterTitle}>MARQUES</div>
         {filtersData.brands.map((brand) => (
-          <div key={brand.name} css={filterOption}>
+          <div key={brand.id} css={filterOption}>
             <input
               type="checkbox"
-              id={`brand-${brand.name}`}
+              id={`${brand.id}`}
               checked={selectedFilters.brands.includes(brand.name)}
               onChange={() => handleCheckboxChange("brands", brand.name)}
             />
-            <label htmlFor={`brand-${brand.name}`}>{brand.name}</label>
+            <label htmlFor={`brand-${brand.id}`}>{brand.name}</label>
           </div>
         ))}
       </div>
 
       {/* Filtre par taille */}
       <div css={filterSection}>
-        <div css={filterTitle}>Tailles</div>
+        <div css={filterTitle}>TAILLES</div>
         {filtersData.sizes.map((size) => (
           <div key={size} css={filterOption}>
             <input
@@ -205,39 +193,43 @@ export default function Filters({ onFilterChange }: FiltersProps) {
 
       {/* Filtre par type de terrain */}
       <div css={filterSection}>
-        <div css={filterTitle}>Type de terrain</div>
-        {filtersData.ground_types.map((type) => (
-          <div key={type.name} css={filterOption}>
+        <div css={filterTitle}>TYPE DE TERRAIN</div>
+        {filtersData.ground_types.map((ground_type) => (
+          <div key={ground_type.id} css={filterOption}>
             <input
               type="checkbox"
-              id={`ground-${type.name}`}
-              checked={selectedFilters.ground_types.includes(type.name)}
-              onChange={() => handleCheckboxChange("ground_types", type.name)}
+              id={`ground-${ground_type.id}`}
+              checked={selectedFilters.ground_types.includes(ground_type.name)}
+              onChange={() =>
+                handleCheckboxChange("ground_types", ground_type.name)
+              }
             />
-            <label htmlFor={`ground-${type.name}`}>{type.name}</label>
+            <label htmlFor={`ground-${ground_type.id}`}>
+              {ground_type.name}
+            </label>
           </div>
         ))}
       </div>
 
-      {/* Filtre par activité */}
+      {/* Filtre par utilisation */}
       <div css={filterSection}>
-        <div css={filterTitle}>Activité</div>
+        <div css={filterTitle}>UTILISATION</div>
         {filtersData.uses.map((use) => (
-          <div key={use.name} css={filterOption}>
+          <div key={use.id} css={filterOption}>
             <input
               type="checkbox"
-              id={`use-${use.name}`}
+              id={`use-${use.id}`}
               checked={selectedFilters.uses.includes(use.name)}
               onChange={() => handleCheckboxChange("uses", use.name)}
             />
-            <label htmlFor={`use-${use.name}`}>{use.name}</label>
+            <label htmlFor={`use-${use.id}`}>{use.name}</label>
           </div>
         ))}
       </div>
 
       {/* Filtre par couleur */}
       <div css={filterSection}>
-        <div css={filterTitle}>Couleurs</div>
+        <div css={filterTitle}>COULEURS</div>
         {filtersData.colors.map((color) => (
           <div key={color.name} css={filterOption}>
             <input
@@ -254,7 +246,7 @@ export default function Filters({ onFilterChange }: FiltersProps) {
 
       {/* Filtre par prix */}
       <div css={filterSection}>
-        <div css={filterTitle}>Prix</div>
+        <div css={filterTitle}>PRIX</div>
         <div css={priceInputs}>
           <input
             css={priceInput}

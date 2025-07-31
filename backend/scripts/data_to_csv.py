@@ -4,6 +4,7 @@ from collections import defaultdict
 import os
 import random
 import csv
+import re
 
 # 1. Configuration des modèles de base (sans déclinaisons)
 base_models = {
@@ -73,7 +74,7 @@ base_models = {
         "is_active": True,
         "use": "Occasionel"
     },
-    "Breezandals": {
+    "Breezandal": {
         "brand": "Vibram fivefingers",
         "sales": 0,
         "base_price": 150.00,
@@ -867,7 +868,8 @@ for model_name, model_data in base_models.items():
             "material": variant["material"],
             "use_details": variant["use_details"],
             "care_instructions": variant["care_instructions"],
-            "description": model_data.get("description", "")
+            "description": model_data.get("description", ""),
+            "base_model": re.sub(r'[^a-zA-Z0-9]', '_', model_name.lower())
         })
         
         # Fichier variants_config.csv

@@ -23,6 +23,7 @@ router.get("/", async (req: any, res: any) => {
     } = req.query;
     let query = `
       SELECT DISTINCT ON (pv.product_id, pv.color_id)
+        pv.id,
         p.name,
         pv.price,
         p.rating,
@@ -165,6 +166,40 @@ router.get("/", async (req: any, res: any) => {
     res
       .status(500)
       .json({ error: "Erreur lors de la récupération des produits" });
+  }
+});
+
+router.get("/filters", async (req, res) => {
+  try {
+    const [brands, sizes, ground_types, uses, colors, genders] =
+      await Promise.all([
+        pool.query("SELECT name FROM brands ORDER BY name"),
+        pool.query("SELECT DISTINCT eu_size FROM sizes ORDER BY eu_size"),
+        pool.query("SELECT name FROM ground_types ORDER BY name"),
+        pool.query("SELECT name FROM uses ORDER BY name"),
+        pool.query("SELECT name, hex_code FROM colors ORDER BY name"),
+        pool.query("SELECT name FROM genders ORDER BY name"),
+      ]);
+
+    res.json({
+      brands: brands.rows.map((row) => ({ id: row.id, name: row.name })),
+      sizes: sizes.rows.map((row) => row.eu_size),
+      ground_types: ground_types.rows.map((row) => ({
+        id: row.id,
+        name: row.name,
+      })),
+      uses: uses.rows.map((row) => ({
+        id: row.id,
+        name: row.name,
+      })),
+      colors: colors.rows.map((row) => ({
+        name: row.name,
+        hex: row.hex_code,
+      })),
+      genders: genders.rows.map((row) => ({ id: row.id, name: row.name })),
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Erreur lors du chargement des filtres" });
   }
 });
 

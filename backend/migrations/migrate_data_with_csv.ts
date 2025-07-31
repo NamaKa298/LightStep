@@ -6,6 +6,7 @@ interface Products {
   sale: number;
   name: string;
   brand: string;
+  base_model: string;
   base_price: number;
   weight: number;
   type: string;
@@ -92,16 +93,17 @@ async function importProducts() {
       const productInsert = await client.query(
         `
         INSERT INTO products (
-          sale, name, brand_id, base_price, weight, type_id, gender_id, use_id,
+          sale, name, base_model, brand_id, base_price, weight, type_id, gender_id, use_id,
           stability, drop, rating, "1_star", "2_star", "3_star", "4_star",
           "5_star", review_count, is_recommended, news, sole_details, upper,
           material, use_details, care_instructions, description
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
         RETURNING id
         `,
         [
           p.sale,
           p.name,
+          p.base_model,
           brand_id,
           p.base_price,
           p.weight,
