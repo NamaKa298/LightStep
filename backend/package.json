@@ -12,34 +12,47 @@
     "add-json": "ts-node scripts/add-from-json.ts",
     "upload-images": "ts-node scripts/upload-images-r2.ts",
     "clean-images": "ts-node scripts/clean-temp-images.ts",
-    "show-table": "ts-node scripts/show-table.ts"
+    "show-table": "ts-node scripts/show-table.ts",
+    "postinstall": "prisma generate",
+    "prisma:generate": "prisma generate",
+    "prisma:seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts",
+    "schema": "./prisma/schema.prisma"
+  },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.842.0",
-    "@aws-sdk/s3-request-presigner": "^3.842.0",
+    "@aws-sdk/client-s3": "^3.844.0",
+    "@aws-sdk/s3-request-presigner": "^3.844.0",
     "@types/node-fetch": "^2.6.12",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
+    "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mime-types": "^3.0.1",
     "node-fetch": "^3.3.2",
+    "pandas": "^0.0.3",
     "pd": "^0.8.1",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "sharp": "^0.34.3"
   },
   "devDependencies": {
+    "@prisma/client": "^6.13.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^24.0.7",
+    "@types/mime-types": "^3.0.1",
+    "@types/node": "^24.1.0",
     "@types/pg": "^8.15.4",
     "nodemon": "^3.1.10",
+    "prisma": "^6.13.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }

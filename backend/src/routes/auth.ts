@@ -1,7 +1,7 @@
-import express from "express";
 import bcrypt from "bcryptjs";
+import express from "express";
 import jwt from "jsonwebtoken";
-import { pool } from "../db";
+import { pool } from "../db/db";
 
 const router = express.Router();
 const JWT_SECRET = "lightstep_secret_key_2025"; // Changez ça en production !
@@ -12,10 +12,7 @@ router.post("/register", async (req: any, res: any) => {
     const { email, password } = req.body;
 
     // Vérifier si l'utilisateur existe déjà
-    const existingUser = await pool.query(
-      "SELECT id FROM users WHERE email = $1",
-      [email]
-    );
+    const existingUser = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
 
     if (existingUser.rows.length > 0) {
       return res.status(400).json({ error: "Cet email est déjà utilisé" });
@@ -39,11 +36,7 @@ router.post("/register", async (req: any, res: any) => {
     const user = rows[0];
 
     // Créer le token JWT
-    const token = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role },
-      JWT_SECRET,
-      { expiresIn: "24h" }
-    );
+    const token = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: "24h" });
 
     res.json({
       message: "Inscription réussie !",
@@ -62,9 +55,7 @@ router.post("/login", async (req: any, res: any) => {
     const { email, password } = req.body;
 
     // Trouver l'utilisateur
-    const { rows } = await pool.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
+    const { rows } = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
 
     if (rows.length === 0) {
       return res.status(401).json({ error: "Email ou mot de passe incorrect" });
@@ -80,11 +71,7 @@ router.post("/login", async (req: any, res: any) => {
     }
 
     // Créer le token JWT
-    const token = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role },
-      JWT_SECRET,
-      { expiresIn: "24h" }
-    );
+    const token = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: "24h" });
 
     res.json({
       message: "Connexion réussie !",

@@ -1,6 +1,5 @@
 import express from "express";
-import { pool } from "../db";
-import { addImageUrlsToProducts } from "../image-utils";
+import { pool } from "../db/db";
 
 const router = express.Router();
 
@@ -23,43 +22,32 @@ router.post("/", async (req: any, res: any) => {
 // Récupérer tous les produits
 router.get("/", async (req: any, res: any) => {
   try {
-    const { rows } = await pool.query(
-      "SELECT * FROM products WHERE is_active = true ORDER BY id"
-    );
+    const { rows } = await pool.query("SELECT * FROM products WHERE is_active = true ORDER BY id");
 
     // Convertir les ratings et review_count en nombres
     const productsWithNumericRatings = rows.map((product) => ({
       ...product,
       rating: product.rating ? parseFloat(product.rating) : null,
-      review_count: product.review_count
-        ? parseInt(product.review_count)
-        : null,
+      review_count: product.review_count ? parseInt(product.review_count) : null,
     }));
 
-    // 🚀 AJOUT : Reconstruire automatiquement les URLs d'images
-    console.log("🔧 Reconstruction des URLs d'images...");
-    const productsWithUrls = addImageUrlsToProducts(productsWithNumericRatings);
-    console.log(
-      "✅ URLs reconstruites, exemple:",
-      productsWithUrls[0]?.image_url_full
-    );
+  //   // 🚀 AJOUT : Reconstruire automatiquement les URLs d'images
+  //   console.log("🔧 Reconstruction des URLs d'images...");
+  //   const productsWithUrls = addImageUrlsToProducts(productsWithNumericRatings);
+  //   console.log("✅ URLs reconstruites, exemple:", productsWithUrls[0]?.image_url_full);
 
-    res.json(productsWithUrls);
-  } catch (error) {
-    console.error("Erreur lors de la récupération:", error);
-    res
-      .status(500)
-      .json({ error: "Erreur lors de la récupération des produits" });
-  }
+  //   res.json(productsWithUrls);
+  // } catch (error) {
+  //   console.error("Erreur lors de la récupération:", error);
+  //   res.status(500).json({ error: "Erreur lors de la récupération des produits" });
+  // }
 });
 
 // Récupérer un produit par ID
 router.get("/:id", async (req: any, res: any) => {
   try {
     const { id } = req.params;
-    const { rows } = await pool.query("SELECT * FROM products WHERE id = $1", [
-      id,
-    ]);
+    const { rows } = await pool.query("SELECT * FROM products WHERE id = $1", [id]);
 
     if (rows.length === 0) {
       return res.status(404).json({ error: "Produit non trouvé" });
@@ -69,17 +57,13 @@ router.get("/:id", async (req: any, res: any) => {
     const product = {
       ...rows[0],
       rating: rows[0].rating ? parseFloat(rows[0].rating) : null,
-      review_count: rows[0].review_count
-        ? parseInt(rows[0].review_count)
-        : null,
+      review_count: rows[0].review_count ? parseInt(rows[0].review_count) : null,
     };
 
     res.json(product);
   } catch (error) {
     console.error("Erreur lors de la récupération:", error);
-    res
-      .status(500)
-      .json({ error: "Erreur lors de la récupération du produit" });
+    res.status(500).json({ error: "Erreur lors de la récupération du produit" });
   }
 });
 
@@ -104,9 +88,7 @@ router.put("/:id", async (req: any, res: any) => {
     res.json(rows[0]);
   } catch (error) {
     console.error("Erreur lors de la modification:", error);
-    res
-      .status(500)
-      .json({ error: "Erreur lors de la modification du produit" });
+    res.status(500).json({ error: "Erreur lors de la modification du produit" });
   }
 });
 
@@ -114,10 +96,7 @@ router.put("/:id", async (req: any, res: any) => {
 router.delete("/:id", async (req: any, res: any) => {
   try {
     const { id } = req.params;
-    const { rows } = await pool.query(
-      "DELETE FROM products WHERE id = $1 RETURNING *",
-      [id]
-    );
+    const { rows } = await pool.query("DELETE FROM products WHERE id = $1 RETURNING *", [id]);
 
     if (rows.length === 0) {
       return res.status(404).json({ error: "Produit non trouvé" });

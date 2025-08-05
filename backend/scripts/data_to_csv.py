@@ -3,10 +3,11 @@ import csv
 from collections import defaultdict
 import os
 import random
+import csv
 
 # 1. Configuration des modèles de base (sans déclinaisons)
 base_models = {
-    "Graspifier": {
+        "Graspifier": {
         "brand": "Vibram fivefingers",
         "sales": 0,
         "base_price": 120.00,
@@ -33,10 +34,11 @@ base_models = {
         "sole_details": "",
         "upper": "",
         "material": "Caoutchouc Vibram EcoStep avec 30 % de contenu Vibram recyclé.",
-        "utilisation": "Idéal pour l'entraînement en musculation et les routines en salle, où l'attention est portée sur l'équilibre et la sensation au sol.",
+        "use_details": "Idéal pour l'entraînement en musculation et les routines en salle, où l'attention est portée sur l'équilibre et la sensation au sol.",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "La tige synthétique respirante et extensible de la Graspifier épouse véritablement le pied comme un gant, tandis que la semelle Max-Feel segmentée offre une excellente sensation au sol et une bonne articulation du pied, avec un équilibre optimal entre traction et durabilité.\nNotre caoutchouc Vibram EcoStep avec 30 % de contenu Vibram recyclé offre adhérence et traction, reconnaissant ainsi notre engagement envers la durabilité du produit.\nÉpaisseur totale de la semelle : 5 mm",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Occasionel"
     },
     "KSO EVO": {
         "brand": "Vibram fivefingers",
@@ -47,7 +49,7 @@ base_models = {
         "unisex": False,
         "Homme": {"sizes": [i for i in range(40, 45)]},
         "Femme": {"sizes": [i for i in range(38, 42)]},
-        "type": "chaussures minimalistes",
+        "type": "Chaussures minimalistes",
         "category": "Fitness",
         "ground_type": "Salle",
         "stability": "Modérée",
@@ -65,10 +67,11 @@ base_models = {
         "sole_details": "Semelle intérieure : 2 mm EVA + Doublure en Drilex\nSemelle extérieure : 3 mm de caoutchouc\nComposé : Vibram XS Trek",
         "upper": "Maille de Polyester\nFilm de protection et renforcement en polyuréthane\nLaçage rapide",
         "material": "Caoutchouc, dublure en Drilex, maille de polyester, film de protection en polyuréthane",
-        "utilisation": "Fitness, pliométrie, mouvements primitifs, équilibre et renforcement.",
+        "use_details": "Fitness, pliométrie, mouvements primitifs, équilibre et renforcement.",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "Articulation et sensation au sol maximales. Adhérence assurée et protection essentielle.\nConception légère, aérée et simple de la tige réglable.\nCe modèle fait partie de notre gamme Medium Ground Feel. Philosophie du produit.",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Occasionel"
     },
     "Breezandals": {
         "brand": "Vibram fivefingers",
@@ -79,7 +82,7 @@ base_models = {
         "unisex": False,
         "Homme": {"sizes": [39,40,41,42,44]},
         "Femme": {"sizes": [36,38,39,40,41]},
-        "type": "chaussures minimalistes",
+        "type": "Chaussures minimalistes",
         "category": "Trail",
         "ground_type": "Boue",
         "stability": "Minimaliste",
@@ -97,10 +100,11 @@ base_models = {
         "sole_details": "",
         "upper": "",
         "material": "",
-        "utilisation": "Idéal pour les sentiers, s’adapte également à l’eau.",
+        "use_details": "Idéal pour les sentiers, s’adapte également à l’eau.",
         "care_instructions": "Lavage en machine à froid / Séchage à l’air libre",
-        "description": "La Breezandal est la chaussure d'extérieur la plus respirante de la collection Fivefingers.\nConçue pour être utilisée sur les sentiers, la semelle en caoutchouc MegaGrip excelle également sur les roches humides, ce qui fait de la Breezandal une chaussure idéale pour une utilisation près des rivières et des lacs.",
-        "is_active": "true"
+        "description": "La Breezandal est la chaussure d'extérieur la plus respirante de la collection Fivefingers.\nConçue pour être utilisée sur les sentiers, la semelle en caoutchouc MegaGrip excelle également sur les roches humides, ce qui fait de la Breezandal une chaussure idéale pour une use_details près des rivières et des lacs.",
+        "is_active": True,
+        "use": "Intensif"
     },
     "Roadaround": {
         "brand": "Vibram fivefingers",
@@ -110,7 +114,7 @@ base_models = {
         "weight": {"Femme": 132},
         "unisex": False,
         "Femme": {"sizes": [i for i in range(37, 42)]},
-        "type": "chaussures minimalistes",
+        "type": "Chaussures minimalistes",
         "category": "Casual",
         "ground_type": "Route",
         "stability": "Modérée",
@@ -128,10 +132,11 @@ base_models = {
         "sole_details": "",
         "upper": "",
         "material": "",
-        "utilisation": "Convient parfaitement pour marcher sur des surfaces dures comme l'asphalte et le béton.",
+        "use_details": "Convient parfaitement pour marcher sur des surfaces dures comme l'asphalte et le béton.",
         "care_instructions": "Lavage en machine à froid / Séchage à l’air libre",
         "description": "La tige en air-mesh super-respirante avec des panneaux réfléchissants rappelle les jours de gloire de la conception des baskets.\nLa semelle intermédiaire en EVA à double coussin d'air et la semelle extérieure articulée Vibram Carrarmato reflètent l'histoire de Vibram en termes d'image et de fonction. Notre caoutchouc Vibram EcoStep avec 30 % de contenu Vibram recyclé offre adhérence et traction, reconnaissant ainsi notre engagement en faveur de la durabilité des produits.\nÉpaisseur totale de la semelle : 11,5 mm",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Intensif"
     },
     "V-Aqua": {
         "brand": "Vibram fivefingers",
@@ -142,9 +147,9 @@ base_models = {
         "unisex": False,
         "Homme": {"sizes": [i for i in range(39, 46)]},
         "Femme": {"sizes": [i for i in range(36, 41)]},
-        "type": "chaussures minimalistes",
+        "type": "Chaussures minimalistes",
         "category": "Trail",
-        "ground_type": "Sentiers",
+        "ground_type": "Sentier",
         "stability": "Minimaliste",
         "drop": 0,
         "rating": {"Homme": 4.2, "Femme": 4},
@@ -160,10 +165,11 @@ base_models = {
         "sole_details": "Semelle Megagrip de 3,7 mm avec perforations drainantes pour une meilleure performance\nSemelle intérieure en EVA de 2 mm avec traitement silicone",
         "upper": "",
         "material": "",
-        "utilisation": "Trekking dans les roches humides, Canoë, Kayak, Expéditions en rivière, Tubing, SUP.",
+        "use_details": "Trekking dans les roches humides, Canoë, Kayak, Expéditions en rivière, Tubing, SUP.",
         "care_instructions": "Lavage en machine à froid / Séchage à l’air libre",
         "description": "Déplacez-vous naturellement dans et hors de l'eau tout ainsi que sur des terrains variés.\nLégère, fine et flexible sur le pied, la V-Aqua est idéale pour les situations où il n'est pas possible de marcher entièrement pieds nus.\nLa coupe ajustée et la conception légère, ainsi que les perforations de la Semelle Megagrip très résistante, permettent à l'eau de circuler rapidement dans la chaussure pour un séchage rapide.\nUn autre élément distinctif, l'impression en Silicone de pointe dans la doublure empêche tout glissement interne supplémentaire.",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Régulier"
     },
     "Scramkey": {
         "brand": "Vibram fivefingers",
@@ -175,7 +181,7 @@ base_models = {
         "Homme": {"sizes": [i for i in range(39, 45)]},
         "type": "Chaussures minimalistes",
         "category": "Trail",
-        "ground_type": "Sentiers",
+        "ground_type": "Sentier",
         "stability": "Guidée",
         "drop": 0,
         "rating": {"Homme": 3.3},
@@ -191,10 +197,11 @@ base_models = {
         "sole_details": "Crampon de traction VN098 + semelle-sangle de puissance intégrée, avec une zone 'adhérence élevée pré-tamponnée à l'avant pied.\nComposé : Megagrip 2.0\nCaoutchouc : 4mm",
         "upper": "Tige en polyester extensible avec superpositions en tpu aux principaux points d'abrasion ; col en néoprène extensible avec deux languettes de serrage. Contrefort de talon en tpu à haute abrasion.",
         "material": "",
-        "utilisation": "Convient parfaitement à la pratique du scrambling sur des terrains accidentés et rocailleux.",
+        "use_details": "Convient parfaitement à la pratique du scrambling sur des terrains accidentés et rocailleux.",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "La Scramkey est l'outil de mouvement naturel le plus puissant pour faire du scrambling en extérieur.\nAvec la technologie Traction lug, le power strap intégré à la semelle, la zone d'adhérence pré-tamponnée et le composé ultime Megagrip™ Elite, ce produit excelle dans les endroits rocailleux en extérieur.\nIl est doté d'une tige durable et sûre qui utilise une tige en polyester extensible avec des renforts TPU et une double fermeture auto-agrippante.", 
-        "is_active": "true"
+        "is_active": True,
+        "use": "Régulier"
     },
     "V-Alpha": {
         "brand": "Vibram fivefingers",
@@ -205,9 +212,9 @@ base_models = {
         "unisex": False,
         "Homme": {"sizes": [i for i in range(42, 47)]},
         "Femme": {"sizes": [35,36,37,39,40]},
-        "type": "chaussures minimalistes",
+        "type": "Chaussures minimalistes",
         "category": ["Trail","Running"],
-        "ground_type": "Sentiers",
+        "ground_type": "Sentier",
         "stability": "Neutre",
         "drop": 0,
         "rating": {"Homme": 4.3, "Femme": 4.4},
@@ -223,10 +230,11 @@ base_models = {
         "sole_details": "Semelle extérieure en caoutchouc de 3,7 mm\nSemelle intérieure en Mousse de 2 mm pour un confort accru",
         "upper": "Empeigne en laine et matière synthétique pour une meilleure respirabilité et une réduction des odeurs",
         "material": "",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l’air libre",
         "description": "La V-Alpha est un incontournable de l'entraînement en extérieur minimaliste, et est 100 % fidèle à notre philosophie d'origine : une protection du pied qui permet la perception sensorielle du sol, la performance et la dextérité. La semelle extérieure en caoutchouc flexible présente notre composé le plus polyvalent : Vibram Megagrip.\nCe composé assure à la fois l'adhérence et la durabilité dans le temps, sur un sol sec comme mouillé.",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Intensif"
     },
     "V-Soul": {
         "brand": "Vibram fivefingers",
@@ -236,7 +244,7 @@ base_models = {
         "weight": {"Femme": 91},
         "unisex": False,
         "Femme": {"sizes": [37,38,39,40,42]},
-        "type": "chaussures minimalistes",
+        "type": "Chaussures minimalistes",
         "category": ["Fitness","Yoga"],
         "ground_type": "Salle",
         "stability": "Minimaliste",
@@ -254,10 +262,11 @@ base_models = {
         "sole_details": "Semelle intérieure : Mousse en Polyuréthane de 2 mm + Doublure en Laine de Polyester\nCaoutchouc : composé XS Trek de 3 mm",
         "upper": "Polyester Brillant avec Réglage par Fermeture Auto-agrippante",
         "material": "",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l’air libre",
-        "description": "La V-Soul est notre dernière offre axée sur le fitness féminin et alternatif en intérieur.\nÉlégante et fine, elle peut être utilisée pour de nombreuses activités.\nLa V-Soul s'inscrit dans notre « philosophie de produit à sensation maximale », offrant un potentiel maximal d'articulation et de sensation au sol.\nDotée d'une coupe ajustable et sécurisée, elle est également très ouverte, légère et flexible.\nLes meilleures utilisations de cette chaussure sont le fitness fonctionnel, la plyométrie, le Pilates et le yoga, entre autres.",
-        "is_active": "true"
+        "description": "La V-Soul est notre dernière offre axée sur le fitness féminin et alternatif en intérieur.\nÉlégante et fine, elle peut être utilisée pour de nombreuse activités.\nLa V-Soul s'inscrit dans notre « philosophie de produit à sensation maximale », offrant un potentiel maximal d'articulation et de sensation au sol.\nDotée d'une coupe ajustable et sécurisée, elle est également très ouverte, légère et flexible.\nLes meilleures use_detailss de cette chaussure sont le fitness fonctionnel, la plyométrie, le Pilates et le yoga, entre autres.",
+        "is_active": True,
+        "use": "Occasionel"
     },
     "Furoshiki": {
         "brand": "Vibram fivefingers",
@@ -268,7 +277,7 @@ base_models = {
         "unisex": False,
         "Homme": {"sizes": [40,41,43,44,45]},
         "Femme": {"sizes": [35,36,37,38,40]},
-        "type": "chaussures minimalistes",
+        "type": "Chaussures minimalistes",
         "category": "Casual",
         "ground_type": "Route",
         "stability": "Minimaliste",
@@ -286,10 +295,11 @@ base_models = {
         "sole_details": "Semelle Vibram à faible densité pour une réduction du poids.",
         "upper": "Ajustement adaptable grâce à la forme anatomique et l’adhérence Vibram, offrant une empeigne extensible qui épouse parfaitement le pied.",
         "material": "Composition : 28 % Élasthane (Caoutchouc Extensible / Lycra), 72 % PA (Polyamide et Nylon)",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l’air libre",
         "description": "Notre dernière et plus grande innovation en matière de chaussures alternatives encore améliorée !\nNous avons amélioré l'ajustement et la fonctionnalité, en adaptant le design de la semelle, la forme et l'ajustement de l’empeigne, ainsi que la partie orteils.\nEmportez-la partout… pour tout ce que vous faites et partout où vous allez, il y a Furoshiki !\nLe concept de ce type de chaussures est inspiré par la technique japonaise traditionnelle qui consiste à envelopper divers objets du quotidien dans un tissu pour les transporter.\nFuroshiki est la seule semelle du marché qui enveloppe l'ensemble du pied. Comme l’empeigne est fabriquée en tissu extensible, elle s'adaptera parfaitement à l'anatomie de chaque type de pied et le système de fermeture auto-agrippante permet un ajustement rapide et facile.\nGrâce à notre technologie révolutionnaire de semelles Vibram, Furoshiki offre le meilleur des conforts dans n'importe quel environnement !\nElle est également très facile à transporter et chaque paire est livrée avec son propre étui de voyage. L'ultime compagnon des chaussures de voyage, offrant protection, adhérence et confort.",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Régulier"
     },
        "One Quarter Toile": {
         "brand": "Vibram fivefingers",
@@ -299,7 +309,7 @@ base_models = {
         "weight": 88, 
         "unisex": True,
         "sizes": {"sizes": [i for i in range(39, 44)]},
-        "type": "chaussures minimalistes",
+        "type": "Chaussures minimalistes",
         "category": "Casual",
         "ground_type": "Route",
         "stability": "Minimaliste",
@@ -317,10 +327,11 @@ base_models = {
         "sole_details": "Semelle Vibram à faible densité pour une réduction du poids.",
         "upper": "Ajustement adaptable grâce à la forme anatomique et l’adhérence Vibram, offrant une empeigne extensible qui épouse parfaitement le pied.",
         "material": "Composition : 28 % Élasthane (Caoutchouc Extensible / Lycra), 72 % PA (Polyamide et Nylon)",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l’air libre",
         "description": "Notre dernière et plus grande innovation en matière de chaussures alternatives encore améliorée !\nNous avons amélioré l'ajustement et la fonctionnalité, en adaptant le design de la semelle, la forme et l'ajustement de l’empeigne, ainsi que la partie orteils.\nEmportez-la partout… pour tout ce que vous faites et partout où vous allez, il y a Furoshiki !\nLe concept de ce type de chaussures est inspiré par la technique japonaise traditionnelle qui consiste à envelopper divers objets du quotidien dans un tissu pour les transporter.\nFuroshiki est la seule semelle du marché qui enveloppe l'ensemble du pied. Comme l’empeigne est fabriquée en tissu extensible, elle s'adaptera parfaitement à l'anatomie de chaque type de pied et le système de fermeture auto-agrippante permet un ajustement rapide et facile.\nGrâce à notre technologie révolutionnaire de semelles Vibram, Furoshiki offre le meilleur des conforts dans n'importe quel environnement !\nElle est également très facile à transporter et chaque paire est livrée avec son propre étui de voyage. L'ultime compagnon des chaussures de voyage, offrant protection, adhérence et confort.",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Intensif"
     },
     "One Quarter Leather": {
         "brand": "Vibram fivefingers",
@@ -330,7 +341,7 @@ base_models = {
         "weight": {"Homme": 88}, 
         "unisex": False,
         "Homme": {"sizes": [41,42,44,45,46]},
-        "type": "chaussures minimalistes",
+        "type": "Chaussures minimalistes",
         "category": "Casual",
         "ground_type": "Route",
         "stability": "Minimaliste",
@@ -348,10 +359,11 @@ base_models = {
         "sole_details": "Semelle dotée de la Technologie Vibram LITEBASE avec le composé Gumlite.\nDécouvrez la Technologie Vibram LITEBASE, qui réduit considérablement l'épaisseur et le poids des semelles extérieures en caoutchouc, tout en conservant l'adhérence et la traction attendues de Vibram. Cette nouvelle technologie réduit radicalement l'épaisseur de la semelle jusqu'à 50 % par rapport à une conception de semelle identique et permet de réduire le poids total jusqu'à 30 %.",
         "upper": "Ajustement adaptable grâce à la forme anatomique et l’adhérence Vibram, offrant une empeigne extensible qui épouse parfaitement le pied.",
         "material": "Semelle : Caoutchouc Gumlite Vibram et Technologie Vibram LITEBASE\nEmpeigne : Cuir",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l’air libre",
         "description": "Relevant le défi de maintenir la performance pour ¼ du volume habituel, Vibram présente la nouvelle Vibram ¼ (Vibram One Quarter).\nAvec son design spécial en origami tridimensionnel et la technologie unique de sa semelle (Vibram LiteBase), Vibram ¼ est une chaussure légère, confortable et compacte, facile à transporter et parfaite pour les voyages.\nUn modèle au look moderne qui sera le compagnon idéal de votre temps libre, de vos aventures en ville et, pourquoi pas, un cadeau unique !",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Intensif"
     },
         "One Quarter Jeans": {
         "brand": "Vibram fivefingers",
@@ -361,7 +373,7 @@ base_models = {
         "weight": {"Homme": 110}, 
         "unisex": False,
         "Homme": {"sizes": [37,38,39,40,41,42]},
-        "type": "chaussures minimalistes",
+        "type": "Chaussures minimalistes",
         "category": "Casual",
         "ground_type": "Route",
         "stability": "Minimaliste",
@@ -379,10 +391,11 @@ base_models = {
         "sole_details": "Semelle dotée de la Technologie Vibram LITEBASE avec le composé Gumlite.\nDécouvrez la Technologie Vibram LITEBASE, qui réduit considérablement l'épaisseur et le poids des semelles extérieures en caoutchouc, tout en conservant l'adhérence et la traction attendues de Vibram. Cette nouvelle technologie réduit radicalement l'épaisseur de la semelle jusqu'à 50 % par rapport à une conception de semelle identique et permet de réduire le poids total jusqu'à 30 %.",
         "upper": "Ajustement adaptable grâce à la forme anatomique et l’adhérence Vibram, offrant une empeigne extensible qui épouse parfaitement le pied.",
         "material": "Semelle : Caoutchouc Gumlite Vibram et Technologie Vibram LITEBASE\nEmpeigne : Jean",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l’air libre",
         "description": "Relevant le défi de maintenir la performance pour ¼ du volume habituel, Vibram présente la nouvelle Vibram ¼ (Vibram One Quarter).\nAvec son design spécial en origami tridimensionnel et la technologie unique de sa semelle (Vibram LiteBase), Vibram ¼ est une chaussure légère, confortable et compacte, facile à transporter et parfaite pour les voyages.\nUn modèle au look moderne qui sera le compagnon idéal de votre temps libre, de vos aventures en ville et, pourquoi pas, un cadeau unique !",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Régulier"
     },
     "V-Run": {
         "brand": "Vibram fivefingers",
@@ -393,9 +406,9 @@ base_models = {
         "unisex": False,
         "Homme": {"sizes": [i for i in range(39, 43)]},
         "Femme": {"sizes": [i for i in range(35, 39)]},
-        "type": "chaussures minimalistes",
+        "type": "Chaussures minimalistes",
         "category": "Running",
-        "ground_type": ["Route","Sentiers"],
+        "ground_type": ["Route","Sentier"],
         "stability": "Neutre",
         "drop": 0,
         "rating": {"Homme": 4.2, "Femme": 4.1},
@@ -411,10 +424,11 @@ base_models = {
         "sole_details": "Semelle intérieure : 2mm EVA + Doublure Drilex antimicrobien\nSemelle intermédiaire : 4mm EVA\nCaoutchouc : 2.5mm.",
         "upper": "Filet en Polyester Lycra Stretch + Microfibre en Polyester",
         "material": "",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l’air libre",
         "description": "Ce modèle très confortable est doté d'une empeigne souple et ajourée pour maximiser la respirabilité.\nC'est une chaussure de course idéale pour faire la transition entre les chaussures traditionnelles et une approche plus minimaliste.\nLa construction de la semelle fine vous permet de sentir la Terre sous vos pieds.",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Régulier"
     },
     "KMD EVO": {
         "brand": "Vibram fivefingers",
@@ -427,7 +441,7 @@ base_models = {
         "Femme": {"sizes": [i for i in range(36, 41)]},
         "type": "Chaussures minimalistes",
         "category": "Running",
-        "ground_type": ["Route", "Sentiers"],
+        "ground_type": ["Route", "Sentier"],
         "stability": "Modérée",
         "drop": 0,
         "rating": {"Homme" :4.4, "Femme": 4.4},
@@ -443,10 +457,11 @@ base_models = {
         "sole_details": "Semelle intérieure : 2 mm EVA+Anti Microbial Drilex Sockliner\\n Semelle intermédiaire : 6 mm EVA",
         "upper": "100% Filament de polyester à faible élasticité",
         "material": "",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
-        "description": "La KMD EVO est très appréciée des fans pour une bonne raison. Chaussure d'entraînement polyvalente pour l'intérieur et l'extérieur, elle est dotée d'une semelle intérieure Vibram Metaflex SL de 6 mm, d'une semelle extérieure Ecostep Recycle et d'une tige tricotée souple avec un système de laçage rapide.\\nLégère, souple et confortable, la KMD EVO convient parfaitement aux activités d'entraînement traditionnelles en intérieur et en extérieur, telles que les cours de fitness, l'haltérophilie, le cardio et d'autres exercices en salle de sport.\\nRemarque : Ce modèle Vibram FiveFingers utilise un composé de caoutchouc appelé Vibram EcoStep Recycle pour sa semelle. En raison de l'utilisation de matériaux recyclés, le caoutchouc présente des taches blanches. Il ne s'agit pas d'une peinture, d'un défaut ou d'une salissure, mais simplement du résultat du caoutchouc utilisé.",
-        "is_active": "true"
+        "description": "La KMD EVO est très appréciée des fans pour une bonne raison. Chaussure d'entraînement polyvalente pour l'intérieur et l'extérieur, elle est dotée d'une semelle intérieure Vibram Metaflex SL de 6 mm, d'une semelle extérieure Ecostep Recycle et d'une tige tricotée souple avec un système de laçage rapide.\\nLégère, souple et confortable, la KMD EVO convient parfaitement aux activités d'entraînement traditionnelles en intérieur et en extérieur, telles que les cours de fitness, l'haltérophilie, le cardio et d'autres exercices en salle de sport.\\nRemarque : Ce modèle Vibram FiveFingers utilise un composé de caoutchouc appelé Vibram EcoStep Recycle pour sa semelle. En raison de l'use_details de matériaux recyclés, le caoutchouc présente des taches blanches. Il ne s'agit pas d'une peinture, d'un défaut ou d'une salissure, mais simplement du résultat du caoutchouc utilisé.",
+        "is_active": True,
+        "use": "Occasionel"
     },
     "V-Trail 2.0": {
         "brand": "Vibram fivefingers",
@@ -459,7 +474,7 @@ base_models = {
         "Femme": {"sizes": [i for i in range(37, 42)]},
         "type": "Chaussures minimalistes",
         "category": "Trail",
-        "ground_type": "Sentiers",
+        "ground_type": "Sentier",
         "stability": "Guidée",
         "drop": 0,
         "rating": {"Homme" :3.7, "Femme": 3.4},
@@ -475,10 +490,11 @@ base_models = {
         "sole_details": "Semelle Intérieure en EVA de 2 mm + Doublure en Polyester \\nSemelle Extérieure en Caoutchouc Megagrip de 3,7 mm",
         "upper": "",
         "material": "",
-        "utilisation": "Idéale pour courir dans la nature, sur les sentiers ou lors de courses d'obstacles : la chaussure de choix pour se déplacer sur des surfaces imprévisibles.",
+        "use_details": "Idéale pour courir dans la nature, sur les sentiers ou lors de courses d'obstacles : la chaussure de choix pour se déplacer sur des surfaces imprévisibles.",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "La V-Trail 2.0 offre les nouvelles et meilleures caractéristiques pour conquérir les sentiers avec aisance, y compris les deux couches de matière autour des orteils pour éviter les fissures des coutures et une empeigne améliorée plus hydrofuge que la version précédente. La V-Trail 2.0 est dotée d'une maille 3D Cocoon tissée dans la semelle extérieure pour la protéger des objets les plus tranchants pendant l'entraînement en extérieur, comme les pierres et les racines. La maille est tridimensionnelle, elle disperse le point d'impact sur toute la partie inférieure de la chaussure. Elle offre toujours une excellente sensation au sol et dextérité. Le composé de la semelle extérieure Megagrip offre une adhérence suprême sur terrain sec comme humide.",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Occasionel"
     },
     "V-Train 2.0": {
         "brand": "Vibram fivefingers",
@@ -507,10 +523,11 @@ base_models = {
         "sole_details": "Semelle intérieure: Assise Plantaire en EVA de 2mm + Doublure en Polyester\\n Semelle intermédiaire: N/A\\n Caoutchouc: Semelle extérieure en caoutchouc XS Trek de 4mm",
         "upper": "Polyester, Panneaux Latéraux en TPU",
         "material": "",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "La V-Train 2.0 est idéale pour les entraîneurs et athlètes expérimentés.\\n Bon niveau de sensation au sol et de protection avec une bonne articulation des orteils pour un bon équilibre et une stabilité optimale\\n Construction de l’empeigne spécialement conçue pour l'entraînement intensif, axée sur la durabilité et les performances\\n Cosses distinctives de traction de la corde dans la voûte\\n Nouveau système de laçage des panneaux avec fermeture auto-agrippante, sensation plus douce. Idéale pour les mouvements agressifs et latéraux\\n Composé caoutchouc XS Trek pour des performances polyvalentes en intérieur comme en extérieur",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Régulier"
     },
     "V-Trek": {
         "brand": "Vibram fivefingers",
@@ -539,12 +556,13 @@ base_models = {
         "sole_details": "Semelle Megagrip en caoutchouc de 4 mm pour des performances optimales sur diverses surfaces",
         "upper": "Empeigne extérieure en laine et matière synthétique pour plus d'extensibilité et de confort",
         "material": "",
-        "utilisation": "Trekking, Marche, Escalade, Sport urbain.",
+        "use_details": "Trekking, Marche, Escalade, Sport urbain.",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
-        "description": "La V-Trek est idéale pour la marche, la randonnée et le trekking, et propose un style urbain très élégant. La semelle extérieure Flexible dotée de la technologie Megagrip est idéale pour une utilisation en extérieur, pour une adhérence dans des conditions sèches comme humides. Une semelle intermédiaire en polyuréthane légèrement plus épaisse offre un confort supplémentaire, et notre matériau supérieur mélangé en laine et matière synthétique aide à améliorer la respirabilité et à réduire les odeurs. La coupe mi-haute et le système de laçage traditionnel permettent également un look sportif et décontracté. Les fibres synthétiques présentes dans la construction assurent la résistance mécanique et la durabilité.",
-        "is_active": "true"
+        "description": "La V-Trek est idéale pour la marche, la randonnée et le trekking, et propose un style urbain très élégant. La semelle extérieure Flexible dotée de la technologie Megagrip est idéale pour une use_details en extérieur, pour une adhérence dans des conditions sèches comme humides. Une semelle intermédiaire en polyuréthane légèrement plus épaisse offre un confort supplémentaire, et notre matériau supérieur mélangé en laine et matière synthétique aide à améliorer la respirabilité et à réduire les odeurs. La coupe mi-haute et le système de laçage traditionnel permettent également un look sportif et décontracté. Les fibres synthétiques présentes dans la construction assurent la résistance mécanique et la durabilité.",
+        "is_active": True,
+        "use": "Intensif"
     },
-    "V-KUMO": {
+    "V-Kumo": {
         "brand": "Vibram fivefingers",
         "sales": 0,
         "base_price": 120.00,
@@ -570,10 +588,11 @@ base_models = {
         "sole_details": "Semelle intérieure : 2 mm EVA + Doublure en Drilex\\n Semelle extérieure : 3 mm de caoutchouc\\n Composé : Vibram XS Trek",
         "upper": "Polyester matelassé",
         "material": "",
-        "utilisation": "Trekking, Marche, Escalade, Sport urbain.",
+        "use_details": "Trekking, Marche, Escalade, Sport urbain.",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "Cette chaussure décontractée de tous les jours est élégante, confortable et offre une sensation maximale au sol. La tige en polyester matelassé est agréable au pied et s'attache bien grâce à une double bande auto-agrippante. La semelle extérieure est en caoutchouc Vibram XS Trek, qui offre une bonne adhérence pour les activités quotidiennes telles que promener le chien, faire les courses ou passer du temps en plein air avec des amis.",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Occasionel"
     },
     "Spyridon EVO": {
         "brand": "Vibram fivefingers",
@@ -602,10 +621,11 @@ base_models = {
         "sole_details": "Semelle intérieure : 3 mm Polyuréthane + Doublure en Drilex Antimicrobien\\n Semelle extérieure : 3,5 mm de caoutchouc\\n Composé : Vibram Megagrip",
         "upper": "Polyester",
         "material": "",
-        "utilisation": "Idéale pour courir dans la nature, sur les sentiers ou lors de courses d'obstacles : la chaussure de choix pour se déplacer sur des surfaces imprévisibles.",
+        "use_details": "Idéale pour courir dans la nature, sur les sentiers ou lors de courses d'obstacles : la chaussure de choix pour se déplacer sur des surfaces imprévisibles.",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "Une évolution naturelle de notre chaussure de trail populaire durable, légère et respirante, et dispose désormais d'un système de fermeture sécurisé à sangle auto-agrippante pour une meilleure stabilité. La semelle de cette chaussure de trail robuste est conçue avec la technologie Vibram 3D Cocoon, une fine couche protectrice en maille croisée qui offre une protection légère sur les sentiers et les terrains irréguliers. L'ajout de Vibram Megagrip offre une adhérence supérieure sur les surfaces humides comme sèches. La Spyridon EVO est née pour l'extérieur, idéale pour le trail, les randonnées, les courses d'obstacles et tout ce que Mère Nature peut mettre à vos pieds.",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Intensif"
     },
     "V-Lynx": {
         "brand": "Vibram fivefingers",
@@ -634,10 +654,11 @@ base_models = {
         "sole_details": "Semelle intérieure : Polyuréthane souple 4 mm ;\\n Semelle extérieure : 4 mm ;\\n Composant de la semelle : Vibram XS Trek",
         "upper": "Matière supérieure hydrofuge et rembourrée, fermeture à glissière thermo-soudée",
         "material": "",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "Ce modèle est équipé d'une semelle intérieure en polyuréthane souple de 4 mm et d'une semelle extérieure flexible en caoutchouc Vibram de 4 mm, dotée du composé de caoutchouc XS TREK pour une traction et une adhérence sur des terrains variés. La tige déperlante et rembourrée garde vos pieds au chaud les jours de bruine, tandis que la fermeture éclair thermo-soudée améliore l'isolation. Parfaite pour le quotidien de l'automne et de l'hiver.",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Intensif"
     },
     "EL-X Knit": {
         "brand": "Vibram fivefingers",
@@ -666,10 +687,11 @@ base_models = {
         "sole_details": "Semelle intérieure : 2 mm EVA\\n Semelle intermédiaire : N/A\\n Caoutchouc : 3 MM",
         "upper": "Tissée",
         "material": "",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
-        "description": "Cette version améliorée d'un style populaire allie le confort d'enfilage d'une empeigne tissée souple à une semelle extérieure minimaliste et adhérente. La semelle XS Trek de 3 mm offre un équilibre optimal entre traction et durabilité sur des terrains variés. La EL-X Knit offre une bonne sensation au sol pour ceux qui recherchent une expérience minimaliste, et est idéale pour une utilisation au quotidien dans un style décontracté.",
-        "is_active": "true"
+        "description": "Cette version améliorée d'un style populaire allie le confort d'enfilage d'une empeigne tissée souple à une semelle extérieure minimaliste et adhérente. La semelle XS Trek de 3 mm offre un équilibre optimal entre traction et durabilité sur des terrains variés. La EL-X Knit offre une bonne sensation au sol pour ceux qui recherchent une expérience minimaliste, et est idéale pour une use_details au quotidien dans un style décontracté.",
+        "is_active": True,
+        "use": "Intensif"
     },
     "KOS Vintage": {
         "brand": "Vibram fivefingers",
@@ -697,10 +719,11 @@ base_models = {
         "sole_details": "Semelle intérieure : Microfibre en Polyester\\n Semelle intermédiaire : N/A\\n Caoutchouc : 1,5 mm",
         "upper": "Polyamide Extensible, Polyester, Polyuréthane",
         "material": "",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
-        "description": "Une nouvelle version d'un classique intemporel, l'édition limitée de la KSO Vintage célèbre le meilleur de ce que les chaussures minimalistes FiveFingers ont à offrir. Le polyamide extensible, fin et résistant et la maille extensible respirante enveloppent votre pied, pour un ajustement confortable qui ne laisse rien entrer. L’empeigne est respirante et à sèche rapidement, pour permettre une utilisation dans l'eau ou par temps humide, tandis que le système populaire de fermeture auto-agrippante assure un ajustement sûr. De plus, la semelle extérieure en caoutchouc performant XS Trek, non marquante, est extrêmement polyvalente et offre une excellente adhérence sur les surfaces sèches comme humides. La KSO Vintage est idéale aussi bien pour une utilisation quotidienne décontractée que pour des entraînements en salle de sport, et même pour les aventures sur les sentiers. Elle est conçue pour les vrais minimalistes qui veulent se connecter pleinement avec la Terre.",
-        "is_active": "true"
+        "description": "Une nouvelle version d'un classique intemporel, l'édition limitée de la KSO Vintage célèbre le meilleur de ce que les chaussures minimalistes FiveFingers ont à offrir. Le polyamide extensible, fin et résistant et la maille extensible respirante enveloppent votre pied, pour un ajustement confortable qui ne laisse rien entrer. L’empeigne est respirante et à sèche rapidement, pour permettre une use_details dans l'eau ou par temps humide, tandis que le système populaire de fermeture auto-agrippante assure un ajustement sûr. De plus, la semelle extérieure en caoutchouc performant XS Trek, non marquante, est extrêmement polyvalente et offre une excellente adhérence sur les surfaces sèches comme humides. La KSO Vintage est idéale aussi bien pour une use_details quotidienne décontractée que pour des entraînements en salle de sport, et même pour les aventures sur les sentiers. Elle est conçue pour les vrais minimalistes qui veulent se connecter pleinement avec la Terre.",
+        "is_active": True,
+        "use": "Régulier"
     },
     "KMD sport": {
         "brand": "Vibram fivefingers",
@@ -728,12 +751,13 @@ base_models = {
         "sole_details": "Semelle extérieure en caoutchouc de 4 mm\\n Assise plantaire en polyuréthane de 2 mm",
         "upper": "",
         "material": "",
-        "utilisation": "",
+        "use_details": "",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "Pensée pour l'athlète d'aujourd'hui, Vibram FiveFingers gagne en intensité avec la Vibram FiveFingers KMD Sport. Cette conception multisports conserve tout ce que nous aimons de la KSO avec des améliorations fonctionnelles qui plaisent aux amateurs de fitness les plus actifs. Pour la toute première fois, Vibram présente une semelle de 2 mm sans couture pour réduire les frottements. Les fermetures auto-agrippantes au talon et sur le cou-de-pied permettent de fixer l’empeigne en nylon extensible aux contours de votre pied, comme une seconde peau. La KMD Sport ne serait pas complète sans une semelle extérieure en caoutchouc Vibram TC1 de 4 mm qui offre l'adhérence et la protection dont vous avez besoin pour une large variété d'activités. Lavage en Machine / Séchage à l'Air Libre.",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Régulier"
     },
-        "V street": {
+        "V-street": {
         "brand": "Vibram fivefingers",
         "sales": 0,
         "base_price": 215.00,
@@ -759,13 +783,13 @@ base_models = {
         "sole_details": "12mm Total Thickness of sole.​\\n MIDSOLE: 6mm Foam\\n RUBBER: 4mm Rubber",
         "upper": "Stretch poly-wool blend with knit-sleeve collar; speed lace system closure.",
         "material": "",
-        "utilisation": "Idéal pour la marche urbaine sur des surfaces dures et artificielles.",
+        "use_details": "Idéal pour la marche urbaine sur des surfaces dures et artificielles.",
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "Une édition limitée de la collaboration Brandblack® Vibram Fivefingers combine une semelle Vibram Fivefingers confortable avec du caoutchouc Vibram XS Trek. Cette semelle propulse et amortit, ce qui en fait le choix idéal pour les promenades urbaines. La conception lisse de la tige associe les meilleurs matériaux : une tige en laine mélangée pour une saisonnalité maximale, et un col de chaussette extensible pour un confort ajusté.",
-        "is_active": "true"
+        "is_active": True,
+        "use": "Intensif"
     }
 }
-
 
 def generate_random_stocks(sizes, mean=15, variation=10):
     """
@@ -778,7 +802,7 @@ def generate_random_stocks(sizes, mean=15, variation=10):
 # 2. Génération automatique des déclinaisons
 def generate_gender_variants(model_name, model_data):
     variants = []
-    
+
     if model_data["unisex"]:
         # Taille unique pour les deux genres
         
@@ -808,6 +832,8 @@ def generate_gender_variants(model_name, model_data):
 # 3. Génération des CSV
 all_products = []
 all_variants = []
+all_categories = []
+all_ground_types = []
 
 for model_name, model_data in base_models.items():
     variants = generate_gender_variants(model_name, model_data)
@@ -825,6 +851,7 @@ for model_name, model_data in base_models.items():
             "ground_type": variant["ground_type"],
             "stability": variant["stability"],
             "drop": variant["drop"],
+            "use": variant["use"],
             "rating": variant["rating"].get(variant["gender"]) if isinstance(variant["rating"], dict) else variant["rating"],
             "1_star": variant["1_star"].get(variant["gender"]) if isinstance(variant["1_star"], dict) else variant["1_star"],
             "2_star": variant["2_star"].get(variant["gender"]) if isinstance(variant["2_star"], dict) else variant["2_star"],
@@ -837,9 +864,10 @@ for model_name, model_data in base_models.items():
             "sole_details": variant["sole_details"],
             "upper":variant["upper"],
             "material": variant["material"],
-            "utilisation": variant["utilisation"],
+            "use_details": variant["use_details"],
             "care_instructions": variant["care_instructions"],
-            "description": model_data.get("description", "")
+            "description": model_data.get("description", ""),
+            "base_model": "model"
         })
         
         # Fichier variants_config.csv
@@ -852,17 +880,46 @@ for model_name, model_data in base_models.items():
             for i, size in enumerate(variant["sizes"]):
                 all_variants.append({
                     "name": variant["full_name"],
+                    "sku": variant["brand"][:6].upper()+"-"+(model_name.upper())+"-"+variant["gender"][:1].upper()+ "-" + str(size) + "-"+color.upper(),
+                    "stocks": variant["stocks"][i],
                     "is_active" : variant["is_active"],
+                    "price":variant["price"],
                     "colors": color,
-                        "sku": variant["brand"][:6].upper()+"-"+(model_name.upper())+"-"+variant["gender"][:1].upper()+ "-" + str(size) + "-"+color.upper(),
-                        "sizes": size,
-                        "stocks": variant["stocks"][i]
+                    "sizes": size,
             })
         
+        categories_list = variant["category"]
 
-# 4. Export dans le répertoire courant
+        if isinstance(categories_list, str):
+            categories_list = [categories_list]
+        for category in categories_list:
+            all_categories.append({
+                "name":  variant["full_name"],
+                "category": category,
+            })
+
+        ground_types_list = variant["ground_type"]
+
+        if isinstance(ground_types_list, str):
+            ground_types_list = [ground_types_list]
+        for ground_type in ground_types_list:
+            all_ground_types.append({
+                "name":  variant["full_name"],
+                "ground_type": ground_type,
+            })
+
+# 4. Export dans le dossier seed_data à la racine de backend
+script_dir = os.path.dirname(os.path.abspath(__file__))
+backend_dir = os.path.dirname(script_dir)
+seed_data_dir = os.path.join(backend_dir, "seed_data")
+os.makedirs(seed_data_dir, exist_ok=True)
+products_path = os.path.join(seed_data_dir, "products.csv")
+variants_path = os.path.join(seed_data_dir, "product_variants.csv")
+categories_path = os.path.join(seed_data_dir, "product_categories.csv")
+ground_types_path = os.path.join(seed_data_dir, "product_ground_types.csv")
+
 pd.DataFrame(all_products).to_csv(
-    "products.csv",
+    products_path,
     index=False,
     quoting=csv.QUOTE_ALL,
     escapechar="\\",
@@ -870,7 +927,23 @@ pd.DataFrame(all_products).to_csv(
 )
 
 pd.DataFrame(all_variants).to_csv(
-    "variants_product.csv",
+    variants_path,
+    index=False,
+    quoting=csv.QUOTE_ALL,
+    escapechar="\\",
+    encoding="utf-8"
+)
+
+pd.DataFrame(all_categories).to_csv(
+    categories_path,
+    index=False,
+    quoting=csv.QUOTE_ALL,
+    escapechar="\\",
+    encoding="utf-8"
+)
+
+pd.DataFrame(all_ground_types).to_csv(
+    ground_types_path,
     index=False,
     quoting=csv.QUOTE_ALL,
     escapechar="\\",
