@@ -7,7 +7,7 @@ async function migrateDatabase() {
     console.log("🔄 Migration de la base de données...");
 
     // Lire le fichier SQL de migration
-    const sqlFile = join(process.cwd(), "scripts", "migrate-full.sql");
+    const sqlFile = join(process.cwd(), "migrations", "migrate-full.sql");
     const sql = readFileSync(sqlFile, "utf8");
 
     // Nettoyer le SQL : supprimer tous les commentaires
@@ -40,7 +40,10 @@ async function migrateDatabase() {
 
     for (const statement of statements) {
       if (statement.trim()) {
-        console.log("\n🔄 Executing:", statement.trim().substring(0, 60) + "...");
+        console.log(
+          "\n🔄 Executing:",
+          statement.trim().substring(0, 60) + "..."
+        );
         try {
           await pool.query(statement);
           console.log("✅ Success!");

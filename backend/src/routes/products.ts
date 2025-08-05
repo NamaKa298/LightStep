@@ -3,109 +3,203 @@ import { pool } from "../db/db";
 
 const router = express.Router();
 
-// Ajouter un produit
-router.post("/", async (req: any, res: any) => {
-  try {
-    const { name, brand, price, size, type, activity, gender } = req.body;
-    const { rows } = await pool.query(
-      `INSERT INTO products (name, brand, price, size, type, activity, gender) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [name, brand, price, size, type, activity, gender]
-    );
-    res.json(rows[0]);
-  } catch (error) {
-    console.error("Erreur lors de l'ajout:", error);
-    res.status(500).json({ error: "Erreur lors de l'ajout du produit" });
-  }
-});
-
 // Récupérer tous les produits
 router.get("/", async (req: any, res: any) => {
   try {
-    const { rows } = await pool.query("SELECT * FROM products WHERE is_active = true ORDER BY id");
+    const {
+      genders,
+      brands,
+      sizes,
+      ground_types,
+      minPrice,
+      maxPrice,
+      uses,
+      stability,
+      minDrop,
+      maxDrop,
+      minHeight,
+      maxHeight,
+      colors,
+    } = req.query;
+    let query = `
+      SELECT DISTINCT ON (pv.product_id, pv.color_id)
+        pv.id,
+        p.name,
+        pv.price,
+        p.rating,
+        p.review_count
+      FROM product_variants pv
+      JOIN products p ON pv.product_id = p.id
+      JOIN brands b ON p.brand_id = b.id
+      JOIN sizes s ON pv.size_id = s.id
+      JOIN colors c ON pv.color_id = c.id
+      JOIN genders g ON p.gender_id = g.id
+      JOIN product_ground_types pgt ON p.id = pgt.product_id
+      JOIN ground_types gt ON pgt.ground_type_id = gt.id
+      JOIN uses u ON p.use_id = u.id
+    `;
 
-    // Convertir les ratings et review_count en nombres
-    const productsWithNumericRatings = rows.map((product) => ({
-      ...product,
-      rating: product.rating ? parseFloat(product.rating) : null,
-      review_count: product.review_count ? parseInt(product.review_count) : null,
-    }));
+    // Tableaux pour les conditions et les paramètres
+    const conditions: string[] = [];
+    const params: any[] = [];
 
-  //   // 🚀 AJOUT : Reconstruire automatiquement les URLs d'images
-  //   console.log("🔧 Reconstruction des URLs d'images...");
-  //   const productsWithUrls = addImageUrlsToProducts(productsWithNumericRatings);
-  //   console.log("✅ URLs reconstruites, exemple:", productsWithUrls[0]?.image_url_full);
-
-  //   res.json(productsWithUrls);
-  // } catch (error) {
-  //   console.error("Erreur lors de la récupération:", error);
-  //   res.status(500).json({ error: "Erreur lors de la récupération des produits" });
-  // }
-});
-
-// Récupérer un produit par ID
-router.get("/:id", async (req: any, res: any) => {
-  try {
-    const { id } = req.params;
-    const { rows } = await pool.query("SELECT * FROM products WHERE id = $1", [id]);
-
-    if (rows.length === 0) {
-      return res.status(404).json({ error: "Produit non trouvé" });
+    if (genders) {
+      const genderList = Array.isArray(genders) ? genders : [genders];
+      conditions.push(
+        `g.name IN (${genderList
+          .map((_, i) => `$${params.length + i + 1}`)
+          .join(",")})`
+      );
+      params.push(...genderList);
     }
 
-    // Convertir les ratings en nombres
-    const product = {
-      ...rows[0],
-      rating: rows[0].rating ? parseFloat(rows[0].rating) : null,
-      review_count: rows[0].review_count ? parseInt(rows[0].review_count) : null,
-    };
+    // Ajout des filtres
+    if (brands) {
+      const brandList = Array.isArray(brands) ? brands : [brands];
+      conditions.push(
+        `b.name IN (${brandList
+          .map((_, i) => `$${params.length + i + 1}`)
+          .join(",")})`
+      );
+      params.push(...brandList);
+    }
 
-    res.json(product);
+    if (sizes) {
+      const sizeList = Array.isArray(sizes)
+        ? sizes.map(Number)
+        : [Number(sizes)];
+      conditions.push(
+        `s.eu_size IN (${sizeList
+          .map((_, i) => `$${params.length + i + 1}`)
+          .join(",")})`
+      );
+      params.push(...sizeList);
+    }
+
+    if (ground_types) {
+      const groundTypeList = Array.isArray(ground_types)
+        ? ground_types
+        : [ground_types];
+      conditions.push(
+        `gt.name IN (${groundTypeList
+          .map((_, i) => `$${params.length + i + 1}`)
+          .join(",")})`
+      );
+      params.push(...groundTypeList);
+    }
+
+    if (minPrice) {
+      conditions.push(`pv.price >= $${params.length + 1}`);
+      params.push(Number(minPrice));
+    }
+
+    if (maxPrice) {
+      conditions.push(`pv.price <= $${params.length + 1}`);
+      params.push(Number(maxPrice));
+    }
+
+    if (uses) {
+      const useList = Array.isArray(uses) ? uses : [uses];
+      conditions.push(
+        `u.name IN (${useList
+          .map((_, i) => `$${params.length + i + 1}`)
+          .join(",")})`
+      );
+      params.push(...useList);
+    }
+
+    if (stability) {
+      const stabilityList = Array.isArray(stability) ? stability : [stability];
+      conditions.push(
+        `p.stability IN (${stabilityList
+          .map((_, i) => `$${params.length + i + 1}`)
+          .join(",")})`
+      );
+      params.push(...stabilityList);
+    }
+
+    if (minDrop) {
+      conditions.push(`pv.drop >= $${params.length + 1}`);
+      params.push(Number(minDrop));
+    }
+
+    if (maxDrop) {
+      conditions.push(`pv.drop <= $${params.length + 1}`);
+      params.push(Number(maxDrop));
+    }
+
+    if (minHeight) {
+      conditions.push(`pv.height >= $${params.length + 1}`);
+      params.push(Number(minHeight));
+    }
+
+    if (maxHeight) {
+      conditions.push(`pv.height <= $${params.length + 1}`);
+      params.push(Number(maxHeight));
+    }
+
+    if (colors) {
+      const colorList = Array.isArray(colors) ? colors : [colors];
+      conditions.push(
+        `c.hex_code IN (${colorList
+          .map((_, i) => `$${params.length + i + 1}`)
+          .join(",")})`
+      );
+      params.push(...colorList);
+    }
+
+    // Ajouter les conditions à la requête
+    if (conditions.length > 0) {
+      query += ` WHERE ${conditions.join(" AND ")}`;
+    }
+
+    // Finaliser la requête
+    query += `
+      GROUP BY p.id, pv.id, b.name
+      ORDER BY pv.product_id, pv.color_id
+    `;
+
+    const { rows } = await pool.query(query, params);
+    res.json(rows);
   } catch (error) {
     console.error("Erreur lors de la récupération:", error);
-    res.status(500).json({ error: "Erreur lors de la récupération du produit" });
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la récupération des produits" });
   }
 });
 
-// Modifier un produit
-router.put("/:id", async (req: any, res: any) => {
+router.get("/filters", async (req, res) => {
   try {
-    const { id } = req.params;
-    const { name, brand, price, size, type, activity, gender } = req.body;
+    const [brands, sizes, ground_types, uses, colors, genders] =
+      await Promise.all([
+        pool.query("SELECT name FROM brands ORDER BY name"),
+        pool.query("SELECT DISTINCT eu_size FROM sizes ORDER BY eu_size"),
+        pool.query("SELECT name FROM ground_types ORDER BY name"),
+        pool.query("SELECT name FROM uses ORDER BY name"),
+        pool.query("SELECT name, hex_code FROM colors ORDER BY name"),
+        pool.query("SELECT name FROM genders ORDER BY name"),
+      ]);
 
-    const { rows } = await pool.query(
-      `UPDATE products 
-       SET name = $1, brand = $2, price = $3, size = $4, type = $5, activity = $6, gender = $7 
-       WHERE id = $8 
-       RETURNING *`,
-      [name, brand, price, size, type, activity, gender, id]
-    );
-
-    if (rows.length === 0) {
-      return res.status(404).json({ error: "Produit non trouvé" });
-    }
-
-    res.json(rows[0]);
+    res.json({
+      brands: brands.rows.map((row) => ({ id: row.id, name: row.name })),
+      sizes: sizes.rows.map((row) => row.eu_size),
+      ground_types: ground_types.rows.map((row) => ({
+        id: row.id,
+        name: row.name,
+      })),
+      uses: uses.rows.map((row) => ({
+        id: row.id,
+        name: row.name,
+      })),
+      colors: colors.rows.map((row) => ({
+        name: row.name,
+        hex: row.hex_code,
+      })),
+      genders: genders.rows.map((row) => ({ id: row.id, name: row.name })),
+    });
   } catch (error) {
-    console.error("Erreur lors de la modification:", error);
-    res.status(500).json({ error: "Erreur lors de la modification du produit" });
-  }
-});
-
-// Supprimer un produit
-router.delete("/:id", async (req: any, res: any) => {
-  try {
-    const { id } = req.params;
-    const { rows } = await pool.query("DELETE FROM products WHERE id = $1 RETURNING *", [id]);
-
-    if (rows.length === 0) {
-      return res.status(404).json({ error: "Produit non trouvé" });
-    }
-
-    res.json({ message: "Produit supprimé avec succès", product: rows[0] });
-  } catch (error) {
-    console.error("Erreur lors de la suppression:", error);
-    res.status(500).json({ error: "Erreur lors de la suppression du produit" });
+    res.status(500).json({ error: "Erreur lors du chargement des filtres" });
   }
 });
 

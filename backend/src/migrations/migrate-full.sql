@@ -99,7 +99,6 @@ CHECK (review_count >= 0);
 DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS old_unused_table;
 
-
 ALTER TABLE products 
 DROP COLUMN IF EXISTS news;
 
@@ -196,3 +195,16 @@ ARRAY[0, 1, 2, 3, 5]);
 -- CREATE INDEX idx_products_base_model ON products(base_model);
 
 TRUNCATE TABLE product_images RESTART IDENTITY;
+=======
+-- ALTER TABLE types
+-- ALTER COLUMN name TYPE VARCHAR(30);
+
+INSERT INTO uses(name) VALUES
+('Occasionel'),
+('Régulier'),
+('Intensif');
+=======
+*/
+
+ALTER TABLE products
+ADD COLUMN IF NOT EXISTS use_id INTEGER REFERENCES uses(id);

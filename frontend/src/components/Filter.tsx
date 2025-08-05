@@ -2,301 +2,269 @@
 import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
 
-// Types TypeScript
-type FiltreOption = {
-  id: string;
-  label: string;
+type FilterOption = {
+  id?: number;
+  name: string;
   count?: number;
+  hex_code?: string;
 };
 
-type FiltreCategorie = {
-  id: string;
-  label: string;
-  options: FiltreOption[];
+type FiltersData = {
+  brands: FilterOption[];
+  sizes: number[];
+  ground_types: FilterOption[];
+  uses: FilterOption[];
+  colors: FilterOption[];
+  genders: FilterOption[];
 };
 
-export default function Filtres() {
-  // État pour les filtres
-  const [categoriesFiltres, setCategoriesFiltres] = useState<FiltreCategorie[]>([]);
-  const [filtresActifs, setFiltresActifs] = useState<Record<string, string[]>>({});
-  const [dropdownOuvert, setDropdownOuvert] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+type FiltersProps = {
+  onFilterChange: (filters: any) => void;
+};
 
-  // Chargement des filtres depuis le backend
+export default function Filters({ onFilterChange }: FiltersProps) {
+  const [filtersData, setFiltersData] = useState<FiltersData | null>(null);
+  const [selectedFilters, setSelectedFilters] = useState({
+    brands: [] as string[],
+    sizes: [] as number[],
+    ground_types: [] as string[],
+    uses: [] as string[],
+    colors: [] as string[],
+    genders: [] as string[],
+    minPrice: "",
+    maxPrice: "",
+  });
+
   useEffect(() => {
-    const chargerFiltres = async () => {
-      try {
-        const response = await fetch("/api/filtres");
-
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status}`);
-        }
-
-        const data: FiltreCategorie[] = await response.json();
-        setCategoriesFiltres(data);
-      } catch (err) {
-        console.error("Erreur de chargement des filtres", err);
-        setError("Impossible de charger les filtres. Veuillez réessayer.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    chargerFiltres();
+    fetch("http://localhost:3001/api/products/filters")
+      .then((res) => res.json())
+      .then((data) => {
+        setFiltersData({
+          brands: data.brands,
+          sizes: data.sizes,
+          ground_types: data.ground_types,
+          uses: data.uses,
+          colors: data.colors,
+          genders: data.genders,
+        });
+      });
   }, []);
 
-  // Gestion des interactions
-  const toggleDropdown = (categorieId: string) => {
-    setDropdownOuvert(dropdownOuvert === categorieId ? null : categorieId);
-  };
+  useEffect(() => {
+    // Notifier le parent des changements de filtre
+    onFilterChange(selectedFilters);
+  }, [selectedFilters, onFilterChange]);
 
-  const toggleFiltre = (categorieId: string, optionId: string) => {
-    setFiltresActifs((prev) => {
-      const currentSelections = prev[categorieId] || [];
-      const nouvellesSelections = currentSelections.includes(optionId)
-        ? currentSelections.filter((id) => id !== optionId)
-        : [...currentSelections, optionId];
+  if (!filtersData) {
+    return <div>Chargement des filtres...</div>;
+  }
 
-      return {
-        ...prev,
-        [categorieId]: nouvellesSelections,
-      };
+  const handleCheckboxChange = (
+    filterType: keyof typeof selectedFilters,
+    value: string | number
+  ) => {
+    setSelectedFilters((prev) => {
+      const currentArray = [...prev[filterType]] as (string | number)[];
+      const valueIndex = currentArray.indexOf(value);
+
+      if (valueIndex === -1) {
+        // Ajouter la valeur
+        return { ...prev, [filterType]: [...currentArray, value] };
+      } else {
+        // Retirer la valeur
+        return {
+          ...prev,
+          [filterType]: currentArray.filter((v) => v !== value),
+        };
+      }
     });
   };
 
-  const supprimerFiltre = (categorieId: string, optionId: string) => {
-    setFiltresActifs((prev) => {
-      const nouvellesSelections = prev[categorieId]?.filter((id) => id !== optionId) || [];
-      return {
-        ...prev,
-        [categorieId]: nouvellesSelections,
-      };
-    });
+  const handlePriceChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "minPrice" | "maxPrice"
+  ) => {
+    setSelectedFilters((prev) => ({
+      ...prev,
+      [type]: e.target.value,
+    }));
   };
 
-  const effacerTousLesFiltres = () => {
-    setFiltresActifs({});
-  };
+  const allFilter = css`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 20%;
+  `;
 
-  // États de chargement et d'erreur
-  if (loading) {
-    return (
-      <div css={styles.container}>
-        <h2 css={styles.title}>Filtrer les produits</h2>
-        <div css={styles.loadingError}>Chargement des filtres...</div>
-      </div>
-    );
-  }
+  const filterSection = css`
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+  `;
 
-  if (error) {
-    return (
-      <div css={styles.container}>
-        <h2 css={styles.title}>Filtrer</h2>
-        <div css={[styles.loadingError, styles.error]}>{error}</div>
-      </div>
-    );
-  }
+  const filterTitle = css`
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-style: italic;
+  `;
+
+  const filterOption = css`
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+    gap: 10px;
+    padding: 5px;
+  `;
+
+  const colorSwatch = css`
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    margin-right: 8px;
+    display: inline-block;
+    border: 1px solid #ddd;
+  `;
+
+  const priceInputs = css`
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  `;
+
+  const priceInput = css`
+    width: 70px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  `;
+
+  if (!filtersData) return <div>Chargement des filtres...</div>;
 
   return (
-    <div css={styles.container}>
-      <h2 css={styles.title}>Filtrer</h2>
-
-      {/* Filtres actifs */}
-      <div css={styles.activeFilters}>
-        {Object.entries(filtresActifs).map(([categorieId, options]) =>
-          options?.map((optionId) => {
-            const categorie = categoriesFiltres.find((c) => c.id === categorieId);
-            const option = categorie?.options.find((o) => o.id === optionId);
-
-            return option ? (
-              <span key={`${categorieId}-${optionId}`} css={styles.filterBadge}>
-                {option.label}
-                <button
-                  onClick={() => supprimerFiltre(categorieId, optionId)}
-                  css={styles.removeButton}
-                  aria-label={`Retirer le filtre ${option.label}`}
-                >
-                  ×
-                </button>
-              </span>
-            ) : null;
-          })
-        )}
-
-        {Object.values(filtresActifs).some((options) => options?.length > 0) && (
-          <button onClick={effacerTousLesFiltres} css={styles.clearAllButton} aria-label="Effacer tous les filtres">
-            Effacer tout
-          </button>
-        )}
+    <div css={allFilter}>
+      {/* Filtre par genre */}
+      <div css={filterSection}>
+        <div css={filterTitle}>GENRE</div>
+        {filtersData.genders.map((gender) => (
+          <div key={gender.id} css={filterOption}>
+            <input
+              type="checkbox"
+              id={`${gender.id}`}
+              checked={selectedFilters.genders.includes(gender.name)}
+              onChange={() => handleCheckboxChange("genders", gender.name)}
+            />
+            <label htmlFor={`gender-${gender.id}`}>{gender.name}</label>
+          </div>
+        ))}
       </div>
 
-      {/* Dropdowns des filtres */}
-      <div css={styles.dropdownsContainer}>
-        {categoriesFiltres.map((categorie) => {
-          const isOpen = dropdownOuvert === categorie.id;
-          return (
-            <div key={categorie.id} css={styles.dropdownWrapper}>
-              <button
-                css={styles.dropdownButton(isOpen)}
-                onClick={() => toggleDropdown(categorie.id)}
-                aria-expanded={isOpen}
-                aria-controls={`dropdown-${categorie.id}`}
-              >
-                {categorie.label}
-                <span css={styles.dropdownIcon(isOpen)} aria-hidden="true">
-                  ▼
-                </span>
-              </button>
+      {/* Filtre par marque */}
+      <div css={filterSection}>
+        <div css={filterTitle}>MARQUES</div>
+        {filtersData.brands.map((brand) => (
+          <div key={brand.id} css={filterOption}>
+            <input
+              type="checkbox"
+              id={`${brand.id}`}
+              checked={selectedFilters.brands.includes(brand.name)}
+              onChange={() => handleCheckboxChange("brands", brand.name)}
+            />
+            <label htmlFor={`brand-${brand.id}`}>{brand.name}</label>
+          </div>
+        ))}
+      </div>
 
-              {isOpen && (
-                <div id={`dropdown-${categorie.id}`} css={styles.dropdownContent} role="menu">
-                  {categorie.options.map((option) => (
-                    <label key={option.id} css={styles.filterOption}>
-                      <input
-                        type="checkbox"
-                        checked={filtresActifs[categorie.id]?.includes(option.id) || false}
-                        onChange={() => toggleFiltre(categorie.id, option.id)}
-                        aria-label={`Filtrer par ${option.label}`}
-                      />
-                      <span>
-                        {option.label}
-                        {option.count !== undefined && <span css={styles.count}> ({option.count})</span>}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        })}
+      {/* Filtre par taille */}
+      <div css={filterSection}>
+        <div css={filterTitle}>TAILLES</div>
+        {filtersData.sizes.map((size) => (
+          <div key={size} css={filterOption}>
+            <input
+              type="checkbox"
+              id={`size-${size}`}
+              checked={selectedFilters.sizes.includes(size)}
+              onChange={() => handleCheckboxChange("sizes", size)}
+            />
+            <label htmlFor={`size-${size}`}>{size}</label>
+          </div>
+        ))}
+      </div>
+
+      {/* Filtre par type de terrain */}
+      <div css={filterSection}>
+        <div css={filterTitle}>TYPE DE TERRAIN</div>
+        {filtersData.ground_types.map((ground_type) => (
+          <div key={ground_type.id} css={filterOption}>
+            <input
+              type="checkbox"
+              id={`ground-${ground_type.id}`}
+              checked={selectedFilters.ground_types.includes(ground_type.name)}
+              onChange={() =>
+                handleCheckboxChange("ground_types", ground_type.name)
+              }
+            />
+            <label htmlFor={`ground-${ground_type.id}`}>
+              {ground_type.name}
+            </label>
+          </div>
+        ))}
+      </div>
+
+      {/* Filtre par utilisation */}
+      <div css={filterSection}>
+        <div css={filterTitle}>UTILISATION</div>
+        {filtersData.uses.map((use) => (
+          <div key={use.id} css={filterOption}>
+            <input
+              type="checkbox"
+              id={`use-${use.id}`}
+              checked={selectedFilters.uses.includes(use.name)}
+              onChange={() => handleCheckboxChange("uses", use.name)}
+            />
+            <label htmlFor={`use-${use.id}`}>{use.name}</label>
+          </div>
+        ))}
+      </div>
+
+      {/* Filtre par couleur */}
+      <div css={filterSection}>
+        <div css={filterTitle}>COULEURS</div>
+        {filtersData.colors.map((color) => (
+          <div key={color.name} css={filterOption}>
+            <input
+              type="checkbox"
+              id={`color-${color.name}`}
+              checked={selectedFilters.colors.includes(color.name)}
+              onChange={() => handleCheckboxChange("colors", color.name)}
+            />
+            <span css={[colorSwatch, { backgroundColor: color.hex_code }]} />
+            <label htmlFor={`color-${color.name}`}>{color.name}</label>
+          </div>
+        ))}
+      </div>
+
+      {/* Filtre par prix */}
+      <div css={filterSection}>
+        <div css={filterTitle}>PRIX</div>
+        <div css={priceInputs}>
+          <input
+            css={priceInput}
+            type="number"
+            placeholder="Min"
+            value={selectedFilters.minPrice}
+            onChange={(e) => handlePriceChange(e, "minPrice")}
+          />
+          <span>-</span>
+          <input
+            css={priceInput}
+            type="number"
+            placeholder="Max"
+            value={selectedFilters.maxPrice}
+            onChange={(e) => handlePriceChange(e, "maxPrice")}
+          />
+        </div>
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: css`
-    font-family: "Arial", sans-serif;
-    max-width: 300px;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  `,
-  title: css`
-    margin-top: 0;
-    font-size: 1.5rem;
-    color: #333;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-  `,
-  loadingError: css`
-    padding: 15px;
-    text-align: center;
-    color: #666;
-  `,
-  error: css`
-    color: #dc3545;
-  `,
-  activeFilters: css`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
-  `,
-  filterBadge: css`
-    display: inline-flex;
-    align-items: center;
-    padding: 5px 10px;
-    background-color: #e9ecef;
-    border-radius: 20px;
-    font-size: 0.9rem;
-  `,
-  removeButton: css`
-    margin-left: 5px;
-    background: none;
-    border: none;
-    color: #6c757d;
-    cursor: pointer;
-    font-size: 1rem;
-    line-height: 1;
-    &:hover {
-      color: #dc3545;
-    }
-  `,
-  clearAllButton: css`
-    background: none;
-    border: none;
-    color: #0d6efd;
-    cursor: pointer;
-    font-size: 0.9rem;
-    padding: 5px;
-    &:hover {
-      text-decoration: underline;
-    }
-  `,
-  dropdownsContainer: css`
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  `,
-  dropdownWrapper: css`
-    position: relative;
-  `,
-  dropdownButton: (isOpen: boolean) => css`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 10px 15px;
-    background-color: ${isOpen ? "#e9ecef" : "white"};
-    border: 1px solid #ced4da;
-    border-radius: ${isOpen ? "4px 4px 0 0" : "4px"};
-    cursor: pointer;
-    text-align: left;
-    font-size: 1rem;
-    &:hover {
-      background-color: #f1f1f1;
-    }
-  `,
-  dropdownIcon: (isOpen: boolean) => css`
-    font-size: 0.7rem;
-    transition: transform 0.2s;
-    transform: ${isOpen ? "rotate(180deg)" : "none"};
-  `,
-  dropdownContent: css`
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: white;
-    border: 1px solid #ced4da;
-    border-top: none;
-    border-radius: 0 0 4px 4px;
-    padding: 10px;
-    z-index: 100;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-height: 300px;
-    overflow-y: auto;
-  `,
-  filterOption: css`
-    display: flex;
-    align-items: center;
-    padding: 8px 5px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    &:hover {
-      background-color: #f8f9fa;
-    }
-    input {
-      margin-right: 10px;
-      cursor: pointer;
-    }
-  `,
-  count: css`
-    color: #6c757d;
-    font-size: 0.8rem;
-    margin-left: 5px;
-  `,
-};

@@ -2,9 +2,10 @@ import Band from "../../components/Band";
 import ContactWidget from "../../components/ContactWidget";
 import Footer from "../../components/layout/Footer";
 import NavBar from "../../components/NavBar";
-import Filter from "../../components/Filter";
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
+import ProductsList from "../../components/ProductsList";
+import Filter from "../../components/Filter";
 
 function ShoppingList() {
   return (
@@ -13,7 +14,8 @@ function ShoppingList() {
       <MainContent className="container">
         <NavBar />
         <ContactWidget />
-        <Filter />
+        <Filter onFilterChange={(filters) => console.log(filters)} />
+        <ProductsList />
       </MainContent>
       <Footer />
     </AppContainer>
