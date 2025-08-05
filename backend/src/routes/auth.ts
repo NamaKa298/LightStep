@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { pool } from "../db";
+import { pool } from "../db/db";
 
 const router = express.Router();
 const JWT_SECRET = "lightstep_secret_key_2025"; // Changez ça en production !
