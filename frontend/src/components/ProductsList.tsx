@@ -27,7 +27,11 @@ export default function ProductsList() {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/products")
+    const controller = new AbortController();
+
+    fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
+      signal: controller.signal,
+    })
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}: ${res.statusText}`);
@@ -39,8 +43,12 @@ export default function ProductsList() {
         setProducts(data);
       })
       .catch((error) => {
-        console.error("❌ Erreur:", error.message);
+        if (error.name !== "AbortError") {
+          console.error("❌ Erreur:", error.message);
+        }
       });
+
+    return () => controller.abort();
   }, []);
 
   const productsTable = css`
@@ -73,30 +81,15 @@ export default function ProductsList() {
       <div css={productsTable}>
         {products.map((product) => (
           <div key={product.id}>
-            <img
-              css={productImage}
-              src={
-                product.image_url_full ||
-                product.image_url ||
-                "/placeholder-image.jpg"
-              }
-              alt={product.name}
-            />
+            <img css={productImage} src={product.image_url_full || product.image_url || "/placeholder-image.jpg"} alt={product.name} />
             <h3 css={productModel}>{product.name}</h3>
             <div>
               {/* Affichage des étoiles de notation */}
-              {product.rating !== undefined &&
-                product.rating !== null &&
-                (typeof product.rating === "number"
-                  ? product.rating > 0
-                  : parseFloat(product.rating) > 0) && (
-                  <div>
-                    <StarRating
-                      rating={product.rating}
-                      reviewCount={product.review_count}
-                    />
-                  </div>
-                )}
+              {product.rating !== undefined && product.rating !== null && (typeof product.rating === "number" ? product.rating > 0 : parseFloat(product.rating) > 0) && (
+                <div>
+                  <StarRating rating={product.rating} reviewCount={product.review_count} />
+                </div>
+              )}
               <p css={productPrice}>{product.price}€</p>
             </div>
           </div>
