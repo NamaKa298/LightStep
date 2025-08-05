@@ -18,16 +18,10 @@ export default function StarRating({ rating, reviewCount }: StarRatingProps) {
     font-size: 16px;
   `;
   // Convertir rating en nombre
-  const numericRating =
-    typeof rating === "string" ? parseFloat(rating) : rating;
+  const numericRating = typeof rating === "string" ? parseFloat(rating) : rating;
 
   // Vérifier que la note est valide
-  if (
-    isNaN(numericRating) ||
-    numericRating < 0 ||
-    numericRating === null ||
-    numericRating === undefined
-  ) {
+  if (isNaN(numericRating) || numericRating < 0 || numericRating === null || numericRating === undefined) {
     return null;
   }
 
@@ -56,9 +50,7 @@ export default function StarRating({ rating, reviewCount }: StarRatingProps) {
           return <Star key={starSerialNumber} filling={filling} />;
         })}
       </div>
-      {reviewCount !== undefined && reviewCount > 0 && (
-        <span className="text-gray-500 text-xs">({reviewCount})</span>
-      )}
+      {reviewCount !== undefined && reviewCount > 0 && <span className="text-gray-500 text-xs">({reviewCount})</span>}
     </div>
   );
 }

@@ -1,2 +1,6 @@
 .env
 /src/generated/prisma
+local-images
+*.png
+*.jpg
+*.webp
