@@ -792,7 +792,6 @@ base_models = {
     }
 }
 
-
 def generate_random_stocks(sizes, mean=15, variation=10):
     """
     Génère des stocks aléatoires avec:

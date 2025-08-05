@@ -1,4 +1,4 @@
-import { pool } from "../src/db";
+import { pool } from "../src/db/db";
 import { readFileSync } from "fs";
 import { join } from "path";
 

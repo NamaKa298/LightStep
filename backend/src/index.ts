@@ -1,11 +1,9 @@
-import express from "express";
+dotenv.config({ path: ".env.local" });
 import cors from "cors";
 import dotenv from "dotenv";
+import express from "express";
+import authRouter from "./routes/auth";
 import productsRouter from "./routes/products";
-import authRouter, {
-  authenticateToken,
-  requireAdmin as authRequireAdmin,
-} from "./routes/auth";
 
 // Charger les variables d'environnement
 dotenv.config();
