@@ -40,7 +40,7 @@
     "pandas": "^0.0.3",
     "pd": "^0.8.1",
     "pg": "^8.16.3",
-    "sharp": "^0.34.3"
+    "sharp": "^0.34.3",
     "pg-copy-streams": "^7.0.0"
   },
   "devDependencies": {
