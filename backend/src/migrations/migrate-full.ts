@@ -1,6 +1,6 @@
-import { pool } from "../src/db/db";
 import { readFileSync } from "fs";
 import { join } from "path";
+import { pool } from "../db/db";
 
 async function migrateDatabase() {
   try {
@@ -40,10 +40,7 @@ async function migrateDatabase() {
 
     for (const statement of statements) {
       if (statement.trim()) {
-        console.log(
-          "\n🔄 Executing:",
-          statement.trim().substring(0, 60) + "..."
-        );
+        console.log("\n🔄 Executing:", statement.trim().substring(0, 60) + "...");
         try {
           await pool.query(statement);
           console.log("✅ Success!");
