@@ -2,7 +2,8 @@
   "name": "lightstep",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\""
+    "dev": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
+    "preinstall": "npm_config_rollup_core=wasm npm install rollup@3"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
