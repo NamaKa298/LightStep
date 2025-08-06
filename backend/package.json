@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/index.ts",
-    "start": "node dist/index.js",
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
+    "start": "node dist/src/index.js",
     "build": "tsc",
     "init-db": "ts-node scripts/init-db.ts",
     "migrate-full": "ts-node migrations/migrate-full.ts",
@@ -15,6 +15,7 @@
     "show-table": "ts-node scripts/show-table.ts",
     "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
     "prisma:seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
@@ -31,8 +32,8 @@
     "@types/node-fetch": "^2.6.12",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
     "csv-parse": "^6.0.0",
+    "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mime-types": "^3.0.1",
@@ -40,8 +41,8 @@
     "pandas": "^0.0.3",
     "pd": "^0.8.1",
     "pg": "^8.16.3",
-    "sharp": "^0.34.3",
-    "pg-copy-streams": "^7.0.0"
+    "pg-copy-streams": "^7.0.0",
+    "sharp": "^0.34.3"
   },
   "devDependencies": {
     "@prisma/client": "^6.13.0",
