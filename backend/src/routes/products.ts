@@ -1,7 +1,9 @@
 import express from "express";
 import { pool } from "../db/db";
+import { PrismaClient } from "@prisma/client";
 
 const router = express.Router();
+const prisma = new PrismaClient();
 
 // Récupérer tous les produits
 router.get("/", async (req: any, res: any) => {
@@ -21,146 +23,147 @@ router.get("/", async (req: any, res: any) => {
       maxHeight,
       colors,
     } = req.query;
-    let query = `
-      SELECT DISTINCT ON (pv.product_id, pv.color_id)
-        pv.id,
-        p.name,
-        pv.price,
-        p.rating,
-        p.review_count
-      FROM product_variants pv
-      JOIN products p ON pv.product_id = p.id
-      JOIN brands b ON p.brand_id = b.id
-      JOIN sizes s ON pv.size_id = s.id
-      JOIN colors c ON pv.color_id = c.id
-      JOIN genders g ON p.gender_id = g.id
-      JOIN product_ground_types pgt ON p.id = pgt.product_id
-      JOIN ground_types gt ON pgt.ground_type_id = gt.id
-      JOIN uses u ON p.use_id = u.id
-    `;
 
-    // Tableaux pour les conditions et les paramètres
-    const conditions: string[] = [];
-    const params: any[] = [];
+    const where: any = {};
+    const variantFilters: any = {};
 
     if (genders) {
-      const genderList = Array.isArray(genders) ? genders : [genders];
-      conditions.push(
-        `g.name IN (${genderList
-          .map((_, i) => `$${params.length + i + 1}`)
-          .join(",")})`
-      );
-      params.push(...genderList);
+      where.gender = {
+        name: { in: Array.isArray(genders) ? genders : [genders] },
+      };
     }
 
-    // Ajout des filtres
     if (brands) {
-      const brandList = Array.isArray(brands) ? brands : [brands];
-      conditions.push(
-        `b.name IN (${brandList
-          .map((_, i) => `$${params.length + i + 1}`)
-          .join(",")})`
-      );
-      params.push(...brandList);
+      where.brand = {
+        name: { in: Array.isArray(brands) ? brands : [brands] },
+      };
     }
 
     if (sizes) {
-      const sizeList = Array.isArray(sizes)
-        ? sizes.map(Number)
-        : [Number(sizes)];
-      conditions.push(
-        `s.eu_size IN (${sizeList
-          .map((_, i) => `$${params.length + i + 1}`)
-          .join(",")})`
-      );
-      params.push(...sizeList);
+      variantFilters.size = {
+        eu_size: {
+          in: Array.isArray(sizes) ? sizes.map(Number) : [Number(sizes)],
+        },
+      };
     }
 
     if (ground_types) {
-      const groundTypeList = Array.isArray(ground_types)
-        ? ground_types
-        : [ground_types];
-      conditions.push(
-        `gt.name IN (${groundTypeList
-          .map((_, i) => `$${params.length + i + 1}`)
-          .join(",")})`
-      );
-      params.push(...groundTypeList);
+      where.product_ground_types = {
+        some: {
+          ground_type: {
+            name: {
+              in: Array.isArray(ground_types) ? ground_types : [ground_types],
+            },
+          },
+        },
+      };
     }
 
     if (minPrice) {
-      conditions.push(`pv.price >= $${params.length + 1}`);
-      params.push(Number(minPrice));
+      variantFilters.price = {
+        ...variantFilters.price,
+        gte: Number(minPrice),
+      };
     }
 
     if (maxPrice) {
-      conditions.push(`pv.price <= $${params.length + 1}`);
-      params.push(Number(maxPrice));
+      variantFilters.price = {
+        ...variantFilters.price,
+        lte: Number(maxPrice),
+      };
     }
 
     if (uses) {
-      const useList = Array.isArray(uses) ? uses : [uses];
-      conditions.push(
-        `u.name IN (${useList
-          .map((_, i) => `$${params.length + i + 1}`)
-          .join(",")})`
-      );
-      params.push(...useList);
+      where.use = {
+        name: { in: Array.isArray(uses) ? uses : [uses] },
+      };
     }
 
     if (stability) {
-      const stabilityList = Array.isArray(stability) ? stability : [stability];
-      conditions.push(
-        `p.stability IN (${stabilityList
-          .map((_, i) => `$${params.length + i + 1}`)
-          .join(",")})`
-      );
-      params.push(...stabilityList);
+      where.stability = {
+        in: Array.isArray(stability) ? stability : [stability],
+      };
     }
 
     if (minDrop) {
-      conditions.push(`pv.drop >= $${params.length + 1}`);
-      params.push(Number(minDrop));
+      variantFilters.drop = {
+        ...variantFilters.drop,
+        gte: Number(minDrop),
+      };
     }
 
     if (maxDrop) {
-      conditions.push(`pv.drop <= $${params.length + 1}`);
-      params.push(Number(maxDrop));
+      variantFilters.drop = {
+        ...variantFilters.drop,
+        lte: Number(maxDrop),
+      };
     }
 
     if (minHeight) {
-      conditions.push(`pv.height >= $${params.length + 1}`);
-      params.push(Number(minHeight));
+      variantFilters.height = {
+        ...variantFilters.height,
+        gte: Number(minHeight),
+      };
     }
 
     if (maxHeight) {
-      conditions.push(`pv.height <= $${params.length + 1}`);
-      params.push(Number(maxHeight));
+      variantFilters.height = {
+        ...variantFilters.height,
+        lte: Number(maxHeight),
+      };
     }
 
     if (colors) {
-      const colorList = Array.isArray(colors) ? colors : [colors];
-      conditions.push(
-        `c.hex_code IN (${colorList
-          .map((_, i) => `$${params.length + i + 1}`)
-          .join(",")})`
-      );
-      params.push(...colorList);
+      variantFilters.color = {
+        hex_code: { in: Array.isArray(colors) ? colors : [colors] },
+      };
     }
 
     // Ajouter les conditions à la requête
-    if (conditions.length > 0) {
-      query += ` WHERE ${conditions.join(" AND ")}`;
+    if (Object.keys(variantFilters).length > 0) {
+      where.product_variants = { some: variantFilters };
     }
 
-    // Finaliser la requête
-    query += `
-      GROUP BY p.id, pv.id, b.name
-      ORDER BY pv.product_id, pv.color_id
-    `;
+    // Requête Prisma
+    const productVariants = await prisma.productVariant.findMany({
+      where: {
+        product: where,
+      },
+      include: {
+        product: {
+          include: {
+            brand: true,
+            gender: true,
+            use: true,
+            product_ground_types: {
+              include: { ground_type: true },
+            },
+          },
+        },
+        size: true,
+        color: true,
+      },
+      distinct: ["product_id", "color_id"],
+      orderBy: [{ product_id: "asc" }, { color_id: "asc" }],
+    });
 
-    const { rows } = await pool.query(query, params);
-    res.json(rows);
+    // Mapper les variantes avec un nom de variable raccourci
+    const formattedVariants = productVariants.map((v) => ({
+      id: v.id,
+      product_id: v.product_id,
+      name: v.product?.name ?? null,
+      brand: v.product?.brand ?? null,
+      price: v.price,
+      color_id: v.color_id,
+      color_name: v.color?.name ?? null,
+      color_hex: v.color?.hex_code ?? null,
+      gender: v.product?.gender?.name ?? null,
+      use: v.product?.use?.name ?? null,
+      rating: v.product?.rating ?? null,
+      review_count: v.product?.review_count ?? null,
+    }));
+
+    res.json(formattedVariants);
   } catch (error) {
     console.error("Erreur lors de la récupération:", error);
     res

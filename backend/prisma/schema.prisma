@@ -102,7 +102,6 @@ model ProductGroundType {
 
 model ProductImage {
   id                Int      @id @default(autoincrement())
-  product_id        Int
   color_id          Int
   image_type        String   @db.VarChar(50)
   sort_order        String   @db.VarChar(10)
@@ -113,12 +112,11 @@ model ProductImage {
   created_at        DateTime? @default(now()) @db.Timestamptz(6) @map("created_at")
   updated_at        DateTime? @default(now()) @db.Timestamptz(6) @map("updated_at")
   color             Color    @relation(fields: [color_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  product           Product  @relation(fields: [product_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  base_model        String   @db.VarChar(20)
 
   @@index([color_id], map: "idx_product_image_color")
   @@index([product_id], map: "idx_product_image_product")
   @@unique([product_id, color_id, image_type, original_filename])
-
   @@map("product_images")
 }
 
@@ -170,10 +168,9 @@ model Product {
   updated_at           DateTime?           @default(now()) @db.Timestamp(6) @map("updated_at")
   use_details          String?             @db.VarChar(500) @map("use_details")
   use_id               Int?                @map("use_id")
-  base_model           String?             @db.VarChar(55) @map("base_model")
+  base_model           String?             @db.VarChar(20) @map("base_model")
   product_categories   ProductCategory[]
   product_ground_types ProductGroundType[]
-  product_images       ProductImage[]
   product_variants     ProductVariant[]
   brand                Brand?              @relation(fields: [brand_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
   gender               Gender?             @relation(fields: [gender_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
