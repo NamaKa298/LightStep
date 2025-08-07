@@ -9,7 +9,15 @@ dotenv.config({ path: ".env.local" });
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://light-step.vercel.app",
+      "http://localhost:5173", // Pour le dev local
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 app.use(express.json());
 
 // Route de base pour tester si l'API fonctionne
