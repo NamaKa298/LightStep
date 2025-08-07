@@ -9,14 +9,21 @@ export default defineConfig({
     {
       ...purgeCss({
         content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}", "./src/**/*.html"],
-        safelist: [/^ReactModal/, /^Toast/, /-(leave|enter|appear)(|-(to|from|active))$/, /^(?!cursor-move).+-move$/, /^bg-/, /^text-/, /^hover:/],
+        safelist: [
+          /^ReactModal/,
+          /^Toast/,
+          /-(leave|enter|appear)(|-(to|from|active))$/,
+          /^(?!cursor-move).+-move$/,
+          /^bg-/,
+          /^text-/,
+          /^hover:/,
+        ],
       }),
       name: "purge-css",
       enforce: "post",
     } as PluginOption,
   ],
   base: "/", // Force les chemins absolus
-  assetsInclude: ["**/*.html"], // Ajoutez cette ligne
   build: {
     outDir: "dist",
     assetsDir: "assets", // Organise les fichiers statiques
