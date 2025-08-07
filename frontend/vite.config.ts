@@ -16,6 +16,7 @@ export default defineConfig({
     } as PluginOption,
   ],
   base: "/", // Force les chemins absolus
+  assetsInclude: ["**/*.html"], // Ajoutez cette ligne
   build: {
     outDir: "dist",
     assetsDir: "assets", // Organise les fichiers statiques
