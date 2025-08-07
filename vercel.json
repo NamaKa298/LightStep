@@ -1,7 +1,7 @@
 {
   "version": 2,
+  "public": "frontend/dist",
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
-  "fallbacks": [{ "source": "/(.*)", "destination": "/index.html" }],
   "cleanUrls": true,
   "trailingSlash": false
 }
