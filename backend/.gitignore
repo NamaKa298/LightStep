@@ -1,6 +1,7 @@
 .env
 node_modules
 local-images
+dist
 
 *.png
 *.jpg

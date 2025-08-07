@@ -15,7 +15,10 @@ export default defineConfig({
       enforce: "post",
     } as PluginOption,
   ],
+  base: "/", // Force les chemins absolus
   build: {
+    outDir: "dist",
+    assetsDir: "assets", // Organise les fichiers statiques
     cssCodeSplit: true,
     rollupOptions: {
       output: {
