@@ -1,11 +1,17 @@
+/** @jsxImportSource @emotion/react */
 import Band from "../../components/Band";
 import ContactWidget from "../../components/ContactWidget";
 import Footer from "../../components/layout/Footer";
 import NavBar from "../../components/NavBar";
-/** @jsxImportSource @emotion/react */
-import styled from "@emotion/styled";
 import ProductsList from "../../components/ProductsList";
 import Filter from "../../components/Filter";
+import { css } from "@emotion/react";
+import styled from "@emotion/styled";
+
+const content = css`
+  display: flex;
+  flex-direction: row;
+`;
 
 function ShoppingList() {
   return (
@@ -14,8 +20,10 @@ function ShoppingList() {
       <MainContent className="container">
         <NavBar />
         <ContactWidget />
-        <Filter onFilterChange={(filters) => console.log(filters)} />
-        <ProductsList />
+        <div css={content}>
+          <Filter onFilterChange={(filters) => console.log(filters)} />
+          <ProductsList />
+        </div>
       </MainContent>
       <Footer />
     </AppContainer>
