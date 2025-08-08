@@ -9,20 +9,15 @@ export default defineConfig({
     {
       ...purgeCss({
         content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}", "./src/**/*.html"],
-        safelist: [
-          /^ReactModal/,
-          /^Toast/,
-          /-(leave|enter|appear)(|-(to|from|active))$/,
-          /^(?!cursor-move).+-move$/,
-          /^bg-/,
-          /^text-/,
-          /^hover:/,
-        ],
+        safelist: [/^ReactModal/, /^Toast/, /-(leave|enter|appear)(|-(to|from|active))$/, /^(?!cursor-move).+-move$/, /^bg-/, /^text-/, /^hover:/],
       }),
       name: "purge-css",
       enforce: "post",
     } as PluginOption,
   ],
+  server: {
+    hmr: true, // Activation standard du Hot Module Replacement
+  },
   base: "/", // Force les chemins absolus
   build: {
     outDir: "dist",
