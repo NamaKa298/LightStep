@@ -1,9 +1,6 @@
 {
   "version": 2,
-  "rewrites": [
-    { "source": "/ShoppingList", "destination": "/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
   "cleanUrls": true,
   "trailingSlash": false
 }
