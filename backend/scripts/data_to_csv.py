@@ -355,7 +355,7 @@ base_models = {
         "5_star": {"Homme": 121},
         "review_count": {"Homme": 173},
         "is_recommended": {"Homme": 89},
-        "colors": {"Homme": "Noir"},
+        "colors": {"Homme": ["Noir"]},
         "news": {"Homme": False},
         "sole_details": "Semelle dotée de la Technologie Vibram LITEBASE avec le composé Gumlite.\nDécouvrez la Technologie Vibram LITEBASE, qui réduit considérablement l'épaisseur et le poids des semelles extérieures en caoutchouc, tout en conservant l'adhérence et la traction attendues de Vibram. Cette nouvelle technologie réduit radicalement l'épaisseur de la semelle jusqu'à 50 % par rapport à une conception de semelle identique et permet de réduire le poids total jusqu'à 30 %.",
         "upper": "Ajustement adaptable grâce à la forme anatomique et l’adhérence Vibram, offrant une empeigne extensible qui épouse parfaitement le pied.",
@@ -387,7 +387,7 @@ base_models = {
         "5_star": {"Homme": 121},
         "review_count": {"Homme": 173},
         "is_recommended": {"Homme": 89},
-        "colors": {"Homme": "Noir"},
+        "colors": {"Homme": ["Noir"]},
         "news": {"Homme": False},
         "sole_details": "Semelle dotée de la Technologie Vibram LITEBASE avec le composé Gumlite.\nDécouvrez la Technologie Vibram LITEBASE, qui réduit considérablement l'épaisseur et le poids des semelles extérieures en caoutchouc, tout en conservant l'adhérence et la traction attendues de Vibram. Cette nouvelle technologie réduit radicalement l'épaisseur de la semelle jusqu'à 50 % par rapport à une conception de semelle identique et permet de réduire le poids total jusqu'à 30 %.",
         "upper": "Ajustement adaptable grâce à la forme anatomique et l’adhérence Vibram, offrant une empeigne extensible qui épouse parfaitement le pied.",
@@ -486,7 +486,7 @@ base_models = {
         "5_star": {"Homme": 129, "Femme": 43},
         "review_count": {"Homme": 275, "Femme": 122},
         "is_recommended": {"Homme": 72, "Femme": 61},
-        "colors": "Noir",
+        "colors": ["Noir"],
         "news": {"Homme": False, "Femme": False},
         "sole_details": "Semelle Intérieure en EVA de 2 mm + Doublure en Polyester \\nSemelle Extérieure en Caoutchouc Megagrip de 3,7 mm",
         "upper": "",
@@ -694,7 +694,7 @@ base_models = {
         "is_active": True,
         "use": "Intensif"
     },
-    "KOS Vintage": {
+    "KSO Vintage": {
         "brand": "Vibram fivefingers",
         "sales": 0,
         "base_price": 110.00,
@@ -726,7 +726,7 @@ base_models = {
         "is_active": True,
         "use": "Régulier"
     },
-    "KMD sport": {
+    "KMD Sport": {
         "brand": "Vibram fivefingers",
         "sales": 0,
         "base_price": 120.00,
@@ -758,7 +758,7 @@ base_models = {
         "is_active": True,
         "use": "Régulier"
     },
-        "V-street": {
+        "V-Street": {
         "brand": "Vibram fivefingers",
         "sales": 0,
         "base_price": 215.00,
