@@ -39,7 +39,7 @@ base_models = {
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "La tige synthétique respirante et extensible de la Graspifier épouse véritablement le pied comme un gant, tandis que la semelle Max-Feel segmentée offre une excellente sensation au sol et une bonne articulation du pied, avec un équilibre optimal entre traction et durabilité.\nNotre caoutchouc Vibram EcoStep avec 30 % de contenu Vibram recyclé offre adhérence et traction, reconnaissant ainsi notre engagement envers la durabilité du produit.\nÉpaisseur totale de la semelle : 5 mm",
         "is_active": True,
-        "use": "Occasionel"
+        "use": "Occasionnel"
     },
     "KSO EVO": {
         "brand": "Vibram fivefingers",
@@ -72,7 +72,7 @@ base_models = {
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "Articulation et sensation au sol maximales. Adhérence assurée et protection essentielle.\nConception légère, aérée et simple de la tige réglable.\nCe modèle fait partie de notre gamme Medium Ground Feel. Philosophie du produit.",
         "is_active": True,
-        "use": "Occasionel"
+        "use": "Occasionnel"
     },
     "Breezandal": {
         "brand": "Vibram fivefingers",
@@ -267,7 +267,7 @@ base_models = {
         "care_instructions": "Lavage en machine à froid / Séchage à l’air libre",
         "description": "La V-Soul est notre dernière offre axée sur le fitness féminin et alternatif en intérieur.\nÉlégante et fine, elle peut être utilisée pour de nombreuse activités.\nLa V-Soul s'inscrit dans notre « philosophie de produit à sensation maximale », offrant un potentiel maximal d'articulation et de sensation au sol.\nDotée d'une coupe ajustable et sécurisée, elle est également très ouverte, légère et flexible.\nLes meilleures use_detailss de cette chaussure sont le fitness fonctionnel, la plyométrie, le Pilates et le yoga, entre autres.",
         "is_active": True,
-        "use": "Occasionel"
+        "use": "Occasionnel"
     },
     "Furoshiki": {
         "brand": "Vibram fivefingers",
@@ -462,7 +462,7 @@ base_models = {
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "La KMD EVO est très appréciée des fans pour une bonne raison. Chaussure d'entraînement polyvalente pour l'intérieur et l'extérieur, elle est dotée d'une semelle intérieure Vibram Metaflex SL de 6 mm, d'une semelle extérieure Ecostep Recycle et d'une tige tricotée souple avec un système de laçage rapide.\\nLégère, souple et confortable, la KMD EVO convient parfaitement aux activités d'entraînement traditionnelles en intérieur et en extérieur, telles que les cours de fitness, l'haltérophilie, le cardio et d'autres exercices en salle de sport.\\nRemarque : Ce modèle Vibram FiveFingers utilise un composé de caoutchouc appelé Vibram EcoStep Recycle pour sa semelle. En raison de l'use_details de matériaux recyclés, le caoutchouc présente des taches blanches. Il ne s'agit pas d'une peinture, d'un défaut ou d'une salissure, mais simplement du résultat du caoutchouc utilisé.",
         "is_active": True,
-        "use": "Occasionel"
+        "use": "Occasionnel"
     },
     "V-Trail 2.0": {
         "brand": "Vibram fivefingers",
@@ -495,7 +495,7 @@ base_models = {
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "La V-Trail 2.0 offre les nouvelles et meilleures caractéristiques pour conquérir les sentiers avec aisance, y compris les deux couches de matière autour des orteils pour éviter les fissures des coutures et une empeigne améliorée plus hydrofuge que la version précédente. La V-Trail 2.0 est dotée d'une maille 3D Cocoon tissée dans la semelle extérieure pour la protéger des objets les plus tranchants pendant l'entraînement en extérieur, comme les pierres et les racines. La maille est tridimensionnelle, elle disperse le point d'impact sur toute la partie inférieure de la chaussure. Elle offre toujours une excellente sensation au sol et dextérité. Le composé de la semelle extérieure Megagrip offre une adhérence suprême sur terrain sec comme humide.",
         "is_active": True,
-        "use": "Occasionel"
+        "use": "Occasionnel"
     },
     "V-Train 2.0": {
         "brand": "Vibram fivefingers",
@@ -593,7 +593,7 @@ base_models = {
         "care_instructions": "Lavage en machine à froid / Séchage à l'air libre",
         "description": "Cette chaussure décontractée de tous les jours est élégante, confortable et offre une sensation maximale au sol. La tige en polyester matelassé est agréable au pied et s'attache bien grâce à une double bande auto-agrippante. La semelle extérieure est en caoutchouc Vibram XS Trek, qui offre une bonne adhérence pour les activités quotidiennes telles que promener le chien, faire les courses ou passer du temps en plein air avec des amis.",
         "is_active": True,
-        "use": "Occasionel"
+        "use": "Occasionnel"
     },
     "Spyridon EVO": {
         "brand": "Vibram fivefingers",
