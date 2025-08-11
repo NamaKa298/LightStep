@@ -12,7 +12,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://light-step.vercel.app",
+      "https://lightstep.vercel.app",
       "http://localhost:5173", // Pour le dev local
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
