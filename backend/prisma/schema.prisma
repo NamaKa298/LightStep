@@ -152,7 +152,7 @@ model Product {
   weight               Decimal?            @db.Decimal(5, 1)
   type_id              Int?                @map("type_id")
   gender_id            Int?                @map("gender_id")
-  stability            String?             @db.VarChar(20)
+  stability_id         Int?                @map("stability_id")
   drop                 Int?                @db.SmallInt
   rating               Decimal?            @default(0.0) @db.Decimal(2, 1)
   one_star             Int?                @default(0) @map("1_star") @db.SmallInt
@@ -181,6 +181,7 @@ model Product {
   gender               Gender?             @relation(fields: [gender_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
   type                 Type?               @relation(fields: [type_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
   use                  Use?                @relation(fields: [use_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  stability            Stability?          @relation(fields: [stability_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
 
   @@index([base_model], map: "idx_product_base_model")
   @@map("products")
@@ -245,4 +246,12 @@ model ProductVariantImage {
   @@index([product_variant_id])
   @@index([product_image_id])
   @@map("product_variant_images")
+}
+
+model Stability {
+  id       Int       @id @default(autoincrement())
+  name     String    @db.VarChar(20)
+  products Product[]
+
+  @@map("stabilities")
 }
