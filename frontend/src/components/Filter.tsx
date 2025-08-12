@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 type FilterOption = {
   id?: number;
@@ -36,17 +37,21 @@ export default function Filters({ onFilterChange }: FiltersProps) {
   });
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/products/filters")
-      .then((res) => res.json())
-      .then((data) => {
+    // REMPLACÉ fetch par axios
+    axios
+      .get("http://localhost:3001/api/products/filters")
+      .then((response) => {
         setFiltersData({
-          brands: data.brands,
-          sizes: data.sizes,
-          ground_types: data.ground_types,
-          uses: data.uses,
-          colors: data.colors,
-          genders: data.genders,
+          brands: response.data.brands,
+          sizes: response.data.sizes,
+          ground_types: response.data.ground_types,
+          uses: response.data.uses,
+          colors: response.data.colors,
+          genders: response.data.genders,
         });
+      })
+      .catch((error) => {
+        console.error("Erreur lors du chargement des filtres:", error);
       });
   }, []);
 
@@ -118,12 +123,36 @@ export default function Filters({ onFilterChange }: FiltersProps) {
   `;
 
   const colorSwatch = css`
-    width: 16px;
-    height: 16px;
-    border-radius: 3px;
-    margin-right: 8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     display: inline-block;
-    border: 1px solid #ddd;
+    border: 2px solid #ddd;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+
+    &:hover {
+      transform: scale(1.5);
+      border-color: #333;
+    }
+  `;
+
+  const colorSwatchSelected = css`
+    border-color: #000;
+    border-width: 2px;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
+  `;
+
+  const colorSwatchCheckmark = css`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
   `;
 
   const priceInputs = css`
@@ -139,8 +168,6 @@ export default function Filters({ onFilterChange }: FiltersProps) {
     border-radius: 4px;
   `;
 
-  if (!filtersData) return <div>Chargement des filtres...</div>;
-
   return (
     <div css={allFilter}>
       {/* Filtre par genre */}
@@ -150,7 +177,7 @@ export default function Filters({ onFilterChange }: FiltersProps) {
           <div key={gender.id} css={filterOption}>
             <input
               type="checkbox"
-              id={`${gender.id}`}
+              id={`gender-${gender.id}`}
               checked={selectedFilters.genders.includes(gender.name)}
               onChange={() => handleCheckboxChange("genders", gender.name)}
             />
@@ -158,7 +185,6 @@ export default function Filters({ onFilterChange }: FiltersProps) {
           </div>
         ))}
       </div>
-
       {/* Filtre par marque */}
       <div css={filterSection}>
         <div css={filterTitle}>MARQUES</div>
@@ -166,7 +192,7 @@ export default function Filters({ onFilterChange }: FiltersProps) {
           <div key={brand.id} css={filterOption}>
             <input
               type="checkbox"
-              id={`${brand.id}`}
+              id={`brand-${brand.id}`}
               checked={selectedFilters.brands.includes(brand.name)}
               onChange={() => handleCheckboxChange("brands", brand.name)}
             />
@@ -174,7 +200,6 @@ export default function Filters({ onFilterChange }: FiltersProps) {
           </div>
         ))}
       </div>
-
       {/* Filtre par taille */}
       <div css={filterSection}>
         <div css={filterTitle}>TAILLES</div>
@@ -190,7 +215,6 @@ export default function Filters({ onFilterChange }: FiltersProps) {
           </div>
         ))}
       </div>
-
       {/* Filtre par type de terrain */}
       <div css={filterSection}>
         <div css={filterTitle}>TYPE DE TERRAIN</div>
@@ -210,7 +234,6 @@ export default function Filters({ onFilterChange }: FiltersProps) {
           </div>
         ))}
       </div>
-
       {/* Filtre par utilisation */}
       <div css={filterSection}>
         <div css={filterTitle}>UTILISATION</div>
@@ -227,23 +250,36 @@ export default function Filters({ onFilterChange }: FiltersProps) {
         ))}
       </div>
 
-      {/* Filtre par couleur */}
       <div css={filterSection}>
         <div css={filterTitle}>COULEURS</div>
-        {filtersData.colors.map((color) => (
-          <div key={color.name} css={filterOption}>
-            <input
-              type="checkbox"
-              id={`color-${color.name}`}
-              checked={selectedFilters.colors.includes(color.name)}
-              onChange={() => handleCheckboxChange("colors", color.name)}
-            />
-            <span css={[colorSwatch, { backgroundColor: color.hex_code }]} />
-            <label htmlFor={`color-${color.name}`}>{color.name}</label>
-          </div>
-        ))}
-      </div>
+        <div
+          css={css`
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+          `}
+        >
+          {filtersData.colors.map((color) => {
+            const isSelected = selectedFilters.colors.includes(color.name);
 
+            return (
+              <div
+                key={color.name}
+                css={[
+                  colorSwatch,
+                  { backgroundColor: color.hex_code },
+                  isSelected && colorSwatchSelected,
+                ]}
+                onClick={() => handleCheckboxChange("colors", color.name)}
+                title={color.name} // Tooltip avec le nom
+              >
+                {isSelected && <span css={colorSwatchCheckmark}>✓</span>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
       {/* Filtre par prix */}
       <div css={filterSection}>
         <div css={filterTitle}>PRIX</div>
