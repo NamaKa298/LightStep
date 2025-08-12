@@ -448,7 +448,7 @@ async function seed() {
     data: arrayCategories,
     skipDuplicates: true,
   });
-  await prisma.stabilities.createMany({
+  await prisma.stability.createMany({
     data: stabilitiesArray,
     skipDuplicates: true,
   });
