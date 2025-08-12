@@ -8,12 +8,15 @@ export type Product = {
   activity?: string;
   gender?: string;
   description?: string;
-  image_url?: string; // Nom du fichier stocké en base
-  image_url_full?: string; // URL complète reconstruite par l'API
+  image_url?: string;
+  image_url_full?: string;
   images?: string[];
   stock?: number;
   rating?: number;
   review_count?: number;
   color?: string;
   colors?: string[];
+  stability?: string;
+  drop?: number;
+  ground_types?: string[];
 };
