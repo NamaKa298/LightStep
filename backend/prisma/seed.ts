@@ -11,6 +11,7 @@ const sizesArray = [
     uk_size: "4",
     foot_length_cm: "21.3",
     foot_length_in: "8.375",
+    gender_id: 1,
   },
   {
     eu_size: "36",
@@ -18,6 +19,7 @@ const sizesArray = [
     uk_size: "4.5",
     foot_length_cm: "21.9",
     foot_length_in: "8.625",
+    gender_id: 1,
   },
   {
     eu_size: "37",
@@ -25,6 +27,7 @@ const sizesArray = [
     uk_size: "5",
     foot_length_cm: "22.5",
     foot_length_in: "8.875",
+    gender_id: 1,
   },
   {
     eu_size: "38",
@@ -32,6 +35,7 @@ const sizesArray = [
     uk_size: "5.5",
     foot_length_cm: "23.2",
     foot_length_in: "9.125",
+    gender_id: 1,
   },
   {
     eu_size: "39",
@@ -39,6 +43,7 @@ const sizesArray = [
     uk_size: "6",
     foot_length_cm: "23.8",
     foot_length_in: "9.375",
+    gender_id: 1,
   },
   {
     eu_size: "40",
@@ -46,6 +51,7 @@ const sizesArray = [
     uk_size: "6.5",
     foot_length_cm: "24.4",
     foot_length_in: "9.625",
+    gender_id: 1,
   },
   {
     eu_size: "41",
@@ -53,6 +59,7 @@ const sizesArray = [
     uk_size: "7",
     foot_length_cm: "25.1",
     foot_length_in: "9.875",
+    gender_id: 1,
   },
   {
     eu_size: "42",
@@ -60,6 +67,7 @@ const sizesArray = [
     uk_size: "7.5",
     foot_length_cm: "25.7",
     foot_length_in: "10.125",
+    gender_id: 1,
   },
   {
     eu_size: "39",
@@ -67,6 +75,7 @@ const sizesArray = [
     uk_size: "6",
     foot_length_cm: "24.1",
     foot_length_in: "9.5",
+    gender_id: 2,
   },
   {
     eu_size: "40",
@@ -74,6 +83,7 @@ const sizesArray = [
     uk_size: "6.5",
     foot_length_cm: "24.8",
     foot_length_in: "9.75",
+    gender_id: 2,
   },
   {
     eu_size: "41",
@@ -81,6 +91,7 @@ const sizesArray = [
     uk_size: "7",
     foot_length_cm: "25.4",
     foot_length_in: "10",
+    gender_id: 2,
   },
   {
     eu_size: "42",
@@ -88,6 +99,7 @@ const sizesArray = [
     uk_size: "7.5",
     foot_length_cm: "26",
     foot_length_in: "10.25",
+    gender_id: 2,
   },
   {
     eu_size: "43",
@@ -95,6 +107,7 @@ const sizesArray = [
     uk_size: "8",
     foot_length_cm: "26.7",
     foot_length_in: "10.5",
+    gender_id: 2,
   },
   {
     eu_size: "44",
@@ -102,6 +115,7 @@ const sizesArray = [
     uk_size: "8.5",
     foot_length_cm: "27.3",
     foot_length_in: "10.75",
+    gender_id: 2,
   },
   {
     eu_size: "45",
@@ -109,6 +123,7 @@ const sizesArray = [
     uk_size: "9",
     foot_length_cm: "28",
     foot_length_in: "11",
+    gender_id: 2,
   },
   {
     eu_size: "46",
@@ -116,6 +131,7 @@ const sizesArray = [
     uk_size: "9.5",
     foot_length_cm: "28.6",
     foot_length_in: "11.25",
+    gender_id: 2,
   },
   {
     eu_size: "47",
@@ -123,6 +139,7 @@ const sizesArray = [
     uk_size: "10",
     foot_length_cm: "29.2",
     foot_length_in: "11.5",
+    gender_id: 2,
   },
   {
     eu_size: "48",
@@ -130,6 +147,7 @@ const sizesArray = [
     uk_size: "10.5",
     foot_length_cm: "30",
     foot_length_in: "11.75",
+    gender_id: 2,
   },
   {
     eu_size: "49",
@@ -137,6 +155,7 @@ const sizesArray = [
     uk_size: "11",
     foot_length_cm: "30.5",
     foot_length_in: "12",
+    gender_id: 2,
   },
   {
     eu_size: "35",
@@ -144,6 +163,7 @@ const sizesArray = [
     uk_size: "4",
     foot_length_cm: "21.3",
     foot_length_in: "8.375",
+    gender_id: 3,
   },
   {
     eu_size: "36",
@@ -151,6 +171,7 @@ const sizesArray = [
     uk_size: "4.5",
     foot_length_cm: "21.9",
     foot_length_in: "8.625",
+    gender_id: 3,
   },
   {
     eu_size: "37",
@@ -158,6 +179,7 @@ const sizesArray = [
     uk_size: "5",
     foot_length_cm: "22.5",
     foot_length_in: "8.875",
+    gender_id: 3,
   },
   {
     eu_size: "38",
@@ -165,6 +187,7 @@ const sizesArray = [
     uk_size: "5.5",
     foot_length_cm: "23.2",
     foot_length_in: "9.125",
+    gender_id: 3,
   },
   {
     eu_size: "39",
@@ -172,6 +195,7 @@ const sizesArray = [
     uk_size: "6",
     foot_length_cm: "23.95",
     foot_length_in: "9.44",
+    gender_id: 3,
   },
   {
     eu_size: "40",
@@ -179,6 +203,7 @@ const sizesArray = [
     uk_size: "6.5",
     foot_length_cm: "24.6",
     foot_length_in: "9.69",
+    gender_id: 3,
   },
   {
     eu_size: "41",
@@ -186,6 +211,7 @@ const sizesArray = [
     uk_size: "7",
     foot_length_cm: "25.25",
     foot_length_in: "9.94",
+    gender_id: 3,
   },
   {
     eu_size: "42",
@@ -193,6 +219,7 @@ const sizesArray = [
     uk_size: "7.5",
     foot_length_cm: "25.85",
     foot_length_in: "10.19",
+    gender_id: 3,
   },
   {
     eu_size: "43",
@@ -200,6 +227,7 @@ const sizesArray = [
     uk_size: "8",
     foot_length_cm: "26.7",
     foot_length_in: "10.5",
+    gender_id: 3,
   },
   {
     eu_size: "44",
@@ -207,6 +235,7 @@ const sizesArray = [
     uk_size: "8.5",
     foot_length_cm: "27.3",
     foot_length_in: "10.75",
+    gender_id: 3,
   },
   {
     eu_size: "45",
@@ -214,6 +243,7 @@ const sizesArray = [
     uk_size: "9",
     foot_length_cm: "28",
     foot_length_in: "11",
+    gender_id: 3,
   },
   {
     eu_size: "46",
@@ -221,6 +251,7 @@ const sizesArray = [
     uk_size: "9.5",
     foot_length_cm: "28.6",
     foot_length_in: "11.25",
+    gender_id: 3,
   },
   {
     eu_size: "47",
@@ -228,6 +259,7 @@ const sizesArray = [
     uk_size: "10",
     foot_length_cm: "29.2",
     foot_length_in: "11.5",
+    gender_id: 3,
   },
   {
     eu_size: "48",
@@ -235,6 +267,7 @@ const sizesArray = [
     uk_size: "10.5",
     foot_length_cm: "30",
     foot_length_in: "11.75",
+    gender_id: 3,
   },
   {
     eu_size: "49",
@@ -242,6 +275,7 @@ const sizesArray = [
     uk_size: "11",
     foot_length_cm: "30.5",
     foot_length_in: "12",
+    gender_id: 3,
   },
 ];
 
