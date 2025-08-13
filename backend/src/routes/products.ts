@@ -17,8 +17,8 @@ router.get("/", async (req: any, res: any) => {
       stability,
       minDrop,
       maxDrop,
-      minHeight,
-      maxHeight,
+      minWeight,
+      maxWeight,
       colors,
     } = req.query;
 
@@ -76,6 +76,12 @@ router.get("/", async (req: any, res: any) => {
       productFilters.drop = {};
       if (minDrop) productFilters.drop.gte = Number(minDrop);
       if (maxDrop) productFilters.drop.lte = Number(maxDrop);
+    }
+
+    if (minWeight || maxWeight) {
+      productFilters.weight = {};
+      if (minWeight) productFilters.weight.gte = Number(minWeight);
+      if (maxWeight) productFilters.weight.lte = Number(maxWeight);
     }
 
     if (ground_types) {
@@ -141,7 +147,7 @@ router.get("/", async (req: any, res: any) => {
 
 router.get("/filters", async (req, res) => {
   try {
-    const [brands, sizes, groundTypes, uses, colors, genders] =
+    const [brands, sizes, groundTypes, uses, colors, genders, stabilities] =
       await Promise.all([
         prisma.brand.findMany({
           select: { id: true, name: true },
@@ -168,6 +174,10 @@ router.get("/filters", async (req, res) => {
           select: { id: true, name: true },
           orderBy: { name: "asc" },
         }),
+        prisma.stability.findMany({
+          select: { id: true, name: true },
+          orderBy: { name: "asc" },
+        }),
       ]);
 
     res.json({
@@ -180,6 +190,7 @@ router.get("/filters", async (req, res) => {
         hex_code: color.hex_code,
       })),
       genders: genders,
+      stabilities: stabilities,
     });
   } catch (error) {
     console.error("Erreur lors du chargement des filtres:", error);
