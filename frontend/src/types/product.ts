@@ -8,8 +8,7 @@ export type Product = {
   activity?: string;
   gender?: string;
   description?: string;
-  image_url?: string;
-  image_url_full?: string;
+  thumbnail_url?: string;
   images?: string[];
   stock?: number;
   rating?: number;

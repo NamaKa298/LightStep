@@ -2,6 +2,9 @@
 import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FaChevronUp, FaChevronDown } from "react-icons/fa6";
+import { IoIosInformationCircleOutline } from "react-icons/io";
+import styled from "@emotion/styled";
 
 type FilterOption = {
   id?: number;
@@ -17,6 +20,7 @@ type FiltersData = {
   uses: FilterOption[];
   colors: FilterOption[];
   genders: FilterOption[];
+  stabilities: FilterOption[];
 };
 
 type FiltersProps = {
@@ -34,10 +38,27 @@ export default function Filters({ onFilterChange }: FiltersProps) {
     genders: [] as string[],
     minPrice: "",
     maxPrice: "",
+    stabilities: [] as string[],
+    minDrop: "",
+    maxDrop: "",
+    minWeight: "",
+    maxWeight: "",
+  });
+  // CORRIGÉ
+  const [openSections, setOpenSections] = useState({
+    genders: false,
+    brands: false,
+    sizes: false,
+    ground_types: false,
+    uses: false,
+    colors: false,
+    price: false,
+    stabilities: false,
+    drop: false,
+    weight: false,
   });
 
   useEffect(() => {
-    // REMPLACÉ fetch par axios
     axios
       .get("http://localhost:3001/api/products/filters")
       .then((response) => {
@@ -48,6 +69,7 @@ export default function Filters({ onFilterChange }: FiltersProps) {
           uses: response.data.uses,
           colors: response.data.colors,
           genders: response.data.genders,
+          stabilities: response.data.stabilities,
         });
       })
       .catch((error) => {
@@ -56,7 +78,6 @@ export default function Filters({ onFilterChange }: FiltersProps) {
   }, []);
 
   useEffect(() => {
-    // Notifier le parent des changements de filtre
     onFilterChange(selectedFilters);
   }, [selectedFilters, onFilterChange]);
 
@@ -73,10 +94,8 @@ export default function Filters({ onFilterChange }: FiltersProps) {
       const valueIndex = currentArray.indexOf(value);
 
       if (valueIndex === -1) {
-        // Ajouter la valeur
         return { ...prev, [filterType]: [...currentArray, value] };
       } else {
-        // Retirer la valeur
         return {
           ...prev,
           [filterType]: currentArray.filter((v) => v !== value),
@@ -99,12 +118,11 @@ export default function Filters({ onFilterChange }: FiltersProps) {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 20%;
+    padding-right: 50px;
   `;
 
   const filterSection = css`
-    margin-bottom: 20px;
-    padding: 15px;
+    padding: 5px 15px;
     border-radius: 8px;
   `;
 
@@ -112,6 +130,9 @@ export default function Filters({ onFilterChange }: FiltersProps) {
     margin-bottom: 10px;
     font-size: 16px;
     font-style: italic;
+    display: flex;
+    justify-content: space-between;
+    gap: 5vw;
   `;
 
   const filterOption = css`
@@ -168,138 +189,283 @@ export default function Filters({ onFilterChange }: FiltersProps) {
     border-radius: 4px;
   `;
 
+  const colorSwatchContainer = css`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  `;
+  const Separator = styled.hr`
+    color: #80808073;
+    height: 1px;
+    margin: 0.8em 0;
+  `;
+
+  const toggleSection = (sectionName: keyof typeof openSections) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [sectionName]: !prev[sectionName],
+    }));
+  };
+
   return (
     <div css={allFilter}>
-      {/* Filtre par genre */}
       <div css={filterSection}>
-        <div css={filterTitle}>GENRE</div>
-        {filtersData.genders.map((gender) => (
-          <div key={gender.id} css={filterOption}>
-            <input
-              type="checkbox"
-              id={`gender-${gender.id}`}
-              checked={selectedFilters.genders.includes(gender.name)}
-              onChange={() => handleCheckboxChange("genders", gender.name)}
-            />
-            <label htmlFor={`gender-${gender.id}`}>{gender.name}</label>
-          </div>
-        ))}
-      </div>
-      {/* Filtre par marque */}
-      <div css={filterSection}>
-        <div css={filterTitle}>MARQUES</div>
-        {filtersData.brands.map((brand) => (
-          <div key={brand.id} css={filterOption}>
-            <input
-              type="checkbox"
-              id={`brand-${brand.id}`}
-              checked={selectedFilters.brands.includes(brand.name)}
-              onChange={() => handleCheckboxChange("brands", brand.name)}
-            />
-            <label htmlFor={`brand-${brand.id}`}>{brand.name}</label>
-          </div>
-        ))}
-      </div>
-      {/* Filtre par taille */}
-      <div css={filterSection}>
-        <div css={filterTitle}>TAILLES</div>
-        {filtersData.sizes.map((size) => (
-          <div key={size} css={filterOption}>
-            <input
-              type="checkbox"
-              id={`size-${size}`}
-              checked={selectedFilters.sizes.includes(size)}
-              onChange={() => handleCheckboxChange("sizes", size)}
-            />
-            <label htmlFor={`size-${size}`}>{size}</label>
-          </div>
-        ))}
-      </div>
-      {/* Filtre par type de terrain */}
-      <div css={filterSection}>
-        <div css={filterTitle}>TYPE DE TERRAIN</div>
-        {filtersData.ground_types.map((ground_type) => (
-          <div key={ground_type.id} css={filterOption}>
-            <input
-              type="checkbox"
-              id={`ground-${ground_type.id}`}
-              checked={selectedFilters.ground_types.includes(ground_type.name)}
-              onChange={() =>
-                handleCheckboxChange("ground_types", ground_type.name)
-              }
-            />
-            <label htmlFor={`ground-${ground_type.id}`}>
-              {ground_type.name}
-            </label>
-          </div>
-        ))}
-      </div>
-      {/* Filtre par utilisation */}
-      <div css={filterSection}>
-        <div css={filterTitle}>UTILISATION</div>
-        {filtersData.uses.map((use) => (
-          <div key={use.id} css={filterOption}>
-            <input
-              type="checkbox"
-              id={`use-${use.id}`}
-              checked={selectedFilters.uses.includes(use.name)}
-              onChange={() => handleCheckboxChange("uses", use.name)}
-            />
-            <label htmlFor={`use-${use.id}`}>{use.name}</label>
-          </div>
-        ))}
-      </div>
-
-      <div css={filterSection}>
-        <div css={filterTitle}>COULEURS</div>
-        <div
-          css={css`
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-          `}
-        >
-          {filtersData.colors.map((color) => {
-            const isSelected = selectedFilters.colors.includes(color.name);
-
-            return (
-              <div
-                key={color.name}
-                css={[
-                  colorSwatch,
-                  { backgroundColor: color.hex_code },
-                  isSelected && colorSwatchSelected,
-                ]}
-                onClick={() => handleCheckboxChange("colors", color.name)}
-                title={color.name} // Tooltip avec le nom
-              >
-                {isSelected && <span css={colorSwatchCheckmark}>✓</span>}
+        <div css={filterTitle} onClick={() => toggleSection("genders")}>
+          GENRE {openSections.genders ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        <Separator />
+        {openSections.genders && (
+          <div>
+            {filtersData.genders.map((gender) => (
+              <div key={gender.id} css={filterOption}>
+                <input
+                  type="checkbox"
+                  id={`gender-${gender.id}`}
+                  checked={selectedFilters.genders.includes(gender.name)}
+                  onChange={() => handleCheckboxChange("genders", gender.name)}
+                />
+                <label htmlFor={`gender-${gender.id}`}>{gender.name}</label>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
-      {/* Filtre par prix */}
       <div css={filterSection}>
-        <div css={filterTitle}>PRIX</div>
-        <div css={priceInputs}>
-          <input
-            css={priceInput}
-            type="number"
-            placeholder="Min"
-            value={selectedFilters.minPrice}
-            onChange={(e) => handlePriceChange(e, "minPrice")}
-          />
-          <span>-</span>
-          <input
-            css={priceInput}
-            type="number"
-            placeholder="Max"
-            value={selectedFilters.maxPrice}
-            onChange={(e) => handlePriceChange(e, "maxPrice")}
-          />
+        <div css={filterTitle} onClick={() => toggleSection("brands")}>
+          MARQUE {openSections.brands ? <FaChevronUp /> : <FaChevronDown />}
         </div>
+        <Separator />
+        {openSections.brands && (
+          <div>
+            {filtersData.brands.map((brand) => (
+              <div key={brand.id} css={filterOption}>
+                <input
+                  type="checkbox"
+                  id={`brand-${brand.id}`}
+                  checked={selectedFilters.brands.includes(brand.name)}
+                  onChange={() => handleCheckboxChange("brands", brand.name)}
+                />
+                <label htmlFor={`brand-${brand.id}`}>{brand.name}</label>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div css={filterSection}>
+        <div css={filterTitle} onClick={() => toggleSection("sizes")}>
+          TAILLE {openSections.sizes ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        <Separator />
+        {openSections.sizes && (
+          <div>
+            {filtersData.sizes.map((size) => (
+              <div key={size} css={filterOption}>
+                <input
+                  type="checkbox"
+                  id={`size-${size}`}
+                  checked={selectedFilters.sizes.includes(size)}
+                  onChange={() => handleCheckboxChange("sizes", size)}
+                />
+                <label htmlFor={`size-${size}`}>{size}</label>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div css={filterSection}>
+        <div css={filterTitle} onClick={() => toggleSection("price")}>
+          PRIX {openSections.price ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        <Separator />
+        {openSections.price && (
+          <div>
+            <div css={priceInputs}>
+              <input
+                css={priceInput}
+                type="number"
+                placeholder="Min"
+                value={selectedFilters.minPrice}
+                onChange={(e) => handlePriceChange(e, "minPrice")}
+              />
+              <span>-</span>
+              <input
+                css={priceInput}
+                type="number"
+                placeholder="Max"
+                value={selectedFilters.maxPrice}
+                onChange={(e) => handlePriceChange(e, "maxPrice")}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+      <div css={filterSection}>
+        <div css={filterTitle} onClick={() => toggleSection("ground_types")}>
+          TERRAIN
+          {openSections.ground_types ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        <Separator />
+        {openSections.ground_types && (
+          <div>
+            {filtersData.ground_types.map((ground_type) => (
+              <div key={ground_type.id} css={filterOption}>
+                <input
+                  type="checkbox"
+                  id={`ground-${ground_type.id}`}
+                  checked={selectedFilters.ground_types.includes(
+                    ground_type.name
+                  )}
+                  onChange={() =>
+                    handleCheckboxChange("ground_types", ground_type.name)
+                  }
+                />
+                <label htmlFor={`ground-${ground_type.id}`}>
+                  {ground_type.name}
+                </label>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div css={filterSection}>
+        <div css={filterTitle} onClick={() => toggleSection("uses")}>
+          <span css={{ display: "flex", gap: "3px" }}>
+            USAGE <IoIosInformationCircleOutline />
+          </span>
+          {openSections.uses ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        <Separator />
+        {openSections.uses && (
+          <div>
+            {filtersData.uses.map((use) => (
+              <div key={use.id} css={filterOption}>
+                <input
+                  type="checkbox"
+                  id={`use-${use.id}`}
+                  checked={selectedFilters.uses.includes(use.name)}
+                  onChange={() => handleCheckboxChange("uses", use.name)}
+                />
+                <label htmlFor={`use-${use.id}`}>{use.name}</label>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div css={filterSection}>
+        <div css={filterTitle} onClick={() => toggleSection("stabilities")}>
+          <span css={{ display: "flex", gap: "3px" }}>
+            STABILITE <IoIosInformationCircleOutline />
+          </span>
+          {openSections.stabilities ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        <Separator />
+        {openSections.stabilities && (
+          <div>
+            {filtersData.stabilities.map((stability) => (
+              <div key={stability.id} css={filterOption}>
+                <input
+                  type="checkbox"
+                  id={`stability-${stability.id}`}
+                  checked={selectedFilters.stabilities.includes(stability.name)}
+                  onChange={() =>
+                    handleCheckboxChange("stabilities", stability.name)
+                  }
+                />
+                <label htmlFor={`stability-${stability.id}`}>
+                  {stability.name}
+                </label>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div css={filterSection}>
+        <div css={filterTitle} onClick={() => toggleSection("drop")}>
+          <span>
+            DROP <IoIosInformationCircleOutline />
+          </span>
+          {openSections.drop ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        <Separator />
+        {openSections.drop && (
+          <div>
+            <div css={priceInputs}>
+              <input
+                css={priceInput}
+                type="number"
+                placeholder="Min"
+                value={selectedFilters.minPrice}
+                onChange={(e) => handlePriceChange(e, "minPrice")}
+              />
+              <span>-</span>
+              <input
+                css={priceInput}
+                type="number"
+                placeholder="Max"
+                value={selectedFilters.maxPrice}
+                onChange={(e) => handlePriceChange(e, "maxPrice")}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+      <div css={filterSection}>
+        <div css={filterTitle} onClick={() => toggleSection("weight")}>
+          POIDS {openSections.weight ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        <Separator />
+        {openSections.weight && (
+          <div>
+            <div css={priceInputs}>
+              <input
+                css={priceInput}
+                type="number"
+                placeholder="Min"
+                value={selectedFilters.minPrice}
+                onChange={(e) => handlePriceChange(e, "minPrice")}
+              />
+              <span>-</span>
+              <input
+                css={priceInput}
+                type="number"
+                placeholder="Max"
+                value={selectedFilters.maxPrice}
+                onChange={(e) => handlePriceChange(e, "maxPrice")}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+      <div css={filterSection}>
+        <div css={filterTitle} onClick={() => toggleSection("colors")}>
+          COULEUR {openSections.colors ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        <Separator />
+        {openSections.colors && (
+          <div>
+            <div css={colorSwatchContainer}>
+              {filtersData.colors.map((color) => {
+                const isSelected = selectedFilters.colors.includes(color.name);
+
+                return (
+                  <div
+                    key={color.name}
+                    css={[
+                      colorSwatch,
+                      { backgroundColor: color.hex_code },
+                      isSelected && colorSwatchSelected,
+                    ]}
+                    onClick={() => handleCheckboxChange("colors", color.name)}
+                    title={color.name}
+                  >
+                    {isSelected && <span css={colorSwatchCheckmark}>✓</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

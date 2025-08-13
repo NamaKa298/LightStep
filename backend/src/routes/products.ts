@@ -17,8 +17,8 @@ router.get("/", async (req: any, res: any) => {
       stability,
       minDrop,
       maxDrop,
-      minHeight,
-      maxHeight,
+      minWeight,
+      maxWeight,
       colors,
     } = req.query;
 
@@ -78,6 +78,12 @@ router.get("/", async (req: any, res: any) => {
       if (maxDrop) productFilters.drop.lte = Number(maxDrop);
     }
 
+    if (minWeight || maxWeight) {
+      productFilters.weight = {};
+      if (minWeight) productFilters.weight.gte = Number(minWeight);
+      if (maxWeight) productFilters.weight.lte = Number(maxWeight);
+    }
+
     if (ground_types) {
       const groundTypeList = Array.isArray(ground_types)
         ? ground_types
@@ -95,6 +101,8 @@ router.get("/", async (req: any, res: any) => {
       variantFilters.product = productFilters;
     }
 
+    // ...existing code...
+
     const variants = await prisma.productVariant.findMany({
       where: variantFilters,
       include: {
@@ -105,6 +113,17 @@ router.get("/", async (req: any, res: any) => {
         },
         color: { select: { name: true, hex_code: true } },
         size: { select: { eu_size: true } },
+        product_variant_images: {
+          include: {
+            product_image: {
+              select: {
+                thumbnail_url: true,
+                image_type: true,
+                sort_order: true,
+              },
+            },
+          },
+        },
       },
       orderBy: [{ product_id: "asc" }, { color_id: "asc" }],
     });
@@ -115,20 +134,35 @@ router.get("/", async (req: any, res: any) => {
       return acc;
     }, {} as Record<string, any>);
 
-    const formattedVariants = Object.values(uniqueVariants).map((variant) => ({
-      id: variant.id,
-      sku: variant.sku,
-      name: variant.product?.name,
-      price: variant.price,
-      stock: variant.stock,
-      is_active: variant.is_active,
-      rating: variant.product?.rating,
-      review_count: variant.product?.review_count,
-      brand: variant.product?.brand?.name,
-      color: variant.color?.name,
-      color_hex: variant.color?.hex_code,
-      size: variant.size?.eu_size,
-    }));
+    // CORRIGÉ : Query simplifiée - filtrer directement dans les données existantes
+    const formattedVariants = Object.values(uniqueVariants).map(
+      (variant: any) => {
+        // Trouver l'image thumbnail dans les données déjà récupérées
+        const thumbnailImage = variant.product_variant_images?.find(
+          (vi: any) =>
+            vi.product_image &&
+            vi.product_image.image_type === "thumbnail" &&
+            vi.product_image.sort_order === "01"
+        )?.product_image;
+
+        // CORRIGÉ : Return avec accolades
+        return {
+          id: variant.id,
+          sku: variant.sku,
+          name: variant.product?.name,
+          price: variant.price,
+          stock: variant.stock,
+          is_active: variant.is_active,
+          rating: variant.product?.rating,
+          review_count: variant.product?.review_count,
+          brand: variant.product?.brand?.name,
+          color: variant.color?.name,
+          color_hex: variant.color?.hex_code,
+          size: variant.size?.eu_size,
+          thumbnail_url: thumbnailImage?.thumbnail_url || null, // CORRIGÉ : nom de propriété
+        };
+      }
+    );
 
     res.json(formattedVariants);
   } catch (error) {
@@ -141,7 +175,7 @@ router.get("/", async (req: any, res: any) => {
 
 router.get("/filters", async (req, res) => {
   try {
-    const [brands, sizes, groundTypes, uses, colors, genders] =
+    const [brands, sizes, groundTypes, uses, colors, genders, stabilities] =
       await Promise.all([
         prisma.brand.findMany({
           select: { id: true, name: true },
@@ -168,6 +202,10 @@ router.get("/filters", async (req, res) => {
           select: { id: true, name: true },
           orderBy: { name: "asc" },
         }),
+        prisma.stability.findMany({
+          select: { id: true, name: true },
+          orderBy: { name: "asc" },
+        }),
       ]);
 
     res.json({
@@ -180,6 +218,7 @@ router.get("/filters", async (req, res) => {
         hex_code: color.hex_code,
       })),
       genders: genders,
+      stabilities: stabilities,
     });
   } catch (error) {
     console.error("Erreur lors du chargement des filtres:", error);
