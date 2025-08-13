@@ -8,6 +8,8 @@ import type { Product } from "../types/product";
 export default function ProductsList() {
   const [products, setProducts] = useState<Product[]>([]);
 
+  const R2_PUBLIC_URL = import.meta.env.VITE_R2_PUBLIC_URL;
+
   useEffect(() => {
     const controller = new AbortController();
 
@@ -65,11 +67,10 @@ export default function ProductsList() {
             <img
               css={productImage}
               src={
-                product.image_url_full ||
-                product.image_url ||
+                `${R2_PUBLIC_URL}/${product.thumbnail_url}` ||
                 "/placeholder-image.jpg"
               }
-              alt={product.name}
+              alt={`${R2_PUBLIC_URL}/${product.thumbnail_url}`}
             />
             <h3 css={productModel}>{product.name}</h3>
             <div>

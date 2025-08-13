@@ -101,6 +101,8 @@ router.get("/", async (req: any, res: any) => {
       variantFilters.product = productFilters;
     }
 
+    // ...existing code...
+
     const variants = await prisma.productVariant.findMany({
       where: variantFilters,
       include: {
@@ -111,6 +113,17 @@ router.get("/", async (req: any, res: any) => {
         },
         color: { select: { name: true, hex_code: true } },
         size: { select: { eu_size: true } },
+        product_variant_images: {
+          include: {
+            product_image: {
+              select: {
+                thumbnail_url: true,
+                image_type: true,
+                sort_order: true,
+              },
+            },
+          },
+        },
       },
       orderBy: [{ product_id: "asc" }, { color_id: "asc" }],
     });
@@ -121,20 +134,35 @@ router.get("/", async (req: any, res: any) => {
       return acc;
     }, {} as Record<string, any>);
 
-    const formattedVariants = Object.values(uniqueVariants).map((variant) => ({
-      id: variant.id,
-      sku: variant.sku,
-      name: variant.product?.name,
-      price: variant.price,
-      stock: variant.stock,
-      is_active: variant.is_active,
-      rating: variant.product?.rating,
-      review_count: variant.product?.review_count,
-      brand: variant.product?.brand?.name,
-      color: variant.color?.name,
-      color_hex: variant.color?.hex_code,
-      size: variant.size?.eu_size,
-    }));
+    // CORRIGÉ : Query simplifiée - filtrer directement dans les données existantes
+    const formattedVariants = Object.values(uniqueVariants).map(
+      (variant: any) => {
+        // Trouver l'image thumbnail dans les données déjà récupérées
+        const thumbnailImage = variant.product_variant_images?.find(
+          (vi: any) =>
+            vi.product_image &&
+            vi.product_image.image_type === "thumbnail" &&
+            vi.product_image.sort_order === "01"
+        )?.product_image;
+
+        // CORRIGÉ : Return avec accolades
+        return {
+          id: variant.id,
+          sku: variant.sku,
+          name: variant.product?.name,
+          price: variant.price,
+          stock: variant.stock,
+          is_active: variant.is_active,
+          rating: variant.product?.rating,
+          review_count: variant.product?.review_count,
+          brand: variant.product?.brand?.name,
+          color: variant.color?.name,
+          color_hex: variant.color?.hex_code,
+          size: variant.size?.eu_size,
+          thumbnail_url: thumbnailImage?.thumbnail_url || null, // CORRIGÉ : nom de propriété
+        };
+      }
+    );
 
     res.json(formattedVariants);
   } catch (error) {
