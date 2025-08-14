@@ -14,7 +14,7 @@ router.get("/", async (req: any, res: any) => {
       minPrice,
       maxPrice,
       uses,
-      stability,
+      stabilities,
       minDrop,
       maxDrop,
       minWeight,
@@ -67,9 +67,11 @@ router.get("/", async (req: any, res: any) => {
       };
     }
 
-    if (stability) {
-      const stabilityList = Array.isArray(stability) ? stability : [stability];
-      productFilters.stability = { in: stabilityList }; // ← String field, pas une relation
+    if (stabilities) {
+      const stabilityList = Array.isArray(stabilities)
+        ? stabilities
+        : [stabilities];
+      productFilters.stability = { in: stabilityList };
     }
 
     if (minDrop || maxDrop) {
