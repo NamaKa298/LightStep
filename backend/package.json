@@ -16,7 +16,9 @@
     "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
-    "prisma:seed": "ts-node prisma/seed.ts"
+    "prisma:seed": "ts-node prisma/seed.ts",
+    "prisma:gen": "npx prisma generate",
+    "prisma:dev": "npx prisma generate && npx prisma migrate dev"
   },
   "keywords": [],
   "author": "",
