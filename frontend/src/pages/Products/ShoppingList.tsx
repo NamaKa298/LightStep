@@ -7,6 +7,7 @@ import ProductsList from "../../components/ProductsList";
 import Filter from "../../components/Filter";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
+import { useState } from "react";
 
 const content = css`
   display: flex;
@@ -14,6 +15,26 @@ const content = css`
 `;
 
 function ShoppingList() {
+  const [currentFilters, setCurrentFilters] = useState({
+    brands: [] as string[],
+    genders: [] as string[],
+    sizes: [] as number[],
+    minPrice: "",
+    maxPrice: "",
+    ground_types: [] as string[],
+    uses: [] as string[],
+    stabilities: [] as string[],
+    dropMin: "",
+    dropMax: "",
+    weightMin: "",
+    weightMax: "",
+    colors: [] as string[],
+  });
+
+  const handleFilterChange = (filters: typeof currentFilters) => {
+    setCurrentFilters(filters);
+  };
+
   return (
     <AppContainer>
       <Band />
@@ -21,8 +42,8 @@ function ShoppingList() {
         <NavBar />
         <ContactWidget />
         <div css={content}>
-          <Filter onFilterChange={(filters) => console.log(filters)} />
-          <ProductsList />
+          <Filter onFilterChange={handleFilterChange} />
+          <ProductsList filters={currentFilters} />
         </div>
       </MainContent>
       <Footer />
