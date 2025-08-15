@@ -5,6 +5,7 @@ import axios from "axios";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa6";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import styled from "@emotion/styled";
+import Component from "./comp-258";
 
 type FilterOption = {
   id?: number;
@@ -44,7 +45,7 @@ export default function Filters({ onFilterChange }: FiltersProps) {
     minWeight: "",
     maxWeight: "",
   });
-  // CORRIGÉ
+
   const [openSections, setOpenSections] = useState({
     genders: false,
     brands: false,
@@ -280,23 +281,7 @@ export default function Filters({ onFilterChange }: FiltersProps) {
         <Separator />
         {openSections.price && (
           <div>
-            <div css={priceInputs}>
-              <input
-                css={priceInput}
-                type="number"
-                placeholder="Min"
-                value={selectedFilters.minPrice}
-                onChange={(e) => handlePriceChange(e, "minPrice")}
-              />
-              <span>-</span>
-              <input
-                css={priceInput}
-                type="number"
-                placeholder="Max"
-                value={selectedFilters.maxPrice}
-                onChange={(e) => handlePriceChange(e, "maxPrice")}
-              />
-            </div>
+            <Component />
           </div>
         )}
       </div>
