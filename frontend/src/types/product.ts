@@ -17,5 +17,5 @@ export type Product = {
   colors?: string[];
   stability?: string;
   drop?: number;
-  ground_types?: string[];
+  ground_type?: string;
 };

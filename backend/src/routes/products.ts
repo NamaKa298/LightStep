@@ -14,7 +14,7 @@ router.get("/", async (req: any, res: any) => {
       minPrice,
       maxPrice,
       uses,
-      stability,
+      stabilities,
       minDrop,
       maxDrop,
       minWeight,
@@ -40,7 +40,7 @@ router.get("/", async (req: any, res: any) => {
     if (colors) {
       const colorList = Array.isArray(colors) ? colors : [colors];
       variantFilters.color = {
-        hex_code: { in: colorList },
+        name: { in: colorList },
       };
     }
 
@@ -67,9 +67,11 @@ router.get("/", async (req: any, res: any) => {
       };
     }
 
-    if (stability) {
-      const stabilityList = Array.isArray(stability) ? stability : [stability];
-      productFilters.stability = { in: stabilityList }; // ← String field, pas une relation
+    if (stabilities) {
+      const stabilityList = Array.isArray(stabilities)
+        ? stabilities
+        : [stabilities];
+      productFilters.stability = { name: { in: stabilityList } };
     }
 
     if (minDrop || maxDrop) {
@@ -88,7 +90,7 @@ router.get("/", async (req: any, res: any) => {
       const groundTypeList = Array.isArray(ground_types)
         ? ground_types
         : [ground_types];
-      productFilters.ground_types = {
+      productFilters.product_ground_types = {
         some: {
           ground_type: {
             name: { in: groundTypeList },
@@ -145,7 +147,6 @@ router.get("/", async (req: any, res: any) => {
             vi.product_image.sort_order === "01"
         )?.product_image;
 
-        // CORRIGÉ : Return avec accolades
         return {
           id: variant.id,
           sku: variant.sku,
@@ -159,7 +160,7 @@ router.get("/", async (req: any, res: any) => {
           color: variant.color?.name,
           color_hex: variant.color?.hex_code,
           size: variant.size?.eu_size,
-          thumbnail_url: thumbnailImage?.thumbnail_url || null, // CORRIGÉ : nom de propriété
+          thumbnail_url: thumbnailImage?.thumbnail_url || null,
         };
       }
     );
