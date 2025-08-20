@@ -1,6 +1,30 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 
+type BandProps = {
+  onAuthClick: (mode: "login" | "signup") => void;
+};
+
+export default function Band({ onAuthClick }: BandProps) {
+  return (
+    <div css={band}>
+      <div css={bandText}>Livraison gratuite partout en france à partir de 120€ d'achat</div>
+      <ul css={bandUnorderListSelect}>
+        <li css={bandSelect}>
+          <a css={bandLinks} onClick={() => onAuthClick("login")}>
+            Se connecter
+          </a>
+        </li>
+        <li css={bandSelect}>
+          <a css={bandLinks} onClick={() => onAuthClick("signup")}>
+            S'inscrire
+          </a>
+        </li>
+      </ul>
+    </div>
+  );
+}
+
 const band = css`
   background-color: #2b6a62;
   color: white;
@@ -26,6 +50,7 @@ const bandLinks = css`
   color: white;
   text-decoration: none;
   background-color: #2b6a62;
+  cursor: pointer;
 `;
 
 const bandUnorderListSelect = css`
@@ -35,23 +60,3 @@ const bandUnorderListSelect = css`
   list-style: none;
   margin-right: var(--global-margin);
 `;
-
-export default function Band() {
-  return (
-    <div css={band}>
-      <div css={bandText}>Livraison gratuite partout en france à partir de 120€ d'achat</div>
-      <ul css={bandUnorderListSelect}>
-        <li css={bandSelect}>
-          <a css={bandLinks} href="#connection">
-            Se connecter
-          </a>
-        </li>
-        <li css={bandSelect}>
-          <a css={bandLinks} href="#identification">
-            S'identifier
-          </a>
-        </li>
-      </ul>
-    </div>
-  );
-}

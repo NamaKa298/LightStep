@@ -7,8 +7,9 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["node", "@prisma/client"]
+    "types": ["node", "express"],
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "types/*.d.ts"],
   "exclude": ["node_modules"]
 }

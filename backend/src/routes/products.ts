@@ -1,26 +1,11 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../db/prisma";
 
-const prisma = new PrismaClient();
 const router = express.Router();
 
 router.get("/", async (req: any, res: any) => {
   try {
-    const {
-      genders,
-      brands,
-      sizes,
-      ground_types,
-      minPrice,
-      maxPrice,
-      uses,
-      stability,
-      minDrop,
-      maxDrop,
-      minHeight,
-      maxHeight,
-      colors,
-    } = req.query;
+    const { genders, brands, sizes, ground_types, minPrice, maxPrice, uses, stability, minDrop, maxDrop, minHeight, maxHeight, colors } = req.query;
 
     const variantFilters: any = {};
 
@@ -79,9 +64,7 @@ router.get("/", async (req: any, res: any) => {
     }
 
     if (ground_types) {
-      const groundTypeList = Array.isArray(ground_types)
-        ? ground_types
-        : [ground_types];
+      const groundTypeList = Array.isArray(ground_types) ? ground_types : [ground_types];
       productFilters.ground_types = {
         some: {
           ground_type: {
@@ -133,42 +116,39 @@ router.get("/", async (req: any, res: any) => {
     res.json(formattedVariants);
   } catch (error) {
     console.error("Erreur lors de la récupération:", error);
-    res
-      .status(500)
-      .json({ error: "Erreur lors de la récupération des variantes" });
+    res.status(500).json({ error: "Erreur lors de la récupération des variantes" });
   }
 });
 
 router.get("/filters", async (req, res) => {
   try {
-    const [brands, sizes, groundTypes, uses, colors, genders] =
-      await Promise.all([
-        prisma.brand.findMany({
-          select: { id: true, name: true },
-          orderBy: { name: "asc" },
-        }),
-        prisma.size.findMany({
-          select: { eu_size: true },
-          distinct: ["eu_size"],
-          orderBy: { eu_size: "asc" },
-        }),
-        prisma.groundType.findMany({
-          select: { id: true, name: true },
-          orderBy: { name: "asc" },
-        }),
-        prisma.use.findMany({
-          select: { id: true, name: true },
-          orderBy: { name: "asc" },
-        }),
-        prisma.color.findMany({
-          select: { name: true, hex_code: true },
-          orderBy: { name: "asc" },
-        }),
-        prisma.gender.findMany({
-          select: { id: true, name: true },
-          orderBy: { name: "asc" },
-        }),
-      ]);
+    const [brands, sizes, groundTypes, uses, colors, genders] = await Promise.all([
+      prisma.brand.findMany({
+        select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+      prisma.size.findMany({
+        select: { eu_size: true },
+        distinct: ["eu_size"],
+        orderBy: { eu_size: "asc" },
+      }),
+      prisma.groundType.findMany({
+        select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+      prisma.use.findMany({
+        select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+      prisma.color.findMany({
+        select: { name: true, hex_code: true },
+        orderBy: { name: "asc" },
+      }),
+      prisma.gender.findMany({
+        select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+    ]);
 
     res.json({
       brands: brands,

@@ -1,6 +1,8 @@
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import helmet from "helmet";
 import authRouter from "./routes/auth";
 import productsRouter from "./routes/products";
 dotenv.config({ path: ".env.local" });
@@ -16,9 +18,12 @@ app.use(
       "http://localhost:5173", // Pour le dev local
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
 app.use(express.json());
+app.use(cookieParser());
+app.use(helmet());
 
 // Route de base pour tester si l'API fonctionne
 app.get("/", (req, res) => {

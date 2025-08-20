@@ -1,113 +1,107 @@
-import bcrypt from "bcryptjs";
-import express from "express";
-import jwt from "jsonwebtoken";
-import { pool } from "../db/db";
+import { Request, Router } from "express";
+import { prisma } from "../db/prisma";
+import { requireAuth } from "../middleware/auth";
+import { buildAccessPayload, clearRefreshCookie, hashPassword, issueRefreshToken, revokeRefreshToken, rotateRefreshToken, setRefreshCookie, signAccessToken, verifyPassword } from "../services/authService";
 
-const router = express.Router();
-const JWT_SECRET = "lightstep_secret_key_2025"; // Changez ça en production !
+const router = Router();
 
-// Inscription d'un nouvel utilisateur
-router.post("/register", async (req: any, res: any) => {
+// Helper pour extraire l'IP et le userAgent
+function getRequestContext(req: Request) {
+  return {
+    ip: req.ip,
+    userAgent: req.headers["user-agent"],
+  };
+}
+
+// ----------------------- Route /register (inscription) -----------------------
+
+router.post("/register", async (req, res) => {
+  const { email, password } = req.body;
+
+  //1. Verifier l'unicité de l'email
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (existingUser) {
+    return res.status(409).json({ message: "Email déjà utilisé" });
+  }
+
+  //2. Hacher le mot de passe
+  const passwordHash = await hashPassword(password);
+
+  //3. Determine le rôle
+  const adminEmails = process.env.ADMIN_EMAILS?.split(",") || [];
+  const role = adminEmails.includes(email) ? "admin" : "user";
+
+  //4. Crée l'utilisateur
+  const user = await prisma.user.create({ data: { email, passwordHash, role } });
+
+  //5. Genere les tokens
+  const accessToken = signAccessToken(await buildAccessPayload(user.id));
+  const refreshToken = await issueRefreshToken(user.id, getRequestContext(req));
+
+  //6. Définit le cookie et renvoie la réponse
+  setRefreshCookie(res, refreshToken);
+  res.json({ accessToken, user: { id: user.id, email, role } });
+});
+
+// ----------------------- Route /login (Connexion) -----------------------
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  //1. Trouver l'utilisateur
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    return res.status(401).json({ message: "Email ou mot de passe incorrect" });
+  }
+
+  //2. Trouver le mot de passe
+  const isValid = await verifyPassword(password, user.passwordHash);
+  if (!isValid) {
+    return res.status(401).json({ message: "Email ou mot de passe incorrect" });
+  }
+
+  //3. Générer les tokens
+  const accessToken = signAccessToken(await buildAccessPayload(user.id));
+  const refreshToken = await issueRefreshToken(user.id, getRequestContext(req));
+
+  //6. Définit le cookie et renvoie la réponse
+  setRefreshCookie(res, refreshToken);
+  res.json({ accessToken, user: { id: user.id, email, role: user.role } });
+});
+
+// ----------------------- Route /refresh (renouvellement du Token) -----------------------
+router.post("/refresh", async (req, res) => {
+  const refreshToken = req.cookies.refresh_token;
+  if (!refreshToken) {
+    return res.status(401).json({ message: "Refresh token manquant" });
+  }
+
   try {
-    const { email, password } = req.body;
+    // 1. Rotation du token (vérifie + invalide l'ancien)
+    const { accessToken, refreshToken: newRefreshToken } = await rotateRefreshToken(refreshToken, getRequestContext(req));
 
-    // Vérifier si l'utilisateur existe déjà
-    const existingUser = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
-
-    if (existingUser.rows.length > 0) {
-      return res.status(400).json({ error: "Cet email est déjà utilisé" });
-    }
-
-    // Hasher le mot de passe
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Déterminer le rôle (admin si c'est votre email)
-    const adminEmails = ["admin@lightstep.com", "votre@email.com"]; // Ajoutez votre email ici !
-    const role = adminEmails.includes(email) ? "admin" : "client";
-
-    // Créer l'utilisateur
-    const { rows } = await pool.query(
-      `INSERT INTO users (email, password, role) 
-       VALUES ($1, $2, $3) 
-       RETURNING id, email, role, created_at`,
-      [email, hashedPassword, role]
-    );
-
-    const user = rows[0];
-
-    // Créer le token JWT
-    const token = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: "24h" });
-
-    res.json({
-      message: "Inscription réussie !",
-      token,
-      user: { id: user.id, email: user.email, role: user.role },
-    });
+    // 2. Définit le nouveau cookie
+    setRefreshCookie(res, newRefreshToken);
+    res.json({ accessToken });
   } catch (error) {
-    console.error("Erreur lors de l'inscription:", error);
-    res.status(500).json({ error: "Erreur lors de l'inscription" });
+    clearRefreshCookie(res);
+    res.status(401).json({ message: "Session epxirée" });
   }
 });
 
-// Connexion
-router.post("/login", async (req: any, res: any) => {
-  try {
-    const { email, password } = req.body;
-
-    // Trouver l'utilisateur
-    const { rows } = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
-
-    if (rows.length === 0) {
-      return res.status(401).json({ error: "Email ou mot de passe incorrect" });
-    }
-
-    const user = rows[0];
-
-    // Vérifier le mot de passe
-    const validPassword = await bcrypt.compare(password, user.password);
-
-    if (!validPassword) {
-      return res.status(401).json({ error: "Email ou mot de passe incorrect" });
-    }
-
-    // Créer le token JWT
-    const token = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: "24h" });
-
-    res.json({
-      message: "Connexion réussie !",
-      token,
-      user: { id: user.id, email: user.email, role: user.role },
-    });
-  } catch (error) {
-    console.error("Erreur lors de la connexion:", error);
-    res.status(500).json({ error: "Erreur lors de la connexion" });
+// ----------------------- Route /logout (Déconnexion) -----------------------
+router.post("/logout", async (req, res) => {
+  const refreshToken = req.cookies.refresh_token;
+  if (refreshToken) {
+    await revokeRefreshToken(refreshToken); // Marque le token comme révoqué en base
   }
+  clearRefreshCookie(res); // supprime le cookie
+  res.sendStatus(204);
 });
 
-// Middleware pour vérifier le token
-export const authenticateToken = (req: any, res: any, next: any) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
-
-  if (!token) {
-    return res.status(401).json({ error: "Token d'accès requis" });
-  }
-
-  jwt.verify(token, JWT_SECRET, (err: any, user: any) => {
-    if (err) {
-      return res.status(403).json({ error: "Token invalide" });
-    }
-    req.user = user;
-    next();
-  });
-};
-
-// Middleware pour vérifier les droits admin
-export const requireAdmin = (req: any, res: any, next: any) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ error: "Droits administrateur requis" });
-  }
-  next();
-};
+// ----------------------- Route /me (Profil Utilisateur) -----------------------
+router.get("/me", requireAuth, (req, res) => {
+  res.json({ user: req.user });
+});
 
 export default router;

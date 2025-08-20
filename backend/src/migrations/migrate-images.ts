@@ -1,13 +1,12 @@
-import { PrismaClient } from "@prisma/client";
 import "dotenv/config";
 import fs from "fs/promises";
 import { lookup } from "mime-types";
 import path from "path";
 import sharp from "sharp";
+import { prisma } from "../db/prisma";
 import { generatePresignedUrl } from "../utils/r2-uploader";
 
 const IMAGE_DIR = path.join(__dirname, "../../local-images");
-const prisma = new PrismaClient();
 
 // -------------------------------- Fonction pour parser le nom de fichier -------------------------------
 function parseFilename(filename: string): { name: string; color: string; imageType: string; sortOrder: string } {
@@ -87,17 +86,10 @@ async function migrate() {
 
         // Traitement Sharp
         const highresBuffer = await fs.readFile(filePath);
-        const [lowresBuffer, thumbnailBuffer] = await Promise.all([
-          sharp(highresBuffer).resize(90, 113).webp({ quality: 50 }).toBuffer(),
-          sharp(highresBuffer).resize(230, 289).webp({ quality: 70 }).toBuffer(),
-        ]);
+        const [lowresBuffer, thumbnailBuffer] = await Promise.all([sharp(highresBuffer).resize(90, 113).webp({ quality: 50 }).toBuffer(), sharp(highresBuffer).resize(230, 289).webp({ quality: 70 }).toBuffer()]);
 
         // Upload R2
-        await Promise.all([
-          uploadToR2(imageUrls.highres, highresBuffer, mimeType),
-          uploadToR2(imageUrls.lowres, lowresBuffer, "image/webp"),
-          uploadToR2(imageUrls.thumbnail, thumbnailBuffer, "image/webp"),
-        ]);
+        await Promise.all([uploadToR2(imageUrls.highres, highresBuffer, mimeType), uploadToR2(imageUrls.lowres, lowresBuffer, "image/webp"), uploadToR2(imageUrls.thumbnail, thumbnailBuffer, "image/webp")]);
 
         // 4. Insertion avec Prisma - Une seule image par base_model
         try {
