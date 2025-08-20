@@ -1,17 +1,22 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import { useRef } from "react";
 import { useAuthDrawerStore } from "../stores/useAuthDrawerStore";
 
 export default function Band() {
   const setOpen = useAuthDrawerStore((s) => s.setOpen);
   const setMode = useAuthDrawerStore((s) => s.setMode);
 
+  const loginBtnRef = useRef<HTMLButtonElement>(null);
+  const signupBtnRef = useRef<HTMLButtonElement>(null);
+
   return (
     <div css={band}>
       <div css={bandText}>Livraison gratuite partout en france à partir de 120€ d'achat</div>
       <ul css={bandUnorderListSelect}>
         <li css={bandSelect}>
-          <a
+          <button
+            ref={loginBtnRef}
             css={bandLinks}
             onClick={() => {
               setMode("login");
@@ -19,10 +24,11 @@ export default function Band() {
             }}
           >
             Se connecter
-          </a>
+          </button>
         </li>
         <li css={bandSelect}>
-          <a
+          <button
+            ref={signupBtnRef}
             css={bandLinks}
             onClick={() => {
               setMode("signup");
@@ -30,7 +36,7 @@ export default function Band() {
             }}
           >
             S'inscrire
-          </a>
+          </button>
         </li>
       </ul>
     </div>
@@ -63,6 +69,7 @@ const bandLinks = css`
   text-decoration: none;
   background-color: #2b6a62;
   cursor: pointer;
+  border: none;
 `;
 
 const bandUnorderListSelect = css`

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useRef } from "react";
 import { useAuthDrawerStore } from "../../stores/useAuthDrawerStore";
 import Band from "../Band";
 import DrawerAuth from "../DrawerAuth";
@@ -12,6 +13,7 @@ type MainLayoutProps = {
 
 export default function MainLayout({ children, withContainer = false }: MainLayoutProps) {
   const { open, mode, setOpen, setMode } = useAuthDrawerStore();
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <>
@@ -30,6 +32,7 @@ export default function MainLayout({ children, withContainer = false }: MainLayo
         }}
         mode={mode}
         setMode={setMode}
+        triggerRef={triggerRef}
       />
     </>
   );

@@ -34,6 +34,7 @@ export type DrawerAuthProps = {
   onSuccess?: (user: unknown) => void;
   mode: "login" | "signup";
   setMode: (mode: "login" | "signup") => void;
+  triggerRef?: React.RefObject<HTMLElement | null>;
 };
 
 export default function DrawerAuth({ open, onClose, onSuccess, mode, setMode }: DrawerAuthProps) {
@@ -41,6 +42,7 @@ export default function DrawerAuth({ open, onClose, onSuccess, mode, setMode }: 
   const [serverError, setServerError] = useState<string | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLElement | null>(null); // pour restaurer le focus
 
   // ---------- HOOK FORM ----------
   const schema = mode === "login" ? loginSchema : signupSchema;
@@ -65,22 +67,71 @@ export default function DrawerAuth({ open, onClose, onSuccess, mode, setMode }: 
       setClosing(false);
       setServerError(null);
       reset({ email: "", password: "", name: "", accept: false });
+
+      // focus sur le 1er champ
       setTimeout(() => {
         panelRef.current?.querySelector<HTMLInputElement>("input")?.focus();
       }, 50);
     }
   }, [open, mode, reset]);
 
+  // ---------- SCROLL LOCK ----------
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   // ---------- GESTION FERMETURE ----------
   const handleClose = useCallback(() => {
     setClosing(true);
-    setTimeout(() => onClose(), 250);
+    setTimeout(() => {
+      onClose();
+      triggerRef.current?.focus(); // restore focus à l’élément déclencheur
+    }, 250);
   }, [onClose]);
+
+  // ---------- ESCAPE + FOCUS TRAP ----------
+  useEffect(() => {
+    if (!open) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        handleClose();
+      }
+      if (e.key === "Tab" && panelRef.current) {
+        const focusables = panelRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
+        const focusArray = Array.from(focusables);
+        if (focusArray.length === 0) return;
+
+        const first = focusArray[0];
+        const last = focusArray[focusArray.length - 1];
+        const active = document.activeElement;
+
+        if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        } else if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open, handleClose]);
 
   // ---------- SUBMIT ----------
   async function onSubmit(values: FormData) {
     try {
-      setServerError(null); // reset avant submit
+      setServerError(null);
       const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register";
 
       const { data: user } = await axios.post(endpoint, values, {
@@ -92,7 +143,7 @@ export default function DrawerAuth({ open, onClose, onSuccess, mode, setMode }: 
     } catch (err) {
       if (axios.isAxiosError(err)) {
         const msg = (err.response?.data as { message?: string })?.message || "Une erreur est survenue";
-        setServerError(msg); // affiche message serveur
+        setServerError(msg);
       } else {
         setServerError("Erreur inattendue");
       }
@@ -168,7 +219,6 @@ export default function DrawerAuth({ open, onClose, onSuccess, mode, setMode }: 
               </label>
             )}
 
-            {/* Affichage de l'erreur serveur */}
             {serverError && <div css={styles.error}>{serverError}</div>}
 
             <div css={styles.footer}>
