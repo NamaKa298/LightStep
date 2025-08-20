@@ -1,22 +1,34 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import { useAuthDrawerStore } from "../stores/useAuthDrawerStore";
 
-type BandProps = {
-  onAuthClick: (mode: "login" | "signup") => void;
-};
+export default function Band() {
+  const setOpen = useAuthDrawerStore((s) => s.setOpen);
+  const setMode = useAuthDrawerStore((s) => s.setMode);
 
-export default function Band({ onAuthClick }: BandProps) {
   return (
     <div css={band}>
       <div css={bandText}>Livraison gratuite partout en france à partir de 120€ d'achat</div>
       <ul css={bandUnorderListSelect}>
         <li css={bandSelect}>
-          <a css={bandLinks} onClick={() => onAuthClick("login")}>
+          <a
+            css={bandLinks}
+            onClick={() => {
+              setMode("login");
+              setOpen(true);
+            }}
+          >
             Se connecter
           </a>
         </li>
         <li css={bandSelect}>
-          <a css={bandLinks} onClick={() => onAuthClick("signup")}>
+          <a
+            css={bandLinks}
+            onClick={() => {
+              setMode("signup");
+              setOpen(true);
+            }}
+          >
             S'inscrire
           </a>
         </li>

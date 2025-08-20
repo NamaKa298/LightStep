@@ -32,13 +32,13 @@ export type DrawerAuthProps = {
   open: boolean;
   onClose: () => void;
   onSuccess?: (user: unknown) => void;
-  defaultMode?: "login" | "signup";
+  mode: "login" | "signup";
+  setMode: (mode: "login" | "signup") => void;
 };
 
-export default function DrawerAuth({ open, onClose, onSuccess, defaultMode = "login" }: DrawerAuthProps) {
-  const [mode, setMode] = useState<"login" | "signup">(defaultMode);
-  const [closing, setClosing] = useState<boolean>(false);
-  const [serverError, setServerError] = useState<string | null>(null); // gestion erreur serveur
+export default function DrawerAuth({ open, onClose, onSuccess, mode, setMode }: DrawerAuthProps) {
+  const [closing, setClosing] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
@@ -63,16 +63,10 @@ export default function DrawerAuth({ open, onClose, onSuccess, defaultMode = "lo
   useEffect(() => {
     if (open) {
       setClosing(false);
-      setServerError(null); // reset erreur serveur
-      reset({
-        email: "",
-        password: "",
-        name: "",
-        accept: false,
-      });
+      setServerError(null);
+      reset({ email: "", password: "", name: "", accept: false });
       setTimeout(() => {
-        const el = panelRef.current?.querySelector<HTMLInputElement>("input");
-        el?.focus();
+        panelRef.current?.querySelector<HTMLInputElement>("input")?.focus();
       }, 50);
     }
   }, [open, mode, reset]);

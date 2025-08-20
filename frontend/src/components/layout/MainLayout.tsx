@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useAuthDrawerStore } from "../../stores/useAuthDrawerStore";
 import Band from "../Band";
 import DrawerAuth from "../DrawerAuth";
 import Footer from "../Footer";
@@ -11,30 +11,25 @@ type MainLayoutProps = {
 };
 
 export default function MainLayout({ children, withContainer = false }: MainLayoutProps) {
-  const [authOpen, setAuthOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<"login" | "signup">("login");
+  const { open, mode, setOpen, setMode } = useAuthDrawerStore();
 
   return (
     <>
-      <Band
-        onAuthClick={(mode) => {
-          setAuthMode(mode);
-          setAuthOpen(true);
-        }}
-      />
+      <Band />
       <div className="container">
         <Navbar />
       </div>
       <main className={withContainer ? "container" : ""}>{children}</main>
       <Footer />
       <DrawerAuth
-        open={authOpen}
-        onClose={() => setAuthOpen(false)}
+        open={open}
+        onClose={() => setOpen(false)}
         onSuccess={(user) => {
           console.log("Utilisateur connecté :", user);
-          setAuthOpen(false);
+          setOpen(false);
         }}
-        defaultMode={authMode}
+        mode={mode}
+        setMode={setMode}
       />
     </>
   );
