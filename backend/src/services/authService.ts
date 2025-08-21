@@ -161,45 +161,24 @@ export async function revokeRefreshToken(presentedToken: string): Promise<void> 
   });
 }
 
-// Cookie helpers
+// Cookie helpers (refresh Only)
 export function setRefreshCookie(res: Response, token: string): void {
   res.cookie("refresh_token", token, {
     httpOnly: true,
-    secure: process.env.SECURE_COOKIES === "true", // HTTPS uniquement
+    secure: SECURE_COOKIES, // HTTPS uniquement
     sameSite: "lax", // Protection CSRF
-    domain: process.env.COOKIE_DOMAIN,
+    domain: COOKIE_DOMAIN,
     path: "/api/auth",
     maxAge: durationToMs(REFRESH_TTL), // durée de vie
-  });
-}
-
-export function setAccessCookie(res: Response, token: string): void {
-  res.cookie("access_token", token, {
-    httpOnly: true,
-    secure: process.env.SECURE_COOKIES === "true", // HTTPS uniquement
-    sameSite: "lax", // Protection CSRF
-    domain: process.env.COOKIE_DOMAIN,
-    path: "/",
-    maxAge: durationToMs(ACCESS_TTL), // durée de vie
   });
 }
 
 export function clearRefreshCookie(res: Response): void {
   res.clearCookie("refresh_token", {
     httpOnly: true,
-    secure: process.env.SECURE_COOKIES === "true",
+    secure: SECURE_COOKIES,
     sameSite: "lax",
-    domain: process.env.COOKIE_DOMAIN,
-    path: "/api/auth",
-  });
-}
-
-export function clearAccessCookie(res: Response): void {
-  res.clearCookie("access_token", {
-    httpOnly: true,
-    secure: process.env.SECURE_COOKIES === "true",
-    sameSite: "lax",
-    domain: process.env.COOKIE_DOMAIN,
-    path: "/",
+    domain: COOKIE_DOMAIN,
+    path: "/api/auth", // stockage HTTP only
   });
 }

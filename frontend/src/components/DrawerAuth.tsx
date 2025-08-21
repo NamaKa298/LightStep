@@ -6,6 +6,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import api from "../api/api";
+import { useAuthStore } from "../stores/useAuthStore";
+import type { User } from "../types/User";
 
 // ---------- SCHEMAS ----------
 const loginSchema = z.object({
@@ -14,7 +17,8 @@ const loginSchema = z.object({
 });
 
 const signupSchema = loginSchema.extend({
-  name: z.string().min(2, "Nom requis"),
+  firstname: z.string().min(2, "Prénom requis"),
+  lastname: z.string().min(2, "Nom requis"),
   accept: z.boolean().refine((val) => val === true, {
     message: "Tu dois accepter les conditions",
   }),
@@ -24,14 +28,15 @@ const signupSchema = loginSchema.extend({
 type FormData = {
   email: string;
   password: string;
-  name?: string;
+  firstname?: string;
+  lastname?: string;
   accept?: boolean;
 };
 
 export type DrawerAuthProps = {
   open: boolean;
   onClose: () => void;
-  onSuccess?: (user: unknown) => void;
+  onSuccess?: (user: User) => void;
   mode: "login" | "signup";
   setMode: (mode: "login" | "signup") => void;
   triggerRef?: React.RefObject<HTMLElement | null>;
@@ -43,6 +48,7 @@ export default function DrawerAuth({ open, onClose, onSuccess, mode, setMode }: 
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null); // pour restaurer le focus
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   // ---------- HOOK FORM ----------
   const schema = mode === "login" ? loginSchema : signupSchema;
@@ -56,7 +62,8 @@ export default function DrawerAuth({ open, onClose, onSuccess, mode, setMode }: 
     defaultValues: {
       email: "",
       password: "",
-      name: "",
+      firstname: "",
+      lastname: "",
       accept: false,
     },
   });
@@ -66,7 +73,7 @@ export default function DrawerAuth({ open, onClose, onSuccess, mode, setMode }: 
     if (open) {
       setClosing(false);
       setServerError(null);
-      reset({ email: "", password: "", name: "", accept: false });
+      reset({ email: "", password: "", firstname: "", lastname: "", accept: false });
 
       // focus sur le 1er champ
       setTimeout(() => {
@@ -132,13 +139,15 @@ export default function DrawerAuth({ open, onClose, onSuccess, mode, setMode }: 
   async function onSubmit(values: FormData) {
     try {
       setServerError(null);
-      const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register";
-
-      const { data: user } = await axios.post(endpoint, values, {
+      const endpoint = mode === "login" ? "/auth/login" : "/auth/register";
+      const { data } = await api.post(endpoint, values, {
         withCredentials: true,
       });
 
-      onSuccess?.(user);
+      //  Stockage dans Zustand
+      setAuth(data.accessToken, data.user as User);
+
+      onSuccess?.(data.user as User);
       handleClose();
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -177,13 +186,23 @@ export default function DrawerAuth({ open, onClose, onSuccess, mode, setMode }: 
         <section css={styles.body}>
           <form onSubmit={handleSubmit(onSubmit)}>
             {mode === "signup" && (
-              <div css={styles.field}>
-                <label css={styles.label} htmlFor="name">
-                  Nom complet
-                </label>
-                <input css={styles.input} id="name" type="text" placeholder="Prénom et nom" autoComplete="name" {...register("name")} />
-                {errors.name && <div css={styles.error}>{errors.name.message}</div>}
-              </div>
+              <>
+                <div css={styles.field}>
+                  <label css={styles.label} htmlFor="firstname">
+                    Prénom
+                  </label>
+                  <input css={styles.input} id="firstname" type="text" placeholder="Ton prénom" autoComplete="given-name" {...register("firstname")} />
+                  {errors.firstname && <div css={styles.error}>{errors.firstname.message}</div>}
+                </div>
+
+                <div css={styles.field}>
+                  <label css={styles.label} htmlFor="lastname">
+                    Nom
+                  </label>
+                  <input css={styles.input} id="lastname" type="text" placeholder="Ton nom" autoComplete="family-name" {...register("lastname")} />
+                  {errors.lastname && <div css={styles.error}>{errors.lastname.message}</div>}
+                </div>
+              </>
             )}
 
             <div css={styles.field}>
